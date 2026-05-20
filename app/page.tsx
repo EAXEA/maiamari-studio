@@ -186,9 +186,11 @@ export default function HomePage() {
                 <h3 className="font-display text-2xl lg:text-3xl mt-3 leading-snug">
                   {w.title}
                 </h3>
-                <p className="mt-3 text-sm text-[color:var(--color-muted)]">
-                  {w.schedule}
-                </p>
+                {w.schedule && (
+                  <p className="mt-3 text-sm text-[color:var(--color-muted)]">
+                    {w.schedule}
+                  </p>
+                )}
                 <a
                   href={`https://wa.me/${whatsapp}?text=${encodeURIComponent(
                     `Merhaba, "${w.title}" atölyesi için kayıt yaptırmak istiyorum.`,

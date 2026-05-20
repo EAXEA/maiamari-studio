@@ -49,10 +49,10 @@ export interface Workshop {
   slug: string;
   title: string;
   instructor: string;
-  schedule: string;
+  schedule?: string;
   date?: string;
-  description: string;
-  priceTRY: number | null;
+  description?: string;
+  priceTRY?: number | null;
   image?: string;
 }
 

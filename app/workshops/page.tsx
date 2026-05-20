@@ -90,13 +90,17 @@ export default function WorkshopsPage() {
                 Eğitmen
               </dt>
               <dd>{w.instructor}</dd>
-              <dt
-                className="uppercase tracking-[0.2em] text-xs"
-                style={{ color: "var(--color-muted)" }}
-              >
-                Program
-              </dt>
-              <dd>{w.schedule}</dd>
+              {w.schedule && (
+                <>
+                  <dt
+                    className="uppercase tracking-[0.2em] text-xs"
+                    style={{ color: "var(--color-muted)" }}
+                  >
+                    Program
+                  </dt>
+                  <dd>{w.schedule}</dd>
+                </>
+              )}
               {w.date && (
                 <>
                   <dt
