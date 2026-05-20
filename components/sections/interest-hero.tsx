@@ -108,7 +108,11 @@ export function InterestHero({
               {primary && (
                 <Link
                   href={primary.href}
-                  className="inline-flex h-12 px-7 items-center text-[12px] tracking-[0.22em] uppercase bg-white text-[color:var(--color-walnut-dark)] hover:bg-[color:var(--color-accent-pink)] transition-colors duration-500"
+                  className="inline-flex h-12 px-7 items-center text-[12px] tracking-[0.22em] uppercase transition-colors duration-500 hover:bg-[color:var(--color-accent-pink)]"
+                  style={{
+                    background: "#FFFFFF",
+                    color: "var(--color-walnut-dark)",
+                  }}
                 >
                   {primary.label}
                 </Link>

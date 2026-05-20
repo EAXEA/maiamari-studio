@@ -88,11 +88,11 @@ export default async function CategoryPage({
             className="relative aspect-square w-full max-w-[460px] mx-auto lg:mx-0 overflow-hidden bg-[color:var(--color-surface-2)]"
           >
             <Image
-              src="/brand/maimari-mark.png"
+              src="/brand/maimari-logo.png"
               alt=""
               fill
               sizes="(max-width: 1024px) 80vw, 40vw"
-              className="object-contain p-12 opacity-95"
+              className="object-contain p-14 opacity-95"
             />
             <span className="absolute top-4 left-4 text-[10px] tracking-[0.35em] uppercase bg-[color:var(--color-walnut-dark)] text-[color:var(--color-background)] px-3 py-1.5">
               Yakında
