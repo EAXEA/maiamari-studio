@@ -47,111 +47,84 @@ export default function WorkshopsPage() {
       </Reveal>
 
       <Stagger
-        className="mt-16 grid lg:grid-cols-2 gap-6"
+        className="mt-16 grid lg:grid-cols-2 gap-6 lg:gap-8"
         delayChildren={0.15}
         staggerChildren={0.12}
       >
-        {workshops.map((w) => (
-          <StaggerItem
-            key={w.slug}
-            className="border p-8 lg:p-12 flex flex-col group hover:-translate-y-1 transition-transform duration-500"
-          >
-            <div
-              className="-m-8 lg:-m-12 mb-0 p-8 lg:p-12"
-              style={{
-                background: "var(--color-surface)",
-                borderBottom: "1px solid var(--color-border)",
-              }}
+        {workshops.map((w) => {
+          const [firstWord, ...restWords] = w.title.split(" ");
+          const rest = restWords.join(" ");
+          return (
+            <StaggerItem
+              key={w.slug}
+              className="border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-10 lg:p-14 flex flex-col group hover:-translate-y-1 transition-transform duration-500"
             >
               <p
                 className="text-[10px] tracking-[0.35em] uppercase"
                 style={{ color: "var(--color-walnut)" }}
               >
-                {w.instructor}
+                Eğitmen · {w.instructor}
               </p>
+
               <h2
-                className="font-display mt-4 leading-[0.95]"
+                className="font-display mt-5 leading-[0.95]"
                 style={{ color: "var(--color-walnut-dark)" }}
               >
-                <span className="block text-3xl lg:text-5xl italic">
-                  {w.title.split(" ").slice(0, 1).join(" ")}
+                <span className="block text-4xl lg:text-5xl italic">
+                  {firstWord}
                 </span>
-                <span className="block text-3xl lg:text-5xl">
-                  {w.title.split(" ").slice(1).join(" ")}
-                </span>
+                {rest && (
+                  <span className="block text-4xl lg:text-5xl mt-1">
+                    {rest}
+                  </span>
+                )}
               </h2>
-            </div>
 
-            <dl className="mt-8 grid grid-cols-[max-content_1fr] gap-x-8 gap-y-3 text-sm">
-              <dt
-                className="uppercase tracking-[0.2em] text-xs"
+              <p
+                className="mt-8 text-base leading-relaxed flex-1 max-w-md"
                 style={{ color: "var(--color-muted)" }}
               >
-                Eğitmen
-              </dt>
-              <dd>{w.instructor}</dd>
-              {w.schedule && (
-                <>
-                  <dt
-                    className="uppercase tracking-[0.2em] text-xs"
-                    style={{ color: "var(--color-muted)" }}
-                  >
-                    Program
-                  </dt>
-                  <dd>{w.schedule}</dd>
-                </>
-              )}
-              {w.date && (
-                <>
-                  <dt
-                    className="uppercase tracking-[0.2em] text-xs"
-                    style={{ color: "var(--color-muted)" }}
-                  >
-                    Tarih
-                  </dt>
-                  <dd>{w.date}</dd>
-                </>
-              )}
-            </dl>
+                Kayıt için DM üzerinden veya{" "}
+                <a
+                  href={`tel:${biz.contact.phonePrimary.replace(/\s/g, "")}`}
+                  className="underline underline-offset-4"
+                >
+                  {biz.contact.phonePrimary}
+                </a>{" "}
+                numarasını arayın.
+              </p>
 
-            <p
-              className="mt-6 text-sm leading-relaxed flex-1"
-              style={{ color: "var(--color-muted)" }}
-            >
-              Kayıt için DM üzerinden veya {biz.contact.phonePrimary}{" "}
-              numarasını arayın.
-            </p>
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href={`https://wa.me/${whatsapp}?text=${encodeURIComponent(
-                  `Merhaba, "${w.title}" atölyesi için kayıt yaptırmak istiyorum.`,
-                )}`}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex h-11 px-6 items-center text-xs tracking-[0.2em] uppercase transition-opacity hover:opacity-90"
-                style={{
-                  background: "var(--color-walnut-dark)",
-                  color: "var(--color-background)",
-                }}
-              >
-                WhatsApp ile kayıt
-              </a>
-              <a
-                href={biz.contact.instagram}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex h-11 px-6 items-center text-xs tracking-[0.2em] uppercase border transition-colors hover:bg-[color:var(--color-foreground)] hover:text-[color:var(--color-background)]"
-                style={{
-                  borderColor: "var(--color-foreground)",
-                  color: "var(--color-foreground)",
-                }}
-              >
-                Instagram DM
-              </a>
-            </div>
-          </StaggerItem>
-        ))}
+              <div className="mt-10 flex flex-wrap gap-3">
+                <a
+                  href={`https://wa.me/${whatsapp}?text=${encodeURIComponent(
+                    `Merhaba, "${w.title}" atölyesi için kayıt yaptırmak istiyorum.`,
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex h-11 px-6 items-center text-xs tracking-[0.22em] uppercase transition-opacity hover:opacity-90"
+                  style={{
+                    background: "var(--color-walnut-dark)",
+                    color: "var(--color-background)",
+                  }}
+                >
+                  WhatsApp ile kayıt
+                </a>
+                <a
+                  href={biz.contact.instagram}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex h-11 px-6 items-center text-xs tracking-[0.22em] uppercase border transition-colors hover:bg-[color:var(--color-foreground)] hover:text-[color:var(--color-background)]"
+                  style={{
+                    borderColor: "var(--color-foreground)",
+                    color: "var(--color-foreground)",
+                  }}
+                >
+                  Instagram DM
+                </a>
+              </div>
+            </StaggerItem>
+          );
+        })}
       </Stagger>
 
       {/* Visit note */}
