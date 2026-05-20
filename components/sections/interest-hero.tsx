@@ -42,7 +42,7 @@ export function InterestHero({
 
   return (
     <section className="relative w-full h-[88vh] min-h-[640px] max-h-[920px] overflow-hidden">
-      {/* Background image */}
+      {/* Background image — mobilde üst kısmı (tavan/spot ışığı) kesilsin diye object-position kayık */}
       <div className="absolute inset-0">
         <Image
           src={image}
