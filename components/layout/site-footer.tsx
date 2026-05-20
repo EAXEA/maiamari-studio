@@ -10,7 +10,7 @@ export function SiteFooter() {
         <div>
           <div className="flex items-center gap-3">
             <Image src="/brand/maimari-logo.png" alt="" width={36} height={36} />
-            <div className="font-display text-2xl tracking-tight">MAIMARI</div>
+            <div className="font-display text-2xl tracking-tight">MAIAMARI</div>
           </div>
           <p className="mt-6 text-sm text-[color:var(--color-muted)] max-w-sm leading-relaxed">
             {biz.tagline}. Atölyede elle çoğaltılan baskılar, doğal liflerden el

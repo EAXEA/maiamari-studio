@@ -33,7 +33,7 @@ export default function WorkshopsPage() {
             className="mt-8 max-w-2xl text-base lg:text-lg leading-relaxed"
             style={{ color: "var(--color-muted)" }}
           >
-            Suluboya, çanta baskı ve linol baskı atölyelerimiz Maimari
+            Suluboya, çanta baskı ve linol baskı atölyelerimiz Maiamari
             atölyesinde küçük gruplar halinde düzenlenir. Kayıt için DM veya{" "}
             <a
               href={`tel:${biz.contact.phonePrimary.replace(/\s/g, "")}`}

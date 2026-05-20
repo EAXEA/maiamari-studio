@@ -1,5 +1,5 @@
 /**
- * MAIMARI.STUDIO — Data model types
+ * MAIAMARI.STUDIO — Data model types
  */
 
 export type CategorySlug =

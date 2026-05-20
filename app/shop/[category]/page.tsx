@@ -26,7 +26,7 @@ export async function generateMetadata({
     description: cat.description,
     alternates: { canonical: `/shop/${cat.slug}` },
     openGraph: {
-      title: `${cat.name} · MAIMARI`,
+      title: `${cat.name} · MAIAMARI`,
       description: cat.description,
       url: `https://maimari.art/shop/${cat.slug}`,
       type: "website",

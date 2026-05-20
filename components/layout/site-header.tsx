@@ -18,7 +18,7 @@ export function SiteHeader() {
         <Link
           href="/"
           className="flex items-center gap-3 shrink-0"
-          aria-label="Maimari ana sayfa"
+          aria-label="Maiamari ana sayfa"
         >
           <Image
             src="/brand/maimari-logo.png"
@@ -28,7 +28,7 @@ export function SiteHeader() {
             priority
           />
           <span className="font-display text-xl lg:text-[22px] tracking-tight leading-none">
-            MAIMARI
+            MAIAMARI
           </span>
         </Link>
 

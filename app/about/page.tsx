@@ -21,7 +21,7 @@ export default function AboutPage() {
           <div className="relative aspect-square bg-[color:var(--color-surface)] flex items-center justify-center">
             <Image
               src="/brand/maimari-logo.png"
-              alt="Maimari logo"
+              alt="Maiamari logo"
               width={260}
               height={260}
               className="opacity-95"
@@ -39,7 +39,7 @@ export default function AboutPage() {
         </div>
         <div className="space-y-6 text-base leading-relaxed max-w-prose">
           <p>
-            Maimari, Ankara&apos;nın Küçükesat semtinde, Bülbülderesi
+            Maiamari, Ankara&apos;nın Küçükesat semtinde, Bülbülderesi
             Caddesi&apos;nde bulunan bir baskı atölyesi ve galeridir. Atölyenin
             kurucusu <strong>Duygu Sinan</strong>, baskı tekniklerine kendini
             adamış bir sanatçı ve eğitmen olarak; linol baskı, taş baskı, kâğıt

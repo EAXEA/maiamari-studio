@@ -1,5 +1,5 @@
 /**
- * MAIMARI.STUDIO — Local data layer
+ * MAIAMARI.STUDIO — Local data layer
  * ---------------------------------
  * Şu an JSON dosyalarını okur (Faz 1).
  * İleride Supabase'e geçildiğinde sadece bu modül değişecek.

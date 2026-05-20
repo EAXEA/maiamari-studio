@@ -93,7 +93,7 @@ export default function ContactPage() {
             className="w-full h-full border-0"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            title="Maimari konum"
+            title="Maiamari konum"
           />
         </div>
       </div>

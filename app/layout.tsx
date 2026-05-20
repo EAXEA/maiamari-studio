@@ -19,10 +19,10 @@ const display = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://maimari.art"),
+  metadataBase: new URL("https://www.maiamari.art"),
   title: {
-    default: "MAIMARI · Baskı Atölyesi ve Galeri",
-    template: "%s · MAIMARI",
+    default: "MAIAMARI · Baskı Atölyesi ve Galeri",
+    template: "%s · MAIAMARI",
   },
   description:
     "Ankara Çankaya'da bir baskı atölyesi ve galeri. Özgün linol baskılar, el yapımı kâğıtlar, baskı malzemeleri ve atölye programları.",
@@ -30,17 +30,17 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "MAIMARI · Baskı Atölyesi ve Galeri",
+    title: "MAIAMARI · Baskı Atölyesi ve Galeri",
     description:
       "Ankara'da çağdaş bir baskı atölyesi ve galeri. Atölyeden galeriye, sanatın elle dokunulmuş hali.",
-    url: "https://maimari.art",
+    url: "https://www.maiamari.art",
     siteName: "Maiamari Baskı Atölyesi",
-    locale: "tr_TR",
     type: "website",
+    locale: "tr_TR",
   },
   twitter: {
     card: "summary_large_image",
-    title: "MAIMARI · Baskı Atölyesi ve Galeri",
+    title: "MAIAMARI · Baskı Atölyesi ve Galeri",
     description:
       "Ankara'da çağdaş bir baskı atölyesi ve galeri.",
   },

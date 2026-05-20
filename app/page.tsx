@@ -167,7 +167,7 @@ export default function HomePage() {
                 </h2>
                 <p className="mt-5 max-w-xl text-base leading-relaxed text-[color:var(--color-muted)]">
                   Küçük gruplarla linol baskı, suluboya ve çanta baskı atölyeleri.
-                  Maimari mekânında, atölyenin kendi ekipmanlarıyla.
+                  Maiamari mekânında, atölyenin kendi ekipmanlarıyla.
                 </p>
               </div>
               <Link href="/workshops" className="hidden md:inline text-sm editorial-link">
@@ -343,7 +343,7 @@ export default function HomePage() {
                 className="w-full h-full border-0"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                title="Maimari konum"
+                title="Maiamari konum"
               />
             </div>
           </Reveal>

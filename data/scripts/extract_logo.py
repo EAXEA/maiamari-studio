@@ -1,5 +1,5 @@
 """
-MAIMARI logosunu (pembe dairesel etiket) ürün fotoğrafından
+MAIAMARI logosunu (pembe dairesel etiket) ürün fotoğrafından
 crop + dairesel mask + transparent PNG olarak çıkartır.
 """
 from PIL import Image, ImageDraw
