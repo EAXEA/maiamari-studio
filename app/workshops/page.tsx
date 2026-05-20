@@ -10,6 +10,10 @@ const WORKSHOP_IMAGES: Record<string, { src: string; alt: string }> = {
     src: "/images/atolye/watercolor-framed.jpg",
     alt: "Suluboya · zeytin dalı, Duygu Sinan tarafından çerçeveli bir çalışma",
   },
+  "linol-baski-workshop": {
+    src: "/images/atolye/linol-workshop.jpg",
+    alt: "Linol baskı · oyulmuş kalıp ve taze basılmış kare yan yana",
+  },
 };
 
 export default function WorkshopsPage() {
