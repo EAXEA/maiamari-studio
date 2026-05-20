@@ -77,5 +77,8 @@ export interface Business {
   };
   hours: { closingTime: string; note: string };
   googleMapsEmbed: string;
+  googleMapsUrl?: string;
+  latitude?: number;
+  longitude?: number;
   workshops: Workshop[];
 }

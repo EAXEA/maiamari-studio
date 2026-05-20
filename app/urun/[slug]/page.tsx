@@ -8,6 +8,13 @@ import {
 } from "@/lib/data";
 import { formatTRY } from "@/lib/format";
 import { ProductCard } from "@/components/product/product-card";
+import {
+  productSchema,
+  breadcrumbSchema,
+  jsonLdScript,
+} from "@/lib/structured-data";
+
+const BASE_URL = "https://www.maiamari.art";
 
 export async function generateStaticParams() {
   return getAllProducts().map((p) => ({ slug: p.slug }));
@@ -46,8 +53,27 @@ export default async function ProductPage({
     .filter((p) => p.categorySlug === product.categorySlug && p.id !== product.id)
     .slice(0, 4);
 
+  const breadcrumb = breadcrumbSchema(
+    [
+      { name: "Ana sayfa", url: `${BASE_URL}/` },
+      { name: "Mağaza", url: `${BASE_URL}/shop` },
+      ...(cat
+        ? [{ name: cat.name, url: `${BASE_URL}/shop/${cat.slug}` }]
+        : []),
+      { name: product.title, url: `${BASE_URL}/urun/${product.slug}` },
+    ],
+  );
+
   return (
     <div className="container-x py-12 lg:py-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLdScript(productSchema(product))}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLdScript(breadcrumb)}
+      />
       {/* Breadcrumb */}
       <nav className="mb-10 text-xs uppercase tracking-[0.2em] text-[color:var(--color-muted)]">
         <Link href="/shop">Mağaza</Link>

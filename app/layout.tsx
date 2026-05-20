@@ -3,6 +3,12 @@ import { Inter, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
+import {
+  localBusinessSchema,
+  organizationSchema,
+  websiteSchema,
+  jsonLdScript,
+} from "@/lib/structured-data";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -37,12 +43,21 @@ export const metadata: Metadata = {
     siteName: "Maiamari Baskı Atölyesi",
     type: "website",
     locale: "tr_TR",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Maiamari Baskı Atölyesi — Küçükesat, Ankara",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "MAIAMARI · Baskı Atölyesi ve Galeri",
     description:
       "Ankara'da çağdaş bir baskı atölyesi ve galeri.",
+    images: ["/og-image.jpg"],
   },
 };
 
@@ -54,6 +69,20 @@ export default function RootLayout({
       lang="tr"
       className={`${inter.variable} ${display.variable} h-full`}
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={jsonLdScript(localBusinessSchema())}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={jsonLdScript(organizationSchema())}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={jsonLdScript(websiteSchema())}
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-[color:var(--color-background)] text-[color:var(--color-foreground)]">
         <SiteHeader />
         <main className="flex-1">{children}</main>

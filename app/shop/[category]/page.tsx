@@ -10,6 +10,9 @@ import {
 } from "@/lib/data";
 import type { CategorySlug } from "@/lib/types";
 import { ProductCard } from "@/components/product/product-card";
+import { breadcrumbSchema, jsonLdScript } from "@/lib/structured-data";
+
+const BASE_URL = "https://www.maiamari.art";
 
 export async function generateStaticParams() {
   return getCategories().map((c) => ({ category: c.slug }));
@@ -53,8 +56,18 @@ export default async function CategoryPage({
   const categoryBanner: Partial<Record<string, { src: string; alt: string }>> = {};
   const banner = categoryBanner[cat.slug];
 
+  const breadcrumb = breadcrumbSchema([
+    { name: "Ana sayfa", url: `${BASE_URL}/` },
+    { name: "Mağaza", url: `${BASE_URL}/shop` },
+    { name: cat.name, url: `${BASE_URL}/shop/${cat.slug}` },
+  ]);
+
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLdScript(breadcrumb)}
+      />
       {banner && (
         <section className="relative w-full aspect-[21/9] max-h-[480px] overflow-hidden bg-[color:var(--color-surface-2)]">
           <Image
