@@ -49,13 +49,8 @@ export default async function CategoryPage({
   const biz = getBusiness();
   const whatsapp = biz.contact.whatsapp.replace(/\D/g, "");
 
-  // Kategori-spesifik atölye banner görselleri (varsa)
-  const categoryBanner: Partial<Record<string, { src: string; alt: string }>> = {
-    aletler: {
-      src: "/images/atolye/tools-grid.jpg",
-      alt: "Atölyenin alet duvarı — merdaneler ve oyma bıçakları",
-    },
-  };
+  // Kategori-spesifik atölye banner görselleri (eklemek için slug:src ekle)
+  const categoryBanner: Partial<Record<string, { src: string; alt: string }>> = {};
   const banner = categoryBanner[cat.slug];
 
   return (
