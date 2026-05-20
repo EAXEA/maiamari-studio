@@ -39,3 +39,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# data/ — geliştirme artifacts (runtime'da JSON kullanılır, görseller public/'tedir)
+/data/portfolio_raw/
+/data/screenshots/
+/data/images/
+/data/brand/
+
+# Playwright local artifacts
+/.playwright-mcp/
+/maimari-*.png

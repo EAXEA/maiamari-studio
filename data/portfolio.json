@@ -1,0 +1,66 @@
+[
+  {
+    "id": "print-01",
+    "slug": "baski-01",
+    "title": "Baskı № 1",
+    "description": "Sanatçı Duygu Sinan'ın atölyede çoğaltılmış linol baskısı. Detaylı bilgi ve edisyon bilgisi için iletişime geçin.",
+    "image": "/images/portfolio/print_01.jpg",
+    "year": 2018
+  },
+  {
+    "id": "print-02",
+    "slug": "baski-02",
+    "title": "Baskı № 2",
+    "description": "Sanatçı Duygu Sinan'ın atölyede çoğaltılmış linol baskısı. Detaylı bilgi ve edisyon bilgisi için iletişime geçin.",
+    "image": "/images/portfolio/print_02.jpg",
+    "year": 2018
+  },
+  {
+    "id": "print-03",
+    "slug": "baski-03",
+    "title": "Baskı № 3",
+    "description": "Sanatçı Duygu Sinan'ın atölyede çoğaltılmış linol baskısı. Detaylı bilgi ve edisyon bilgisi için iletişime geçin.",
+    "image": "/images/portfolio/print_03.jpg",
+    "year": 2018
+  },
+  {
+    "id": "print-04",
+    "slug": "baski-04",
+    "title": "Baskı № 4",
+    "description": "Sanatçı Duygu Sinan'ın atölyede çoğaltılmış linol baskısı. Detaylı bilgi ve edisyon bilgisi için iletişime geçin.",
+    "image": "/images/portfolio/print_04.jpg",
+    "year": 2018
+  },
+  {
+    "id": "print-05",
+    "slug": "baski-05",
+    "title": "Baskı № 5",
+    "description": "Sanatçı Duygu Sinan'ın atölyede çoğaltılmış linol baskısı. Detaylı bilgi ve edisyon bilgisi için iletişime geçin.",
+    "image": "/images/portfolio/print_05.jpg",
+    "year": 2018
+  },
+  {
+    "id": "print-06",
+    "slug": "baski-06",
+    "title": "Baskı № 6",
+    "description": "Sanatçı Duygu Sinan'ın atölyede çoğaltılmış linol baskısı. Detaylı bilgi ve edisyon bilgisi için iletişime geçin.",
+    "image": "/images/portfolio/print_06.jpg",
+    "year": 2018
+  },
+  {
+    "id": "print-07",
+    "slug": "baski-07",
+    "title": "Baskı № 7",
+    "description": "Sanatçı Duygu Sinan'ın atölyede çoğaltılmış linol baskısı. Detaylı bilgi ve edisyon bilgisi için iletişime geçin.",
+    "image": "/images/portfolio/print_07.jpg",
+    "year": 2018
+  },
+  {
+    "id": "print-08",
+    "slug": "baski-08",
+    "title": "Baskı № 8",
+    "description": "Sanatçı Duygu Sinan'ın atölyede çoğaltılmış linol baskısı. Detaylı bilgi ve edisyon bilgisi için iletişime geçin.",
+    "image": "/images/portfolio/print_08.jpg",
+    "year": 2021
+  }
+]

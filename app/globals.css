@@ -1,26 +1,244 @@
 @import "tailwindcss";
 
+/* ============================================================
+   MAIMARI.STUDIO — Brand Design Tokens
+   ------------------------------------------------------------
+   Google Arts & Culture estetiği ile harmanlanmış sade palet:
+   - Açık krema-beyaz zemin (museum/gallery feel)
+   - Cevizahşap koyu kahve sadece accent
+   - Pembe / nane / press-red spot vurgular
+   - Editorial display + clean sans
+   ============================================================ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-background: #FAF7F2;
+  --color-surface: #F4EFE8;
+  --color-surface-2: #ECE4D7;
+  --color-foreground: #1A1A1A;
+  --color-muted: #6B6157;
+  --color-soft: #8C8278;
+  --color-border: #E2D9CA;
+  --color-hairline: #ECE4D7;
+
+  --color-walnut: #5A3E2B;
+  --color-walnut-dark: #2B1E12;
+  --color-accent-pink: #E8B6C8;
+  --color-mint: #B9D8CC;
+  --color-press-red: #C43A2F;
+
+  --color-success: #4A7C59;
+  --color-warning: #C49A2F;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+  --color-surface: var(--color-surface);
+  --color-surface-2: var(--color-surface-2);
+  --color-muted: var(--color-muted);
+  --color-soft: var(--color-soft);
+  --color-border: var(--color-border);
+  --color-hairline: var(--color-hairline);
+
+  --color-walnut: var(--color-walnut);
+  --color-walnut-dark: var(--color-walnut-dark);
+  --color-pink: var(--color-accent-pink);
+  --color-mint: var(--color-mint);
+  --color-press: var(--color-press-red);
+
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-feature-settings: "ss01", "cv02", "cv11";
+}
+
+h1, h2, h3, h4, .display {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+}
+
+/* Editorial link — inherit + soft hover */
+a { color: inherit; text-decoration: none; }
+a:hover { opacity: 0.7; transition: opacity 0.2s ease; }
+
+/* Gallery-style horizontal hairline */
+.rule {
+  height: 1px;
+  background: var(--color-border);
+}
+.hairline {
+  height: 1px;
+  background: var(--color-hairline);
+}
+
+/* Subtle hover for product cards */
+.card-hover {
+  transition: transform 0.4s cubic-bezier(.2,.7,.2,1), opacity 0.4s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+}
+
+/* Container — standard */
+.container-x {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+  max-width: 1400px;
+}
+@media (min-width: 1024px) {
+  .container-x { padding-inline: 2.5rem; }
+}
+
+/* Container — wider, A&C style (rail headers, hero margins) */
+.container-wide {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+  max-width: 1680px;
+}
+@media (min-width: 1024px) {
+  .container-wide { padding-inline: 3rem; }
+}
+
+/* A&C-style small eyebrow caption */
+.eyebrow {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+.eyebrow-light {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* Display type ramps — A&C uses very large, tight serif italics */
+.display-xl {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(3.5rem, 9vw, 8rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+.display-lg {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  line-height: 1;
+  letter-spacing: -0.015em;
+}
+.display-md {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.875rem, 3.5vw, 3rem);
+  line-height: 1.05;
+}
+
+/* A&C rail — horizontal snap scroller */
+.rail {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scroll-padding-inline: 1.5rem;
+  padding-inline: 1.5rem;
+  padding-block: 0.25rem 1rem;
+}
+@media (min-width: 1024px) {
+  .rail {
+    gap: 1.75rem;
+    scroll-padding-inline: 3rem;
+    padding-inline: 3rem;
   }
 }
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.rail > * {
+  scroll-snap-align: start;
+  flex: 0 0 auto;
 }
+
+/* Edge-fade for rail (optional cue) */
+.rail-fade {
+  position: relative;
+}
+.rail-fade::before,
+.rail-fade::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  width: 3rem;
+  pointer-events: none;
+  z-index: 2;
+}
+.rail-fade::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--color-background), transparent);
+}
+.rail-fade::after {
+  right: 0;
+  background: linear-gradient(-90deg, var(--color-background), transparent);
+}
+
+/* No scrollbar */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* A&C-style underline-on-hover for editorial links */
+.editorial-link {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 2px;
+  border-bottom: 1px solid currentColor;
+  transition: letter-spacing 0.4s ease;
+}
+.editorial-link:hover {
+  letter-spacing: 0.04em;
+  opacity: 1;
+}
+
+/* Tiny chip — used in headers and filter rails */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 14px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  white-space: nowrap;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+.chip:hover {
+  border-color: var(--color-foreground);
+  opacity: 1;
+}
+.chip[data-active="true"] {
+  background: var(--color-foreground);
+  color: var(--color-background);
+  border-color: var(--color-foreground);
+}
+
+/* Frame ratio helpers */
+.ratio-portrait { aspect-ratio: 3 / 4; }
+.ratio-landscape { aspect-ratio: 16 / 10; }
+.ratio-wide { aspect-ratio: 21 / 9; }
+.ratio-square { aspect-ratio: 1 / 1; }

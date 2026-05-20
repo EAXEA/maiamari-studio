@@ -1,0 +1,11 @@
+{
+  "handle": "maiamari.studio",
+  "url": "https://www.instagram.com/maiamari.studio/",
+  "name": "Maiamari Baskı Atölyesi",
+  "followers": 320,
+  "following": 190,
+  "posts": 19,
+  "profilePicLocal": "data/images/instagram/profile_pic.jpg",
+  "note": "Instagram login wall — post galerisini scrape edemedik. Sitede Instagram embed widget kullanılacak. Tam içerik için Meta Graph API token veya manuel asset yüklemesi gerek.",
+  "fetched_at": "2026-05-17"
+}

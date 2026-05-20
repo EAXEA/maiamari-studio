@@ -1,0 +1,55 @@
+{
+  "name": "Maiamari Baskı Atölyesi",
+  "tagline": "Ankara'da bir sanat stüdyosu / Baskı atölyesi",
+  "owner": {
+    "instagram": "duygu.sinan.printmaker"
+  },
+  "address": {
+    "neighborhood": "Küçükesat",
+    "street": "Bülbülderesi Cd. No:90 D:B",
+    "postalCode": "06660",
+    "district": "Çankaya",
+    "city": "Ankara",
+    "country": "Türkiye",
+    "full": "Küçükesat, Bülbülderesi Cd. No:90 D:B, 06660 Çankaya/Ankara"
+  },
+  "transit": {
+    "nearestMetro": "Kolej"
+  },
+  "contact": {
+    "phonePrimary": "+90 506 588 92 77",
+    "phoneSecondary": "+90 507 746 2898",
+    "whatsapp": "+90 506 588 92 77",
+    "instagram": "https://www.instagram.com/maiamari.studio/",
+    "shopier": "https://www.shopier.com/maiamari"
+  },
+  "hours": {
+    "closingTime": "18:00",
+    "note": "Detaylı saatler için DM"
+  },
+  "googleMapsKgmid": "/g/11yhlmlkj5",
+  "latitude": 39.9095899,
+  "longitude": 32.8674945,
+  "googleMapsEmbed": "https://maps.google.com/maps?q=39.9095899,32.8674945&z=18&output=embed",
+  "googleMapsUrl": "https://www.google.com/maps/place/Maiamari+Bask%C4%B1+At%C3%B6lyesi/@39.9095899,32.8674945,17z/data=!4m5!3m4!1s0x14d34f322080aa31:0x5ccb74fbce256277!8m2!3d39.9095899!4d32.8674945",
+  "workshops": [
+    {
+      "title": "Suluboya Aylık Program",
+      "instructor": "Tolga İNALÖZ",
+      "schedule": "Her Perşembe ve Cumartesi 11:00 – 14:00",
+      "registration": "DM üzerinden"
+    },
+    {
+      "title": "Çanta Baskı Workshop",
+      "instructor": "Duygu Sinan",
+      "date": "12 Ekim Pazar",
+      "registration": "DM veya 0506 588 92 77"
+    }
+  ],
+  "googleBusinessProfile": {
+    "customerInteractions": 279,
+    "verified": true
+  },
+  "fetched_at": "2026-05-17",
+  "source": "https://share.google/16HECC11aW42KISvL"
+}
