@@ -87,8 +87,8 @@ export default function HomePage() {
         preLine="Şu an ilgileniyor musun?"
         topic="Linol baskı"
         description="Maiamari, sanatçı Duygu Sinan'ın atölyesi. Atölyede elle çoğaltılan baskılar, doğal liflerden el yapımı kâğıtlar ve baskı programları."
-        image="/images/portfolio/print_05.jpg"
-        imageAlt="Maiamari atölyesinden bir linol baskı"
+        image="/images/atolye/studio-interior-wide.jpg"
+        imageAlt="Maiamari atölyesi — Küçükesat, Ankara"
         primary={{ href: "/galeri", label: "Evet, keşfet" }}
         secondary={{ href: "/workshops", label: "Atölye programı" }}
       />
@@ -129,8 +129,8 @@ export default function HomePage() {
         title="Bir baskı"
         italicTail="nasıl doğar?"
         description="Linol plakanın oyulmasından mürekkebin kâğıdı buluşmasına kadar her aşama atölyede tek elden geçer. Her tabakanın çıkardığı küçük farklar koleksiyonun parçasıdır."
-        image="/images/portfolio/print_06.jpg"
-        imageAlt="Atölyede bir linol baskının yapımı"
+        image="/images/atolye/press-and-brayers.jpg"
+        imageAlt="Atölyenin baskı presi ve merdaneleri"
         href="/journal"
         ctaLabel="Hikayeyi oku"
         align="left"
@@ -216,8 +216,8 @@ export default function HomePage() {
         title="Atölyenin altındaki"
         italicTail="kâğıt fabrikası."
         description="Pamuk, keten ve dut liflerini suya çözüyoruz. Sonra elekten geçirip baskıya hazır kâğıdı tek tek döküyoruz."
-        image="/images/portfolio/print_08.jpg"
-        imageAlt="El yapımı kâğıt üretimi"
+        image="/images/atolye/window-and-press.jpg"
+        imageAlt="Atölye penceresinden — baskı presi ve sokak"
         href="/about"
         ctaLabel="Hikayeyi oku"
         align="right"

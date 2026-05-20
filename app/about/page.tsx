@@ -18,22 +18,22 @@ export default function AboutPage() {
 
       <div className="mt-16 grid lg:grid-cols-[1fr_1.2fr] gap-12 lg:gap-20 items-start">
         <div className="flex flex-col gap-6">
-          <div className="relative aspect-square bg-[color:var(--color-surface)] flex items-center justify-center">
+          <div className="relative aspect-square bg-[color:var(--color-surface-2)] overflow-hidden">
             <Image
-              src="/brand/maimari-logo.png"
-              alt="Maiamari logo"
-              width={260}
-              height={260}
-              className="opacity-95"
-            />
-          </div>
-          <div className="relative aspect-[4/5] bg-[color:var(--color-surface-2)]">
-            <Image
-              src="/images/shopier/38261472/img_00.jpeg"
-              alt="Atölyeden bir kare — Gold linol boyası"
+              src="/images/atolye/gallery-wall.jpg"
+              alt="Atölyenin galeri duvarı — sergilenen linol baskıları"
               fill
               sizes="(max-width: 1024px) 90vw, 40vw"
-              className="object-cover"
+              className="object-cover atolye-tint"
+            />
+          </div>
+          <div className="relative aspect-[4/5] bg-[color:var(--color-surface-2)] overflow-hidden">
+            <Image
+              src="/images/atolye/print-drying.jpg"
+              alt="Atölyede taze basılmış bir kırmızı linol baskı"
+              fill
+              sizes="(max-width: 1024px) 90vw, 40vw"
+              className="object-cover atolye-tint"
             />
           </div>
         </div>

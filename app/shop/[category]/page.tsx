@@ -49,8 +49,30 @@ export default async function CategoryPage({
   const biz = getBusiness();
   const whatsapp = biz.contact.whatsapp.replace(/\D/g, "");
 
+  // Kategori-spesifik atölye banner görselleri (varsa)
+  const categoryBanner: Partial<Record<string, { src: string; alt: string }>> = {
+    aletler: {
+      src: "/images/atolye/tools-grid.jpg",
+      alt: "Atölyenin alet duvarı — merdaneler ve oyma bıçakları",
+    },
+  };
+  const banner = categoryBanner[cat.slug];
+
   return (
-    <div className="container-x py-12 lg:py-16">
+    <div>
+      {banner && (
+        <section className="relative w-full aspect-[21/9] max-h-[480px] overflow-hidden bg-[color:var(--color-surface-2)]">
+          <Image
+            src={banner.src}
+            alt={banner.alt}
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover atolye-tint"
+          />
+        </section>
+      )}
+      <div className="container-x py-12 lg:py-16">
       <header className="mb-12">
         <p className="text-xs tracking-[0.3em] uppercase text-[color:var(--color-muted)]">
           {cat.nameEn}
@@ -165,6 +187,7 @@ export default async function CategoryPage({
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }

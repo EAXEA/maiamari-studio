@@ -1,7 +1,16 @@
+import Image from "next/image";
 import { getBusiness, getWorkshops } from "@/lib/data";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 
 export const metadata = { title: "Atölyeler" };
+
+// Workshop slug → görsel eşlemesi
+const WORKSHOP_IMAGES: Record<string, { src: string; alt: string }> = {
+  "suluboya-aylik-program": {
+    src: "/images/atolye/watercolor-framed.jpg",
+    alt: "Suluboya · zeytin dalı, Duygu Sinan tarafından çerçeveli bir çalışma",
+  },
+};
 
 export default function WorkshopsPage() {
   const biz = getBusiness();
@@ -54,11 +63,24 @@ export default function WorkshopsPage() {
         {workshops.map((w) => {
           const [firstWord, ...restWords] = w.title.split(" ");
           const rest = restWords.join(" ");
+          const img = WORKSHOP_IMAGES[w.slug];
           return (
             <StaggerItem
               key={w.slug}
-              className="border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-10 lg:p-14 flex flex-col group hover:-translate-y-1 transition-transform duration-500"
+              className="border border-[color:var(--color-border)] bg-[color:var(--color-surface)] overflow-hidden flex flex-col group hover:-translate-y-1 transition-transform duration-500"
             >
+              {img && (
+                <div className="relative w-full aspect-[4/3] bg-[color:var(--color-surface-2)] overflow-hidden">
+                  <Image
+                    src={img.src}
+                    alt={img.alt}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover atolye-tint transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
+                  />
+                </div>
+              )}
+              <div className="p-10 lg:p-14 flex flex-col flex-1">
               <p
                 className="text-[10px] tracking-[0.35em] uppercase"
                 style={{ color: "var(--color-walnut)" }}
@@ -121,6 +143,7 @@ export default function WorkshopsPage() {
                 >
                   Instagram DM
                 </a>
+              </div>
               </div>
             </StaggerItem>
           );

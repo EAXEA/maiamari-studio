@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getBusiness } from "@/lib/data";
 
 export const metadata = { title: "İletişim" };
@@ -7,7 +8,23 @@ export default function ContactPage() {
   const whatsapp = biz.contact.whatsapp.replace(/\D/g, "");
 
   return (
-    <div className="container-x py-16 lg:py-24">
+    <div>
+      {/* Storefront banner — atölyenin sokağa açılan yüzü */}
+      <section className="relative w-full aspect-[21/9] max-h-[520px] overflow-hidden bg-[color:var(--color-surface-2)]">
+        <Image
+          src="/images/atolye/storefront.jpg"
+          alt="Maiamari atölyesi — sokağa açılan vitrin"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover atolye-tint"
+        />
+        <figcaption className="absolute bottom-4 lg:bottom-6 left-6 lg:left-10 text-[10px] tracking-[0.32em] uppercase text-white drop-shadow-md">
+          Bülbülderesi Cd. · Küçükesat
+        </figcaption>
+      </section>
+
+      <div className="container-x py-16 lg:py-24">
       <header className="max-w-2xl">
         <p className="text-xs tracking-[0.3em] uppercase text-[color:var(--color-muted)]">
           İletişim
@@ -97,6 +114,7 @@ export default function ContactPage() {
           />
         </div>
       </div>
+    </div>
     </div>
   );
 }
