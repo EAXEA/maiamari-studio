@@ -9,8 +9,7 @@ export type CategorySlug =
   | "merdaneler"            // Brayers
   | "el-yapimi-kagitlar"    // Handmade paper
   | "aletler"               // Tools (carving knife, registration pin, pen)
-  | "cantalar"              // Bags
-  | "atolyeler";            // Workshops
+  | "cantalar";             // Bags
 
 export interface Category {
   slug: CategorySlug;

@@ -87,12 +87,6 @@ export const CATEGORIES: Category[] = [
     nameEn: "Bags",
     description: "Atölye dokunuşlu, kanvas ve puffer kitap çantaları.",
   },
-  {
-    slug: "atolyeler",
-    name: "Atölyeler",
-    nameEn: "Workshops",
-    description: "Suluboya, çanta baskı ve linol baskı atölyeleri.",
-  },
 ];
 
 // ----------------------------------------------------------------
@@ -105,8 +99,11 @@ function classify(title: string): CategorySlug {
   if (t.includes("merdane")) return "merdaneler";
   if (t.includes("kâğıt") || t.includes("kagit") || t.includes("kâğit")) return "el-yapimi-kagitlar";
   if (
-    t.includes("bıçak") ||
-    t.includes("bicak") ||
+    t.includes("bıça") || // bıçak, bıçağı
+    t.includes("bica") ||
+    t.includes("oyma") || // oyma bıçağı / oyma seti
+    t.includes("essdee") ||
+    t.includes("esdee") ||
     t.includes("pin") ||
     t.includes("kalem")
   ) return "aletler";

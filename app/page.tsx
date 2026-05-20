@@ -30,7 +30,7 @@ export default function HomePage() {
   const paper = inStock
     .filter((p) => p.categorySlug === "el-yapimi-kagitlar")
     .slice(0, 8);
-  const cats = getCategories().filter((c) => c.slug !== "atolyeler");
+  const cats = getCategories();
   const biz = getBusiness();
   const workshops = getWorkshops();
   const portfolio = getPortfolio();
