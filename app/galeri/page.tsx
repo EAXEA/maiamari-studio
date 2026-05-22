@@ -12,7 +12,7 @@ export const metadata = {
 export default function GaleriPage() {
   const works = getPortfolio();
   const biz = getBusiness();
-  const whatsapp = biz.contact.whatsapp.replace(/\D/g, "");
+  const phoneHref = `tel:${biz.contact.phonePrimary.replace(/\s/g, "")}`;
 
   // İlk eser → galeri highlight
   const highlight = works[0];
@@ -58,18 +58,14 @@ export default function GaleriPage() {
             </p>
             <div className="flex flex-wrap gap-3 lg:justify-end">
               <a
-                href={`https://wa.me/${whatsapp}?text=${encodeURIComponent(
-                  "Merhaba, galerideki baskılar için bilgi almak istiyorum.",
-                )}`}
-                target="_blank"
-                rel="noreferrer"
+                href={phoneHref}
                 className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase"
                 style={{
                   background: "var(--color-walnut-dark)",
                   color: "var(--color-background)",
                 }}
               >
-                WhatsApp ile bilgi al
+                Telefonla bilgi al
               </a>
               <a
                 href={biz.contact.instagram}
@@ -125,14 +121,10 @@ export default function GaleriPage() {
                   {highlight.description}
                 </p>
                 <a
-                  href={`https://wa.me/${whatsapp}?text=${encodeURIComponent(
-                    `Merhaba, "${highlight.title}" baskısı hakkında bilgi almak istiyorum.`,
-                  )}`}
-                  target="_blank"
-                  rel="noreferrer"
+                  href={phoneHref}
                   className="mt-8 inline-block text-sm editorial-link"
                 >
-                  Bilgi al →
+                  Telefonla bilgi al →
                 </a>
               </div>
             </div>
@@ -212,7 +204,7 @@ export default function GaleriPage() {
               <p className="eyebrow">Edisyon ve sipariş</p>
               <p className="mt-4 max-w-2xl text-base lg:text-lg leading-relaxed text-[color:var(--color-muted)]">
                 Tüm baskılar atölyemizde elle çoğaltılır. Edisyon, boyut ve fiyat
-                bilgisi için bize WhatsApp veya Instagram üzerinden yazabilirsiniz.
+                bilgisi için bize telefon veya Instagram üzerinden ulaşabilirsiniz.
               </p>
             </div>
             <Link

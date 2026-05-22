@@ -44,6 +44,20 @@ export interface PortfolioWork {
   year?: number;
 }
 
+export interface JournalPost {
+  slug: string;
+  title: string;
+  excerpt: string;
+  body?: string;
+  date: string;            // ISO YYYY-MM-DD
+  category?: string;
+  location?: string;
+  locationUrl?: string;
+  image?: string;
+  imageAlt?: string;
+  instagramUrl?: string;
+}
+
 export interface Workshop {
   slug: string;
   title: string;
@@ -71,7 +85,6 @@ export interface Business {
   contact: {
     phonePrimary: string;
     phoneSecondary?: string;
-    whatsapp: string;
     instagram: string;
     shopier: string;
   };

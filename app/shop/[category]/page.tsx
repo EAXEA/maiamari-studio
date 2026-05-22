@@ -50,7 +50,7 @@ export default async function CategoryPage({
   const products = getProductsByCategory(category as CategorySlug);
   const allCats = getCategories();
   const biz = getBusiness();
-  const whatsapp = biz.contact.whatsapp.replace(/\D/g, "");
+  const phoneHref = `tel:${biz.contact.phonePrimary.replace(/\s/g, "")}`;
 
   // Kategori-spesifik atölye banner görselleri (eklemek için slug:src ekle)
   const categoryBanner: Partial<Record<string, { src: string; alt: string }>> = {};
@@ -139,8 +139,8 @@ export default async function CategoryPage({
             </h2>
             <p className="mt-7 max-w-md text-base lg:text-lg leading-relaxed text-[color:var(--color-muted)]">
               Bu koleksiyon için baskılar atölyede tek tek çoğaltılıyor. Yayına
-              girer girmez Instagram&apos;da duyuracağız; istersen WhatsApp&apos;tan
-              da haber alabilirsin.
+              girer girmez Instagram&apos;da duyuracağız; istersen bizi
+              arayarak da bilgi alabilirsin.
             </p>
 
             <div className="mt-9 flex flex-wrap gap-3">
@@ -157,15 +157,11 @@ export default async function CategoryPage({
                 Instagram&apos;da takip et
               </a>
               <a
-                href={`https://wa.me/${whatsapp}?text=${encodeURIComponent(
-                  `Merhaba, "${cat.name}" koleksiyonu yayınlandığında haberim olsun.`,
-                )}`}
-                target="_blank"
-                rel="noreferrer"
+                href={phoneHref}
                 className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase border"
                 style={{ borderColor: "var(--color-walnut-dark)" }}
               >
-                Haberim olsun
+                Telefonla bilgi al
               </a>
             </div>
 

@@ -14,12 +14,24 @@ const WORKSHOP_IMAGES: Record<string, { src: string; alt: string }> = {
     src: "/images/atolye/linol-workshop.jpg",
     alt: "Linol baskı · oyulmuş kalıp ve taze basılmış kare yan yana",
   },
+  "linol-aylik-ders": {
+    src: "/images/atolye/print-drying.jpg",
+    alt: "Linol aylık ders · taze baskıların atölyede kurutulması",
+  },
+  "canta-baski-workshop": {
+    src: "/images/atolye/tools-grid.jpg",
+    alt: "Çanta baskı · atölyedeki alet ve malzeme düzeni",
+  },
+  "el-yapimi-kagit-workshop": {
+    src: "/images/atolye/window-and-press.jpg",
+    alt: "El yapımı kâğıt · atölye penceresinden pres ve çalışma alanı",
+  },
 };
 
-export default function WorkshopsPage() {
+export default function AtolyelerPage() {
   const biz = getBusiness();
   const workshops = getWorkshops();
-  const whatsapp = biz.contact.whatsapp.replace(/\D/g, "");
+  const phoneHref = `tel:${biz.contact.phonePrimary.replace(/\s/g, "")}`;
 
   return (
     <div className="container-x py-16 lg:py-24">
@@ -46,15 +58,13 @@ export default function WorkshopsPage() {
             className="mt-8 max-w-2xl text-base lg:text-lg leading-relaxed"
             style={{ color: "var(--color-muted)" }}
           >
-            Suluboya, çanta baskı ve linol baskı atölyelerimiz Maiamari
-            atölyesinde küçük gruplar halinde düzenlenir. Kayıt için DM veya{" "}
-            <a
-              href={`tel:${biz.contact.phonePrimary.replace(/\s/g, "")}`}
-              className="underline underline-offset-4"
-            >
+            Suluboya, çanta baskı, el yapımı kâğıt ve linol baskı atölyelerimiz
+            Maiamari atölyesinde küçük gruplar halinde düzenlenir. Bilgi ve
+            kayıt için{" "}
+            <a href={phoneHref} className="underline underline-offset-4">
               {biz.contact.phonePrimary}
-            </a>
-            .
+            </a>{" "}
+            numarasını arayın.
           </p>
         </header>
       </Reveal>
@@ -85,69 +95,62 @@ export default function WorkshopsPage() {
                 </div>
               )}
               <div className="p-10 lg:p-14 flex flex-col flex-1">
-              <p
-                className="text-[10px] tracking-[0.35em] uppercase"
-                style={{ color: "var(--color-walnut)" }}
-              >
-                Eğitmen · {w.instructor}
-              </p>
+                <p
+                  className="text-[10px] tracking-[0.35em] uppercase"
+                  style={{ color: "var(--color-walnut)" }}
+                >
+                  Eğitmen · {w.instructor}
+                </p>
 
-              <h2
-                className="font-display mt-5 leading-[0.95]"
-                style={{ color: "var(--color-walnut-dark)" }}
-              >
-                <span className="block text-4xl lg:text-5xl italic">
-                  {firstWord}
-                </span>
-                {rest && (
-                  <span className="block text-4xl lg:text-5xl mt-1">
-                    {rest}
+                <h2
+                  className="font-display mt-5 leading-[0.95]"
+                  style={{ color: "var(--color-walnut-dark)" }}
+                >
+                  <span className="block text-4xl lg:text-5xl italic">
+                    {firstWord}
                   </span>
-                )}
-              </h2>
+                  {rest && (
+                    <span className="block text-4xl lg:text-5xl mt-1">
+                      {rest}
+                    </span>
+                  )}
+                </h2>
 
-              <p
-                className="mt-8 text-base leading-relaxed flex-1 max-w-md"
-                style={{ color: "var(--color-muted)" }}
-              >
-                Kayıt için DM üzerinden veya{" "}
-                <a
-                  href={`tel:${biz.contact.phonePrimary.replace(/\s/g, "")}`}
-                  className="underline underline-offset-4"
+                <p
+                  className="mt-8 text-base leading-relaxed flex-1 max-w-md"
+                  style={{ color: "var(--color-muted)" }}
                 >
-                  {biz.contact.phonePrimary}
-                </a>{" "}
-                numarasını arayın.
-              </p>
+                  Bilgi ve kayıt için{" "}
+                  <a href={phoneHref} className="underline underline-offset-4">
+                    {biz.contact.phonePrimary}
+                  </a>{" "}
+                  numarasını arayabilirsiniz.
+                </p>
 
-              <div className="mt-10 flex flex-wrap gap-3">
-                <a
-                  href={`https://wa.me/${whatsapp}?text=${encodeURIComponent(
-                    `Merhaba, "${w.title}" atölyesi için kayıt yaptırmak istiyorum.`,
-                  )}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex h-11 px-6 items-center text-xs tracking-[0.22em] uppercase transition-opacity hover:opacity-90"
-                  style={{
-                    background: "var(--color-walnut-dark)",
-                    color: "var(--color-background)",
-                  }}
-                >
-                  WhatsApp ile kayıt
-                </a>
-                <a
-                  href={biz.contact.instagram}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex h-11 px-6 items-center text-xs tracking-[0.22em] uppercase border transition-colors hover:bg-[color:var(--color-foreground)] hover:text-[color:var(--color-background)]"
-                  style={{
-                    borderColor: "var(--color-foreground)",
-                    color: "var(--color-foreground)",
-                  }}
-                >
-                  Instagram DM
-                </a>
-              </div>
+                <div className="mt-10 flex flex-wrap gap-3">
+                  <a
+                    href={phoneHref}
+                    className="inline-flex h-11 px-6 items-center text-xs tracking-[0.22em] uppercase transition-opacity hover:opacity-90"
+                    style={{
+                      background: "var(--color-walnut-dark)",
+                      color: "var(--color-background)",
+                    }}
+                  >
+                    Telefonla bilgi al
+                  </a>
+                  <a
+                    href={biz.contact.instagram}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex h-11 px-6 items-center text-xs tracking-[0.22em] uppercase border transition-colors hover:bg-[color:var(--color-foreground)] hover:text-[color:var(--color-background)]"
+                    style={{
+                      borderColor: "var(--color-foreground)",
+                      color: "var(--color-foreground)",
+                    }}
+                  >
+                    Instagram DM
+                  </a>
+                </div>
               </div>
             </StaggerItem>
           );
@@ -178,20 +181,17 @@ export default function WorkshopsPage() {
             className="mt-4 text-sm"
             style={{ color: "var(--color-walnut-dark)" }}
           >
-            Yer kontenjanı sınırlıdır. Kayıt önceliği WhatsApp&apos;tan
-            yapılır.
+            Yer kontenjanı sınırlıdır. Kayıt önceliği telefonla yapılır.
           </p>
           <a
-            href={`https://wa.me/${whatsapp}`}
-            target="_blank"
-            rel="noreferrer"
+            href={phoneHref}
             className="inline-flex h-12 px-8 items-center mt-6 text-xs tracking-[0.25em] uppercase"
             style={{
               background: "var(--color-walnut-dark)",
               color: "var(--color-background)",
             }}
           >
-            WhatsApp&apos;tan yaz
+            Telefonla ara · {biz.contact.phonePrimary}
           </a>
         </div>
       </Reveal>

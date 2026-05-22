@@ -5,7 +5,6 @@ export const metadata = { title: "İletişim" };
 
 export default function ContactPage() {
   const biz = getBusiness();
-  const whatsapp = biz.contact.whatsapp.replace(/\D/g, "");
 
   return (
     <div>
@@ -59,19 +58,6 @@ export default function ContactPage() {
                   className="underline underline-offset-4"
                 >
                   {biz.contact.phonePrimary}
-                </a>
-              </dd>
-              <dt className="text-[color:var(--color-muted)] uppercase tracking-wider">
-                WhatsApp
-              </dt>
-              <dd>
-                <a
-                  href={`https://wa.me/${whatsapp}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="underline underline-offset-4"
-                >
-                  Mesaj gönder
                 </a>
               </dd>
               <dt className="text-[color:var(--color-muted)] uppercase tracking-wider">

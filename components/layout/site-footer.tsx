@@ -29,7 +29,7 @@ export function SiteFooter() {
           <h3 className="eyebrow mb-5">Keşfet</h3>
           <ul className="space-y-3">
             <li><Link href="/galeri">Galeri</Link></li>
-            <li><Link href="/workshops">Atölyeler</Link></li>
+            <li><Link href="/atolyeler">Atölyeler</Link></li>
             <li><Link href="/journal">Günce</Link></li>
             <li><Link href="/about">Hakkımızda</Link></li>
           </ul>
@@ -52,15 +52,6 @@ export function SiteFooter() {
             <li>
               <a href={`tel:${biz.contact.phonePrimary.replace(/\s/g, "")}`}>
                 {biz.contact.phonePrimary}
-              </a>
-            </li>
-            <li>
-              <a
-                href={`https://wa.me/${biz.contact.whatsapp.replace(/\D/g, "")}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                WhatsApp
               </a>
             </li>
             <li>

@@ -16,6 +16,7 @@ import {
 import { FeatureBanner } from "@/components/sections/feature-banner";
 import { DiscoverGrid, type DiscoverItem } from "@/components/sections/discover-grid";
 import { Reveal } from "@/components/motion/reveal";
+import { DISCOVER_THEMES } from "@/lib/discover-themes";
 
 export default function HomePage() {
   const all = getAllProducts();
@@ -34,35 +35,13 @@ export default function HomePage() {
   const biz = getBusiness();
   const workshops = getWorkshops();
   const portfolio = getPortfolio();
-  const whatsapp = biz.contact.whatsapp.replace(/\D/g, "");
+  const phoneHref = `tel:${biz.contact.phonePrimary.replace(/\s/g, "")}`;
 
-  // Tema ile keşfet — sabit 4 tema
-  const themes: DiscoverItem[] = [
-    {
-      label: "Linol Baskı",
-      meta: "Atölyenin ana mecrası",
-      image: "/images/portfolio/print_01.jpg",
-      href: "/shop/linol-baskilari",
-    },
-    {
-      label: "Suluboya",
-      meta: "Aylık program",
-      image: "/images/portfolio/print_03.jpg",
-      href: "/workshops",
-    },
-    {
-      label: "Çanta Baskı",
-      meta: "Tek günlük atölye",
-      image: "/images/portfolio/print_07.jpg",
-      href: "/shop/cantalar",
-    },
-    {
-      label: "El Yapımı Kâğıt",
-      meta: "Doğal liften",
-      image: "/images/portfolio/print_04.jpg",
-      href: "/shop/el-yapimi-kagitlar",
-    },
-  ];
+  // Tema ile keşfet — 4 mecra (tutarlı /atolyeler bağlantısı)
+  const themes: DiscoverItem[] = DISCOVER_THEMES.map((t) => ({
+    ...t,
+    href: "/atolyeler",
+  }));
 
   // Tüm koleksiyonlar — her kategori için bir cover bul
   const collections: DiscoverItem[] = cats.map((c) => {
@@ -87,10 +66,10 @@ export default function HomePage() {
         preLine="Şu an ilgileniyor musun?"
         topic="Linol baskı"
         description="Maiamari, sanatçı Duygu Sinan'ın atölyesi. Atölyede elle çoğaltılan baskılar, doğal liflerden el yapımı kâğıtlar ve baskı programları."
-        image="/images/atolye/studio-interior-wide.jpg"
-        imageAlt="Maiamari atölyesi — Küçükesat, Ankara"
+        image="/images/atolye/storefront.jpg"
+        imageAlt="Maiamari atölyesi · Bülbülderesi Cd. vitrin görünümü"
         primary={{ href: "/galeri", label: "Evet, keşfet" }}
-        secondary={{ href: "/workshops", label: "Atölye programı" }}
+        secondary={{ href: "/atolyeler", label: "Atölye programı" }}
       />
 
       {/* ============================================================
@@ -170,7 +149,7 @@ export default function HomePage() {
                   Maiamari mekânında, atölyenin kendi ekipmanlarıyla.
                 </p>
               </div>
-              <Link href="/workshops" className="hidden md:inline text-sm editorial-link">
+              <Link href="/atolyeler" className="hidden md:inline text-sm editorial-link">
                 Tüm program →
               </Link>
             </div>
@@ -192,15 +171,11 @@ export default function HomePage() {
                   </p>
                 )}
                 <a
-                  href={`https://wa.me/${whatsapp}?text=${encodeURIComponent(
-                    `Merhaba, "${w.title}" atölyesi için kayıt yaptırmak istiyorum.`,
-                  )}`}
-                  target="_blank"
-                  rel="noreferrer"
+                  href={phoneHref}
                   className="mt-7 inline-flex h-10 px-5 items-center self-start border text-[11px] tracking-[0.2em] uppercase hover:bg-[color:var(--color-foreground)] hover:text-[color:var(--color-background)] transition-colors"
                   style={{ borderColor: "var(--color-foreground)" }}
                 >
-                  WhatsApp ile kayıt
+                  Telefonla bilgi al
                 </a>
               </div>
             ))}
@@ -313,16 +288,14 @@ export default function HomePage() {
             </dl>
             <div className="mt-10 flex flex-wrap gap-3">
               <a
-                href={`https://wa.me/${whatsapp}`}
-                target="_blank"
-                rel="noreferrer"
+                href={phoneHref}
                 className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase"
                 style={{
                   background: "var(--color-walnut-dark)",
                   color: "var(--color-background)",
                 }}
               >
-                WhatsApp ile yaz
+                Telefonla ara
               </a>
               <Link
                 href="/contact"

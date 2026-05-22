@@ -4,7 +4,7 @@ import Link from "next/link";
 const NAV = [
   { href: "/galeri", label: "Galeri" },
   { href: "/shop", label: "Mağaza" },
-  { href: "/workshops", label: "Atölyeler" },
+  { href: "/atolyeler", label: "Atölyeler" },
   { href: "/journal", label: "Günce" },
   { href: "/about", label: "Hakkımızda" },
   { href: "/contact", label: "İletişim" },
@@ -65,7 +65,7 @@ export function SiteHeader() {
           <Link
             href="/cart"
             className="relative inline-flex items-center gap-2 hover:opacity-60"
-            aria-label="Sepet"
+            aria-label="Sepet — yakında"
           >
             <svg
               width="18"
@@ -80,8 +80,14 @@ export function SiteHeader() {
               <circle cx="10" cy="21" r="1.2" />
               <circle cx="17" cy="21" r="1.2" />
             </svg>
-            <span className="font-sans text-[13px] text-[color:var(--color-muted)]">
-              (0)
+            <span
+              className="text-[10px] tracking-[0.22em] uppercase px-2 py-0.5"
+              style={{
+                background: "var(--color-surface-2)",
+                color: "var(--color-muted)",
+              }}
+            >
+              Yakında
             </span>
           </Link>
         </div>

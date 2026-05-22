@@ -14,6 +14,7 @@ import type {
   Business,
   Workshop,
   PortfolioWork,
+  JournalPost,
 } from "./types";
 
 // ----------------------------------------------------------------
@@ -105,7 +106,9 @@ function classify(title: string): CategorySlug {
     t.includes("essdee") ||
     t.includes("esdee") ||
     t.includes("pin") ||
-    t.includes("kalem")
+    t.includes("kalem") ||
+    t.includes("şerit") || // ayırma şeritleri
+    t.includes("strip") // stripping tabs
   ) return "aletler";
   if (t.includes("çanta") || t.includes("canta")) return "cantalar";
   return "linol-baskilari";
@@ -242,6 +245,16 @@ export function getWorkshops(): Workshop[] {
 
 export function getPortfolio(): PortfolioWork[] {
   return readJson<PortfolioWork[]>("portfolio.json");
+}
+
+export function getJournalPosts(): JournalPost[] {
+  return readJson<JournalPost[]>("journal.json").sort((a, b) =>
+    b.date.localeCompare(a.date),
+  );
+}
+
+export function getJournalPostBySlug(slug: string): JournalPost | null {
+  return getJournalPosts().find((p) => p.slug === slug) || null;
 }
 
 export function formatTRY(amount: number): string {

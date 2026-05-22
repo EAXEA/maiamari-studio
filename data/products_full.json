@@ -1402,5 +1402,25 @@
       "data/images/shopier/29612045/img_04.jpg"
     ],
     "fetched_at": "2026-05-17T15:31:42"
+  },
+  {
+    "id": "47319192",
+    "url": "https://www.shopier.com/maiamari/47319192",
+    "title": "Stripping Tabs - Ayırma Şeritleri",
+    "statuses": [],
+    "priceText": "65 TL",
+    "priceTRY": 65,
+    "compareAtTRY": null,
+    "imageThumb": "https://cdn.shopier.app/pictures_mid/maiamari_1c3934bae4e30c1a430d72103e45723f.jpeg",
+    "title_full": "Stripping Tabs - Ayırma Şeritleri",
+    "description": "Register pin (kayıt pinleri) ile birlikte kullanılan bu şeritler kâğıdın baskı sırasında kaymasını engeller. 10'lu paketler halinde satılmaktadır.",
+    "gallery": [
+      "https://cdn.shopier.app/pictures_large/maiamari_1c3934bae4e30c1a430d72103e45723f.jpeg"
+    ],
+    "coverImage": "https://cdn.shopier.app/pictures_large/maiamari_1c3934bae4e30c1a430d72103e45723f.jpeg",
+    "localImages": [
+      "data/images/shopier/47319192/img_00.jpeg"
+    ],
+    "fetched_at": "2026-05-22T00:00:00"
   }
 ]

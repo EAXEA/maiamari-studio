@@ -19,7 +19,6 @@
   "contact": {
     "phonePrimary": "+90 506 588 92 77",
     "phoneSecondary": "+90 507 746 2898",
-    "whatsapp": "+90 506 588 92 77",
     "instagram": "https://www.instagram.com/maiamari.studio/",
     "shopier": "https://www.shopier.com/maiamari"
   },
@@ -40,6 +39,21 @@
     },
     {
       "title": "Linol Baskı Workshop",
+      "instructor": "Duygu Sinan",
+      "registration": "DM veya 0506 588 92 77"
+    },
+    {
+      "title": "Linol Aylık Ders",
+      "instructor": "Duygu Sinan",
+      "registration": "DM veya 0506 588 92 77"
+    },
+    {
+      "title": "Çanta Baskı Workshop",
+      "instructor": "Duygu Sinan",
+      "registration": "DM veya 0506 588 92 77"
+    },
+    {
+      "title": "El Yapımı Kâğıt Workshop",
       "instructor": "Duygu Sinan",
       "registration": "DM veya 0506 588 92 77"
     }
