@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { getBusiness } from "@/lib/data";
+import { WhatsappComingSoon } from "@/components/inquiry/whatsapp-coming-soon";
 
 export const metadata = { title: "İletişim" };
 
@@ -40,9 +41,19 @@ export default function ContactPage() {
             <address className="not-italic text-base leading-relaxed">
               {biz.address.full}
               <br />
-              <span className="text-sm text-[color:var(--color-muted)]">
-                Yakın metro: {biz.transit.nearestMetro}
+              <span className="block mt-2 text-sm text-[color:var(--color-muted)]">
+                Yakın metro: <strong className="font-normal">{biz.transit.nearestMetro}</strong>
+                {biz.transit.metroDistance && ` · ${biz.transit.metroDistance}`}
+                {biz.transit.metroWalkMinutes && ` · ${biz.transit.metroWalkMinutes} dk yürüyüş`}
               </span>
+              {biz.transit.nearestBusStop && (
+                <span className="block mt-1 text-sm text-[color:var(--color-muted)]">
+                  Otobüs durağı: <strong className="font-normal">{biz.transit.nearestBusStop}</strong>
+                  {biz.transit.busStopWalkMinutes && ` · ${biz.transit.busStopWalkMinutes} dk`}
+                  {biz.transit.busLines && biz.transit.busLines.length > 0 &&
+                    ` · hatlar ${biz.transit.busLines.join(", ")}`}
+                </span>
+              )}
             </address>
           </section>
 
@@ -59,6 +70,12 @@ export default function ContactPage() {
                 >
                   {biz.contact.phonePrimary}
                 </a>
+              </dd>
+              <dt className="text-[color:var(--color-muted)] uppercase tracking-wider">
+                WhatsApp
+              </dt>
+              <dd>
+                <WhatsappComingSoon variant="inline" />
               </dd>
               <dt className="text-[color:var(--color-muted)] uppercase tracking-wider">
                 Instagram

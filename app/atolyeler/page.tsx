@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { getBusiness, getWorkshops } from "@/lib/data";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
+import { WhatsappComingSoon } from "@/components/inquiry/whatsapp-coming-soon";
 
 export const metadata = { title: "Atölyeler" };
 
@@ -150,6 +151,7 @@ export default function AtolyelerPage() {
                   >
                     Instagram DM
                   </a>
+                  <WhatsappComingSoon variant="button" />
                 </div>
               </div>
             </StaggerItem>
@@ -183,16 +185,19 @@ export default function AtolyelerPage() {
           >
             Yer kontenjanı sınırlıdır. Kayıt önceliği telefonla yapılır.
           </p>
-          <a
-            href={phoneHref}
-            className="inline-flex h-12 px-8 items-center mt-6 text-xs tracking-[0.25em] uppercase"
-            style={{
-              background: "var(--color-walnut-dark)",
-              color: "var(--color-background)",
-            }}
-          >
-            Telefonla ara · {biz.contact.phonePrimary}
-          </a>
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <a
+              href={phoneHref}
+              className="inline-flex h-12 px-8 items-center text-xs tracking-[0.25em] uppercase"
+              style={{
+                background: "var(--color-walnut-dark)",
+                color: "var(--color-background)",
+              }}
+            >
+              Telefonla ara · {biz.contact.phonePrimary}
+            </a>
+            <WhatsappComingSoon variant="button" className="h-12" />
+          </div>
         </div>
       </Reveal>
     </div>

@@ -4,20 +4,18 @@ import { Reveal } from "@/components/motion/reveal";
 
 export const metadata = { title: "Günce" };
 
-function formatDateTR(iso: string): string {
+function yearMonth(iso: string): { year: string; month: string } {
   const d = new Date(iso + "T00:00:00");
-  return d.toLocaleDateString("tr-TR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+  return {
+    year: d.getFullYear().toString(),
+    month: d.toLocaleDateString("tr-TR", { month: "long" }).toUpperCase(),
+  };
 }
 
 export default function JournalPage() {
-  const posts = getJournalPosts();
-  const [featured, ...rest] = posts;
+  const posts = getJournalPosts(); // newest first
 
-  if (!featured) {
+  if (posts.length === 0) {
     return (
       <div className="container-x py-24 lg:py-32 text-center max-w-xl mx-auto">
         <p className="text-xs tracking-[0.3em] uppercase text-[color:var(--color-muted)]">
@@ -26,10 +24,6 @@ export default function JournalPage() {
         <h1 className="font-display text-4xl lg:text-5xl mt-4">
           Yakında yayında.
         </h1>
-        <p className="text-base text-[color:var(--color-muted)] mt-6 leading-relaxed">
-          Atölyeden notlar, baskı süreçleri ve yaklaşan etkinlikler kısa süre
-          içinde burada.
-        </p>
       </div>
     );
   }
@@ -40,7 +34,7 @@ export default function JournalPage() {
       <section className="container-x pt-16 lg:pt-24">
         <Reveal>
           <p className="text-xs tracking-[0.3em] uppercase text-[color:var(--color-muted)]">
-            Günce
+            Günce · Kronoloji
           </p>
           <h1 className="font-display mt-5 leading-[0.98] max-w-4xl tracking-tight">
             <span className="block text-[clamp(2.5rem,5.5vw,5rem)]">
@@ -51,113 +45,194 @@ export default function JournalPage() {
             </span>
           </h1>
           <p className="mt-8 max-w-2xl text-base lg:text-lg leading-relaxed text-[color:var(--color-muted)]">
-            Atölyenin gündemi, katıldığımız etkinlikler ve baskı süreçlerinden
-            kısa kayıtlar.
+            Atölyenin gündemi, katıldığımız etkinlikler ve dönüşüm
+            hikayemizden kısa kayıtlar — en yeniden eskiye doğru.
+            <span className="hidden md:inline">
+              {" "}Karta gelin, açılır.
+            </span>
           </p>
         </Reveal>
       </section>
 
-      {/* Featured post */}
-      <section className="container-x mt-16 lg:mt-24 pb-16 lg:pb-20">
-        <Reveal>
-          <article className="grid lg:grid-cols-[1.4fr_1fr] gap-8 lg:gap-16 items-start">
-            {featured.image && (
-              <div className="relative aspect-[4/5] lg:aspect-[5/6] w-full overflow-hidden bg-[color:var(--color-surface-2)]">
-                <Image
-                  src={featured.image}
-                  alt={featured.imageAlt || featured.title}
-                  fill
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 58vw"
-                  className="object-cover atolye-tint"
-                />
-              </div>
-            )}
-            <div className="lg:pt-6">
-              <p className="text-[10px] tracking-[0.35em] uppercase text-[color:var(--color-walnut)]">
-                {featured.category ?? "Atölyeden"} ·{" "}
-                {formatDateTR(featured.date)}
-              </p>
-              <h2 className="font-display mt-5 text-3xl md:text-4xl lg:text-5xl leading-[1.05] tracking-tight">
-                <span className="italic">{featured.title}</span>
-              </h2>
-              {featured.location && (
-                <p className="mt-4 text-sm tracking-wide text-[color:var(--color-muted)]">
-                  {featured.locationUrl ? (
-                    <a
-                      href={featured.locationUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="underline underline-offset-4 hover:text-[color:var(--color-foreground)]"
-                    >
-                      {featured.location} ↗
-                    </a>
-                  ) : (
-                    featured.location
-                  )}
-                </p>
-              )}
-              <p className="mt-8 text-base lg:text-lg leading-relaxed text-[color:var(--color-foreground)] max-w-prose">
-                {featured.body ?? featured.excerpt}
-              </p>
-              {featured.instagramUrl && (
-                <a
-                  href={featured.instagramUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-10 inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase border"
-                  style={{ borderColor: "var(--color-foreground)" }}
-                >
-                  Instagram'da gör →
-                </a>
-              )}
-            </div>
-          </article>
-        </Reveal>
-      </section>
+      {/* Timeline */}
+      <section className="container-x mt-12 lg:mt-16 pb-16 lg:pb-24">
+        <div className="relative">
+          {/* Vertical axis */}
+          <div
+            className="absolute top-2 bottom-2 w-px hidden md:block left-1/2 -translate-x-1/2"
+            style={{ background: "var(--color-hairline)" }}
+            aria-hidden
+          />
+          <div
+            className="absolute top-2 bottom-2 w-px md:hidden left-3"
+            style={{ background: "var(--color-hairline)" }}
+            aria-hidden
+          />
 
-      {/* Rest of the posts */}
-      {rest.length > 0 && (
-        <section className="container-x py-16 lg:py-20 border-t border-[color:var(--color-hairline)]">
-          <p className="eyebrow mb-10">Diğer kayıtlar</p>
-          <ul className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-12">
-            {rest.map((p) => (
-              <li key={p.slug} className="group">
-                {p.image && (
-                  <div className="relative aspect-[5/4] w-full overflow-hidden bg-[color:var(--color-surface-2)]">
-                    <Image
-                      src={p.image}
-                      alt={p.imageAlt || p.title}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                      className="object-cover atolye-tint transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]"
+          <ol className="space-y-12 lg:space-y-20">
+            {posts.map((post, i) => {
+              const { year, month } = yearMonth(post.date);
+              const isRight = i % 2 === 0;
+              const gallery = post.gallery && post.gallery.length > 0
+                ? post.gallery
+                : (post.image ? [post.image] : []);
+              const extraGallery = gallery.slice(1); // cover hariç ek görseller
+
+              return (
+                <Reveal key={post.slug} delay={i * 0.05}>
+                  <li className="relative md:grid md:grid-cols-2 md:gap-12 lg:gap-16 items-start pl-10 md:pl-0">
+                    {/* Mobile node */}
+                    <div className="absolute md:hidden left-0 top-1 flex flex-col items-center gap-2">
+                      <span
+                        className="block w-3 h-3 rounded-full"
+                        style={{ background: "var(--color-walnut-dark)" }}
+                      />
+                    </div>
+
+                    {/* Date column (desktop alternating) */}
+                    <div
+                      className={`hidden md:flex flex-col ${
+                        isRight ? "md:order-1 md:items-end md:text-right md:pr-12" : "md:order-2 md:items-start md:pl-12"
+                      }`}
+                    >
+                      <div className="sticky top-24">
+                        <p
+                          className="font-display italic text-5xl lg:text-6xl leading-none"
+                          style={{ color: "var(--color-walnut-dark)" }}
+                        >
+                          {year}
+                        </p>
+                        <p className="mt-2 text-xs tracking-[0.3em] uppercase text-[color:var(--color-muted)]">
+                          {month}
+                        </p>
+                        {post.dateLabel && (
+                          <p className="mt-3 text-sm text-[color:var(--color-muted)]">
+                            {post.dateLabel}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Center node (desktop) */}
+                    <div
+                      className="hidden md:block absolute left-1/2 -translate-x-1/2 top-3 w-3 h-3 rounded-full z-10"
+                      style={{ background: "var(--color-walnut-dark)" }}
+                      aria-hidden
                     />
-                  </div>
-                )}
-                <p className="mt-4 text-[10px] tracking-[0.32em] uppercase text-[color:var(--color-muted)]">
-                  {p.category ?? "Atölyeden"} · {formatDateTR(p.date)}
-                </p>
-                <h3 className="font-display mt-2 text-xl lg:text-2xl leading-snug">
-                  {p.title}
-                </h3>
-                <p className="mt-3 text-sm text-[color:var(--color-muted)] leading-relaxed">
-                  {p.excerpt}
-                </p>
-                {p.instagramUrl && (
-                  <a
-                    href={p.instagramUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="mt-4 inline-block text-sm editorial-link"
-                  >
-                    Instagram'da gör →
-                  </a>
-                )}
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+
+                    {/* CARD — image timeline'a yakın, text dışa açılır */}
+                    <article
+                      className={`group bg-[color:var(--color-surface)] border border-[color:var(--color-border)] overflow-hidden transition-all duration-500 ease-out md:hover:shadow-lg md:hover:-translate-y-1 md:flex ${
+                        isRight
+                          ? "md:order-2 md:ml-10 md:flex-row"
+                          : "md:order-1 md:mr-10 md:flex-row-reverse"
+                      }`}
+                    >
+                      {/* Cover — timeline tarafı. self-start + max-h ile sabit
+                          yükseklik; hover'da kart text expand olsa bile image
+                          cell büyümez → düşük çözünürlük asset pikselleşmez. */}
+                      {post.image && (
+                        <div className="relative w-full aspect-[4/5] md:w-[42%] md:aspect-auto md:self-start md:min-h-[300px] md:max-h-[420px] md:sticky md:top-24 bg-[color:var(--color-surface-2)] overflow-hidden shrink-0">
+                          <Image
+                            src={post.image}
+                            alt={post.imageAlt || post.title}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 30vw"
+                            quality={90}
+                            className="object-cover atolye-tint transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
+                          />
+                        </div>
+                      )}
+
+                      {/* Mini meta — always visible */}
+                      <div className="p-6 lg:p-8 md:flex-1 md:min-w-0">
+                        <p className="text-[10px] tracking-[0.35em] uppercase text-[color:var(--color-walnut)]">
+                          {post.category ?? "Atölyeden"}
+                          {post.dateLabel && (
+                            <span className="md:hidden">
+                              {" · "}{post.dateLabel}
+                            </span>
+                          )}
+                        </p>
+                        <h2
+                          className="font-display mt-3 text-2xl lg:text-3xl leading-snug"
+                          style={{ color: "var(--color-walnut-dark)" }}
+                        >
+                          <span className="italic">{post.title}</span>
+                        </h2>
+                        <p className="mt-4 text-sm lg:text-base leading-relaxed text-[color:var(--color-muted)]">
+                          {post.excerpt}
+                        </p>
+
+                        {/* EXPAND-ON-HOVER block (desktop) — mobile always open */}
+                        <div className="max-md:mt-5 md:max-h-0 md:opacity-0 md:overflow-hidden md:group-hover:max-h-[1200px] md:group-hover:opacity-100 md:transition-all md:duration-500 md:ease-out">
+                          <div className="md:pt-5">
+                            {post.location && (
+                              <p className="text-sm text-[color:var(--color-muted)] mb-4">
+                                {post.locationUrl ? (
+                                  <a
+                                    href={post.locationUrl}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="underline underline-offset-4 hover:text-[color:var(--color-foreground)]"
+                                  >
+                                    {post.location} ↗
+                                  </a>
+                                ) : (
+                                  post.location
+                                )}
+                              </p>
+                            )}
+
+                            {post.body && (
+                              <div className="text-sm lg:text-[15px] leading-relaxed text-[color:var(--color-foreground)] whitespace-pre-line max-w-prose">
+                                {post.body}
+                              </div>
+                            )}
+
+                            {/* Gallery thumbnails */}
+                            {extraGallery.length > 0 && (
+                              <div className="mt-6 grid grid-cols-4 gap-1.5">
+                                {extraGallery.map((src, idx) => (
+                                  <div
+                                    key={src + idx}
+                                    className="relative aspect-square bg-[color:var(--color-surface-2)] overflow-hidden border border-[color:var(--color-hairline)]"
+                                  >
+                                    <Image
+                                      src={src}
+                                      alt={`${post.title} — görsel ${idx + 2}`}
+                                      fill
+                                      sizes="(max-width: 768px) 22vw, 160px"
+                                      quality={82}
+                                      className="object-cover hover:scale-105 transition-transform duration-500"
+                                    />
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+
+                            {post.instagramUrl && (
+                              <a
+                                href={post.instagramUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="mt-6 inline-flex h-10 px-5 items-center text-[11px] tracking-[0.22em] uppercase border"
+                                style={{ borderColor: "var(--color-foreground)" }}
+                              >
+                                Instagram&apos;da gör →
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                  </li>
+                </Reveal>
+              );
+            })}
+          </ol>
+        </div>
+      </section>
     </>
   );
 }

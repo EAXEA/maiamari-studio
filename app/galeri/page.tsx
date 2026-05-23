@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { getPortfolio, getBusiness } from "@/lib/data";
 import { Reveal } from "@/components/motion/reveal";
+import { InstagramInquiryButton } from "@/components/inquiry/instagram-inquiry-button";
+import { WhatsappComingSoon } from "@/components/inquiry/whatsapp-coming-soon";
 
 export const metadata = {
   title: "Galeri",
@@ -50,12 +52,27 @@ export default function GaleriPage() {
             </span>
           </h1>
           <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 lg:gap-20 mt-10 items-start">
-            <p className="text-base lg:text-lg leading-relaxed max-w-prose text-[color:var(--color-muted)]">
-              Sanatçı Duygu Sinan&apos;ın atölyede elle bastığı, sayılı
-              edisyondaki linol baskıları. Her bir tabaka atölyede tek tek
-              üretilir; mürekkebin kâğıt üzerindeki izi ve her tabakanın
-              çıkardığı küçük farklar koleksiyonun parçasıdır.
-            </p>
+            <div className="max-w-prose">
+              <p className="text-base lg:text-lg leading-relaxed text-[color:var(--color-muted)]">
+                Sanatçı Duygu Sinan&apos;ın atölyede elle bastığı, sayılı
+                edisyondaki linol baskıları. Her bir tabaka atölyede tek tek
+                üretilir; mürekkebin kâğıt üzerindeki izi ve her tabakanın
+                çıkardığı küçük farklar koleksiyonun parçasıdır.
+              </p>
+              <p
+                className="mt-5 text-sm italic leading-relaxed"
+                style={{ color: "var(--color-walnut)" }}
+              >
+                Yakında: galerideki tüm eserler mağazada{" "}
+                <Link
+                  href="/shop/linol-baskilari"
+                  className="underline underline-offset-4 hover:text-[color:var(--color-foreground)] not-italic"
+                >
+                  Linol Baskıları
+                </Link>{" "}
+                kategorisinde satışa sunulacak.
+              </p>
+            </div>
             <div className="flex flex-wrap gap-3 lg:justify-end">
               <a
                 href={phoneHref}
@@ -67,15 +84,12 @@ export default function GaleriPage() {
               >
                 Telefonla bilgi al
               </a>
-              <a
-                href={biz.contact.instagram}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase border"
+              <InstagramInquiryButton
+                label="Instagram'dan bilgi al"
+                className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase border whitespace-nowrap"
                 style={{ borderColor: "var(--color-foreground)" }}
-              >
-                Instagram&apos;da takip et
-              </a>
+              />
+              <WhatsappComingSoon variant="button" />
             </div>
           </div>
         </Reveal>
@@ -120,12 +134,17 @@ export default function GaleriPage() {
                 <p className="mt-8 text-base leading-relaxed text-[color:var(--color-muted)] max-w-prose">
                   {highlight.description}
                 </p>
-                <a
-                  href={phoneHref}
-                  className="mt-8 inline-block text-sm editorial-link"
-                >
-                  Telefonla bilgi al →
-                </a>
+                <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm">
+                  <a href={phoneHref} className="editorial-link">
+                    Telefonla bilgi al →
+                  </a>
+                  <InstagramInquiryButton
+                    title={highlight.title}
+                    label="Instagram'dan bilgi al →"
+                    className="editorial-link"
+                  />
+                  <WhatsappComingSoon variant="inline" />
+                </div>
               </div>
             </div>
           </Reveal>
@@ -177,7 +196,7 @@ export default function GaleriPage() {
                   sizes="(max-width: 768px) 50vw, 33vw"
                   className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]"
                 />
-                <figcaption className="absolute inset-x-0 bottom-0 p-4 lg:p-5 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-500 bg-gradient-to-t from-black/65 to-transparent">
+                <figcaption className="absolute inset-x-0 bottom-0 p-4 lg:p-5 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-500 bg-gradient-to-t from-black/70 to-transparent">
                   <p
                     className="eyebrow"
                     style={{ color: "rgba(255,255,255,0.78)" }}
@@ -187,6 +206,11 @@ export default function GaleriPage() {
                   <h3 className="font-display text-white text-lg lg:text-xl mt-1 italic">
                     {w.title}
                   </h3>
+                  <InstagramInquiryButton
+                    title={w.title}
+                    label="Instagram'dan bilgi al →"
+                    className="mt-2 inline-block text-[11px] tracking-[0.15em] text-white/90 hover:text-white underline underline-offset-4"
+                  />
                 </figcaption>
               </figure>
             );
@@ -203,8 +227,16 @@ export default function GaleriPage() {
             <div>
               <p className="eyebrow">Edisyon ve sipariş</p>
               <p className="mt-4 max-w-2xl text-base lg:text-lg leading-relaxed text-[color:var(--color-muted)]">
-                Tüm baskılar atölyemizde elle çoğaltılır. Edisyon, boyut ve fiyat
-                bilgisi için bize telefon veya Instagram üzerinden ulaşabilirsiniz.
+                Tüm baskılar atölyemizde elle çoğaltılır. Yakında galerideki
+                eserlerin tamamı mağazada{" "}
+                <Link
+                  href="/shop/linol-baskilari"
+                  className="underline underline-offset-4 hover:text-[color:var(--color-foreground)]"
+                >
+                  Linol Baskıları
+                </Link>{" "}
+                başlığında satışa sunulacak. Şimdilik edisyon, boyut ve fiyat
+                bilgisi için telefon veya Instagram üzerinden ulaşabilirsiniz.
               </p>
             </div>
             <Link

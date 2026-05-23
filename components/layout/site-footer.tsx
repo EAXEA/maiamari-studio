@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getBusiness } from "@/lib/data";
+import { WhatsappComingSoon } from "@/components/inquiry/whatsapp-coming-soon";
 
 export function SiteFooter() {
   const biz = getBusiness();
@@ -21,7 +22,18 @@ export function SiteFooter() {
             <br />
             <span className="block mt-1 opacity-70">
               Yakın metro: {biz.transit.nearestMetro}
+              {biz.transit.metroWalkMinutes
+                ? ` · ${biz.transit.metroWalkMinutes} dk yürüyüş`
+                : ""}
             </span>
+            {biz.transit.nearestBusStop && (
+              <span className="block mt-1 opacity-70">
+                Otobüs: {biz.transit.nearestBusStop}
+                {biz.transit.busStopWalkMinutes
+                  ? ` · ${biz.transit.busStopWalkMinutes} dk`
+                  : ""}
+              </span>
+            )}
           </address>
         </div>
 
@@ -58,6 +70,9 @@ export function SiteFooter() {
               <a href={biz.contact.instagram} target="_blank" rel="noreferrer">
                 Instagram
               </a>
+            </li>
+            <li>
+              <WhatsappComingSoon variant="list" />
             </li>
             <li>
               <a href={biz.contact.shopier} target="_blank" rel="noreferrer">

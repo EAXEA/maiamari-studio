@@ -17,6 +17,7 @@ import { FeatureBanner } from "@/components/sections/feature-banner";
 import { DiscoverGrid, type DiscoverItem } from "@/components/sections/discover-grid";
 import { Reveal } from "@/components/motion/reveal";
 import { DISCOVER_THEMES } from "@/lib/discover-themes";
+import { WhatsappComingSoon } from "@/components/inquiry/whatsapp-coming-soon";
 
 export default function HomePage() {
   const all = getAllProducts();
@@ -193,7 +194,7 @@ export default function HomePage() {
         description="Pamuk, keten ve dut liflerini suya çözüyoruz. Sonra elekten geçirip baskıya hazır kâğıdı tek tek döküyoruz."
         image="/images/atolye/window-and-press.jpg"
         imageAlt="Atölye penceresinden — baskı presi ve sokak"
-        href="/about"
+        href="/kagit"
         ctaLabel="Hikayeyi oku"
         align="right"
         tone="dark"
@@ -278,7 +279,25 @@ export default function HomePage() {
               <dt className="text-[color:var(--color-muted)]">Çalışma</dt>
               <dd>Kapanış {biz.hours.closingTime}</dd>
               <dt className="text-[color:var(--color-muted)]">Metro</dt>
-              <dd>{biz.transit.nearestMetro}</dd>
+              <dd>
+                {biz.transit.nearestMetro}
+                {biz.transit.metroDistance && ` · ${biz.transit.metroDistance}`}
+                {biz.transit.metroWalkMinutes && ` · ${biz.transit.metroWalkMinutes} dk`}
+              </dd>
+              {biz.transit.nearestBusStop && (
+                <>
+                  <dt className="text-[color:var(--color-muted)]">Otobüs</dt>
+                  <dd>
+                    {biz.transit.nearestBusStop}
+                    {biz.transit.busStopWalkMinutes && ` · ${biz.transit.busStopWalkMinutes} dk`}
+                    {biz.transit.busLines && biz.transit.busLines.length > 0 && (
+                      <span className="block text-[color:var(--color-muted)] text-xs mt-0.5">
+                        Hatlar: {biz.transit.busLines.join(", ")}
+                      </span>
+                    )}
+                  </dd>
+                </>
+              )}
               <dt className="text-[color:var(--color-muted)]">Instagram</dt>
               <dd>
                 <a href={biz.contact.instagram} target="_blank" rel="noreferrer">
@@ -304,6 +323,7 @@ export default function HomePage() {
               >
                 İletişim
               </Link>
+              <WhatsappComingSoon variant="button" />
             </div>
           </Reveal>
           <Reveal delay={0.15}>

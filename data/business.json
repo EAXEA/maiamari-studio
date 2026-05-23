@@ -14,7 +14,12 @@
     "full": "Küçükesat, Bülbülderesi Cd. No:90 D:B, 06660 Çankaya/Ankara"
   },
   "transit": {
-    "nearestMetro": "Kolej"
+    "nearestMetro": "Kolej",
+    "metroDistance": "≈ 1.8 km",
+    "metroWalkMinutes": 24,
+    "nearestBusStop": "12257 · Esat Dörtyol",
+    "busStopWalkMinutes": 6,
+    "busLines": ["303", "317-7", "319"]
   },
   "contact": {
     "phonePrimary": "+90 506 588 92 77",

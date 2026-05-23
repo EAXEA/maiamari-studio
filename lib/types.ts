@@ -49,12 +49,14 @@ export interface JournalPost {
   title: string;
   excerpt: string;
   body?: string;
-  date: string;            // ISO YYYY-MM-DD
+  date: string;            // ISO YYYY-MM-DD (gün belirsizse YYYY-MM-01)
+  dateLabel?: string;      // İnsan okur: "Nisan 2025", "Ocak 2026" vb.
   category?: string;
   location?: string;
   locationUrl?: string;
-  image?: string;
+  image?: string;          // mini cover
   imageAlt?: string;
+  gallery?: string[];      // hover-expand'de gösterilecek ek görseller
   instagramUrl?: string;
 }
 
@@ -81,7 +83,14 @@ export interface Business {
     country: string;
     full: string;
   };
-  transit: { nearestMetro: string };
+  transit: {
+    nearestMetro: string;
+    metroDistance?: string;
+    metroWalkMinutes?: number;
+    nearestBusStop?: string;
+    busStopWalkMinutes?: number;
+    busLines?: string[];
+  };
   contact: {
     phonePrimary: string;
     phoneSecondary?: string;

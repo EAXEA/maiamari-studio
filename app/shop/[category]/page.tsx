@@ -11,6 +11,7 @@ import {
 import type { CategorySlug } from "@/lib/types";
 import { ProductCard } from "@/components/product/product-card";
 import { breadcrumbSchema, jsonLdScript } from "@/lib/structured-data";
+import { WhatsappComingSoon } from "@/components/inquiry/whatsapp-coming-soon";
 
 const BASE_URL = "https://www.maiamari.art";
 
@@ -163,6 +164,7 @@ export default async function CategoryPage({
               >
                 Telefonla bilgi al
               </a>
+              <WhatsappComingSoon variant="button" />
             </div>
 
             <p className="eyebrow mt-10">
