@@ -22,7 +22,11 @@ export function MobileMenu({ nav, instagramUrl }: Props) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
+  // Hydration-safe portal mount: server'da `document` yok, sadece client
+  // ilk render'dan sonra portal'ı body'e bağlıyoruz. set-state-in-effect
+  // lint kuralı bu özel kalıbı false positive olarak işaretliyor.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 

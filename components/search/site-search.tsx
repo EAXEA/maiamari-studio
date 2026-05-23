@@ -3,6 +3,7 @@
 import {
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type FormEvent,
@@ -25,11 +26,10 @@ type Props = {
 
 export function SiteSearch({ variant = "desktop", onNavigate }: Props = {}) {
   const [query, setQuery] = useState("");
-  const [items, setItems] = useState<SearchItem[]>([]);
+  const [fuse, setFuse] = useState<Fuse<SearchItem> | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [open, setOpen] = useState(false);
   const [activeIdx, setActiveIdx] = useState(0);
-  const fuseRef = useRef<Fuse<SearchItem> | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -50,8 +50,7 @@ export function SiteSearch({ variant = "desktop", onNavigate }: Props = {}) {
     try {
       const res = await fetch("/api/search");
       const data = (await res.json()) as { items: SearchItem[] };
-      setItems(data.items);
-      fuseRef.current = new Fuse(data.items, {
+      const instance = new Fuse(data.items, {
         keys: [
           { name: "title", weight: 0.7 },
           { name: "subtitle", weight: 0.15 },
@@ -62,18 +61,18 @@ export function SiteSearch({ variant = "desktop", onNavigate }: Props = {}) {
         includeScore: true,
         minMatchCharLength: 2,
       });
+      setFuse(instance);
       setLoaded(true);
     } catch {
       // sessiz
     }
   }, [loaded]);
 
-  const results: SearchItem[] =
-    query.trim().length >= 2 && fuseRef.current
-      ? fuseRef.current
-          .search(query.trim(), { limit: MAX_RESULTS })
-          .map((r) => r.item)
-      : [];
+  const results: SearchItem[] = useMemo(() => {
+    const q = query.trim();
+    if (q.length < 2 || !fuse) return [];
+    return fuse.search(q, { limit: MAX_RESULTS }).map((r) => r.item);
+  }, [query, fuse]);
 
   function onKeyDown(e: KeyboardEvent<HTMLInputElement>) {
     if (!open) return;

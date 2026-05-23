@@ -66,7 +66,7 @@ export default function KagitPage() {
                 Kısıtlı kaynaklarımızın bilinçli kullanımı için biz de
                 mümkün olduğu kadar tek kullanımlık kâğıt ürünlerden
                 kaçınmalı, kullandığımız ürünleri geri dönüşüme
-                sokmalıyız. <em>Maiamari'de el yapımı kâğıt üretimi de
+                sokmalıyız. <em>Maiamari&apos;de el yapımı kâğıt üretimi de
                 bu anlayışla yapılır — atık kâğıtları yeniden işliyoruz.</em>
               </p>
             </div>
@@ -101,7 +101,7 @@ export default function KagitPage() {
                 On iki adım, bir kâğıt.
               </h2>
               <p className="mt-6 max-w-2xl text-base leading-relaxed text-[color:var(--color-muted)]">
-                Sanatçı Duygu Sinan'ın hazırladığı görsel kılavuzdan;
+                Sanatçı Duygu Sinan&apos;ın hazırladığı görsel kılavuzdan;
                 atölyemizdeki üretim sürecinin altı sayfası.
               </p>
             </div>
@@ -230,7 +230,7 @@ export default function KagitPage() {
             Kendi kâğıdınızı dökün.
           </h2>
           <p className="mt-6 text-base text-[color:var(--color-muted)] leading-relaxed">
-            El yapımı kâğıt workshop'umuz Maiamari atölyesinde küçük
+            El yapımı kâğıt workshop&apos;umuz Maiamari atölyesinde küçük
             gruplarla yapılır.
           </p>
           <div className="mt-9 flex flex-wrap justify-center gap-3">

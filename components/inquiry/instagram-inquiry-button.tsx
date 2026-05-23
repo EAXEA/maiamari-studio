@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type CSSProperties, type MouseEvent } from "react";
+import { useState, type CSSProperties } from "react";
 
 const IG_DM_URL = "https://ig.me/m/maiamari.studio";
 const SITE_URL = "https://www.maiamari.art";
@@ -37,7 +37,7 @@ export function InstagramInquiryButton({
     ? `Merhaba, galerideki "${title}" baskısı hakkında bilgi almak istiyorum.\n${SITE_URL}${path}`
     : `Merhaba, galerideki baskılar hakkında bilgi almak istiyorum.\n${SITE_URL}${path}`;
 
-  async function handleClick(e: MouseEvent<HTMLAnchorElement>) {
+  async function handleClick() {
     // Try clipboard; ignore failure (older browsers / insecure context)
     try {
       if (navigator.clipboard && window.isSecureContext) {

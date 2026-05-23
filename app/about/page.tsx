@@ -120,7 +120,7 @@ export default function AboutPage() {
               Bir referans marka.
             </h2>
             <p className="mt-6 text-base leading-relaxed text-[color:var(--color-foreground)] max-w-prose">
-              Türkiye'de baskı sanatları denince akla gelen; atölye, mağaza,
+              Türkiye&apos;de baskı sanatları denince akla gelen; atölye, mağaza,
               üretim ve yerel işbirliğini aynı çatı altında birleştiren öncü
               ve güvenilir marka olmak.
             </p>
