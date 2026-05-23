@@ -13,7 +13,7 @@ import Link from "next/link";
 import Fuse from "fuse.js";
 import type { SearchItem } from "@/app/api/search/route";
 
-const PLACEHOLDER = "Sanatçı, baskı, atölye ara…";
+const PLACEHOLDER = "Ürün, eser, sanatçı, atölye…";
 const MAX_RESULTS = 8;
 
 type Props = {
@@ -147,7 +147,8 @@ export function SiteSearch({ variant = "desktop", onNavigate }: Props = {}) {
           }}
           onKeyDown={onKeyDown}
           placeholder={PLACEHOLDER}
-          className="bg-transparent outline-none w-full text-sm placeholder:text-[color:var(--color-soft)]"
+          /* text-base (16px) iOS Safari'nin focus'ta otomatik zoom'unu engeller; sm: ile desktop 14px'e döner */
+          className="bg-transparent outline-none w-full text-base sm:text-sm placeholder:text-[color:var(--color-soft)]"
           autoComplete="off"
           aria-label="Sitede ara"
         />

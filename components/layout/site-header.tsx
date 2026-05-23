@@ -76,11 +76,6 @@ export function SiteHeader() {
         </div>
       </div>
 
-      {/* Mobil arama çubuğu — üst satırın altında, sade hairline ile ayrılır */}
-      <div className="md:hidden border-t border-[color:var(--color-hairline)] px-5 py-2.5">
-        <SiteSearch variant="mobile" />
-      </div>
-
       {/* Alt satır — md+ editoryal nav */}
       <nav
         aria-label="Ana"
