@@ -42,7 +42,7 @@ export default function GaleriPage() {
          ============================================================ */}
       <section className="container-x py-16 lg:py-24">
         <Reveal>
-          <p className="eyebrow">Galeri · Sanatçının eserleri</p>
+          <p className="eyebrow">Galeri · Kapılar · Duygu Sinan</p>
           <h1 className="font-display mt-5 leading-[0.98] max-w-4xl tracking-tight">
             <span className="block text-[clamp(2.5rem,5.5vw,5rem)]">
               Atölyede çoğaltılmış
@@ -54,24 +54,43 @@ export default function GaleriPage() {
           <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 lg:gap-20 mt-10 items-start">
             <div className="max-w-prose">
               <p className="text-base lg:text-lg leading-relaxed text-[color:var(--color-muted)]">
-                Sanatçı Duygu Sinan&apos;ın atölyede elle bastığı, sayılı
-                edisyondaki linol baskıları. Her bir tabaka atölyede tek tek
-                üretilir; mürekkebin kâğıt üzerindeki izi ve her tabakanın
-                çıkardığı küçük farklar koleksiyonun parçasıdır.
+                Sanatçı{" "}
+                {biz.artist?.instagramUrl ? (
+                  <a
+                    href={biz.artist.instagramUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline underline-offset-4 text-[color:var(--color-foreground)] hover:text-[color:var(--color-walnut)]"
+                  >
+                    Duygu Sinan
+                  </a>
+                ) : (
+                  <strong className="font-normal text-[color:var(--color-foreground)]">
+                    Duygu Sinan
+                  </strong>
+                )}
+                &apos;ın <em className="text-[color:var(--color-foreground)] not-italic">&quot;Kapılar&quot;</em> serisi
+                — atölyede elle bastığı, sayılı edisyondaki linol
+                baskıları. Her bir tabaka atölyede tek tek üretilir;
+                mürekkebin kâğıt üzerindeki izi ve her tabakanın çıkardığı
+                küçük farklar koleksiyonun parçasıdır.
               </p>
-              <p
-                className="mt-5 text-sm italic leading-relaxed"
-                style={{ color: "var(--color-walnut)" }}
-              >
-                Yakında: galerideki tüm eserler mağazada{" "}
-                <Link
-                  href="/shop/linol-baskilari"
-                  className="underline underline-offset-4 hover:text-[color:var(--color-foreground)] not-italic"
+              {biz.artist?.instagramUrl && (
+                <p
+                  className="mt-4 text-sm italic"
+                  style={{ color: "var(--color-walnut)" }}
                 >
-                  Linol Baskıları
-                </Link>{" "}
-                kategorisinde satışa sunulacak.
-              </p>
+                  Sanatçının atölye gündelik hayatı ve iş günü vlogları için{" "}
+                  <a
+                    href={biz.artist.instagramUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline underline-offset-4 not-italic hover:text-[color:var(--color-foreground)]"
+                  >
+                    @{biz.artist.instagramHandle}
+                  </a>
+                </p>
+              )}
             </div>
             <div className="flex flex-wrap gap-3 lg:justify-end">
               <a
@@ -120,6 +139,8 @@ export default function GaleriPage() {
                 <dl className="mt-8 grid grid-cols-[max-content_1fr] gap-x-8 gap-y-2 text-sm">
                   <dt className="text-[color:var(--color-muted)]">Sanatçı</dt>
                   <dd>Duygu Sinan</dd>
+                  <dt className="text-[color:var(--color-muted)]">Seri</dt>
+                  <dd>Kapılar</dd>
                   <dt className="text-[color:var(--color-muted)]">Teknik</dt>
                   <dd>Linol baskı, elle çoğaltılmış</dd>
                   {highlight.year && (
@@ -219,33 +240,72 @@ export default function GaleriPage() {
       </section>
 
       {/* ============================================================
-          5. Footer note — Edisyon bilgisi
+          5. Yakında satışta — koleksiyon teaser kartı
+             (mağazadaki boş kategori "Yakında" promosyon kartı ile aynı tarz)
          ============================================================ */}
       <section className="container-x pb-24 border-t border-[color:var(--color-hairline)] pt-14">
         <Reveal>
-          <div className="grid md:grid-cols-[1fr_max-content] gap-8 items-end">
+          <div className="border border-[color:var(--color-border)] bg-[color:var(--color-surface)] grid lg:grid-cols-[1fr_1.2fr] gap-10 lg:gap-16 items-center p-10 lg:p-16">
+            <div className="relative aspect-square w-full max-w-[460px] mx-auto lg:mx-0 overflow-hidden bg-[color:var(--color-surface-2)]">
+              <Image
+                src={highlight?.image || "/brand/maimari-logo.png"}
+                alt=""
+                fill
+                sizes="(max-width: 1024px) 80vw, 40vw"
+                className={highlight?.image ? "object-cover" : "object-contain p-14 opacity-95"}
+              />
+              <span className="absolute top-4 left-4 text-[10px] tracking-[0.35em] uppercase bg-[color:var(--color-walnut-dark)] text-[color:var(--color-background)] px-3 py-1.5">
+                Yakında
+              </span>
+            </div>
+
             <div>
-              <p className="eyebrow">Edisyon ve sipariş</p>
-              <p className="mt-4 max-w-2xl text-base lg:text-lg leading-relaxed text-[color:var(--color-muted)]">
-                Tüm baskılar atölyemizde elle çoğaltılır. Yakında galerideki
-                eserlerin tamamı mağazada{" "}
+              <p className="eyebrow">Koleksiyon · Yakında</p>
+              <h2 className="font-display mt-4 leading-[0.98] text-[clamp(2.5rem,5vw,4.5rem)] tracking-tight">
+                <span className="block italic">Yakında.</span>
+                <span className="block text-[0.55em] mt-3 tracking-tight">
+                  galerideki eserler mağaza rafına geliyor.
+                </span>
+              </h2>
+              <p className="mt-7 max-w-md text-base lg:text-lg leading-relaxed text-[color:var(--color-muted)]">
+                Galerideki sayılı edisyon linol baskıların tamamı önümüzdeki
+                haftalarda mağazada{" "}
                 <Link
                   href="/shop/linol-baskilari"
                   className="underline underline-offset-4 hover:text-[color:var(--color-foreground)]"
                 >
                   Linol Baskıları
                 </Link>{" "}
-                başlığında satışa sunulacak. Şimdilik edisyon, boyut ve fiyat
-                bilgisi için telefon veya Instagram üzerinden ulaşabilirsiniz.
+                kategorisinde açılıyor. Şimdilik edisyon, boyut ve fiyat
+                bilgisi için bize ulaşabilirsiniz.
               </p>
+
+              <div className="mt-9 flex flex-wrap gap-3">
+                <Link
+                  href="/shop/linol-baskilari"
+                  className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase"
+                  style={{
+                    background: "var(--color-walnut-dark)",
+                    color: "var(--color-background)",
+                  }}
+                >
+                  Mağazada gör
+                </Link>
+                <a
+                  href={phoneHref}
+                  className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase border"
+                  style={{ borderColor: "var(--color-walnut-dark)" }}
+                >
+                  Telefonla bilgi al
+                </a>
+                <InstagramInquiryButton
+                  label="Instagram'dan bilgi al"
+                  className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase border whitespace-nowrap"
+                  style={{ borderColor: "var(--color-walnut-dark)" }}
+                />
+                <WhatsappComingSoon variant="button" />
+              </div>
             </div>
-            <Link
-              href="/contact"
-              className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase border self-start md:self-end"
-              style={{ borderColor: "var(--color-foreground)" }}
-            >
-              İletişim
-            </Link>
           </div>
         </Reveal>
       </section>

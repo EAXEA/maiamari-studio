@@ -139,6 +139,84 @@ export default function KagitPage() {
         </div>
       </section>
 
+      {/* Atölyeden — gerçek üretim kısa filmi */}
+      <section className="container-x py-20 lg:py-24">
+        <Reveal>
+          <div className="grid lg:grid-cols-[1fr_1.1fr] gap-10 lg:gap-16 items-center max-w-6xl mx-auto">
+            <div>
+              <p className="text-xs tracking-[0.3em] uppercase text-[color:var(--color-muted)]">
+                Atölyeden · Kısa film
+              </p>
+              <h2
+                className="font-display italic mt-5 text-3xl lg:text-5xl leading-tight tracking-tight"
+                style={{ color: "var(--color-walnut-dark)" }}
+              >
+                Şimdi atölyede.
+              </h2>
+              <p className="mt-6 text-base lg:text-[17px] leading-relaxed text-[color:var(--color-muted)] max-w-prose">
+                İllüstrasyondan gerçek hayata — atölyemizde el yapımı kâğıt
+                üretiminden bir kesit. Atık kâğıdın suya çözünmesinden
+                kuruyan tabakaya kadar 12 adımın canlı hali.
+              </p>
+              <a
+                href="https://www.instagram.com/reel/DMX7pHgNVc5/"
+                target="_blank"
+                rel="noreferrer"
+                className="mt-8 inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase border"
+                style={{ borderColor: "var(--color-walnut-dark)" }}
+              >
+                Instagram&apos;da izle →
+              </a>
+            </div>
+
+            <a
+              href="https://www.instagram.com/reel/DMX7pHgNVc5/"
+              target="_blank"
+              rel="noreferrer"
+              className="group relative block aspect-[4/5] bg-[color:var(--color-surface-2)] overflow-hidden border border-[color:var(--color-hairline)]"
+              aria-label="Maiamari · el yapımı kâğıt yapım aşaması Instagram reel"
+            >
+              <Image
+                src="/images/atolye/window-and-press.jpg"
+                alt="Atölyeden — el yapımı kâğıt yapım kesiti"
+                fill
+                sizes="(max-width: 1024px) 90vw, 45vw"
+                quality={88}
+                className="object-cover atolye-tint transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
+              />
+              {/* Karanlık overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+              {/* Play ikonu */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span
+                  className="flex items-center justify-center w-20 h-20 rounded-full border-2 border-white/90 backdrop-blur-sm transition-transform duration-500 group-hover:scale-110"
+                  style={{ background: "rgba(0,0,0,0.25)" }}
+                >
+                  <svg
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="white"
+                    aria-hidden
+                  >
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </span>
+              </div>
+              {/* Alt etiket */}
+              <div className="absolute inset-x-0 bottom-0 p-5 lg:p-6 text-white">
+                <p className="text-[10px] tracking-[0.32em] uppercase opacity-80">
+                  Maiamari · Reel
+                </p>
+                <p className="font-display italic text-xl lg:text-2xl mt-1">
+                  El yapımı kâğıt yapımı
+                </p>
+              </div>
+            </a>
+          </div>
+        </Reveal>
+      </section>
+
       {/* CTA */}
       <section className="container-x py-20 lg:py-24 text-center max-w-2xl mx-auto">
         <Reveal>

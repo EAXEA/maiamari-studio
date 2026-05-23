@@ -64,6 +64,8 @@ export interface Workshop {
   slug: string;
   title: string;
   instructor: string;
+  instructorInstagramHandle?: string;
+  instructorInstagramUrl?: string;
   schedule?: string;
   date?: string;
   description?: string;
@@ -71,9 +73,18 @@ export interface Workshop {
   image?: string;
 }
 
+export interface Artist {
+  name: string;
+  title?: string;
+  instagramHandle?: string;
+  instagramUrl?: string;
+  note?: string;
+}
+
 export interface Business {
   name: string;
   tagline: string;
+  artist?: Artist;
   address: {
     neighborhood: string;
     street: string;

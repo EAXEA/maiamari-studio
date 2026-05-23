@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { getBusiness } from "@/lib/data";
 import { WhatsappComingSoon } from "@/components/inquiry/whatsapp-coming-soon";
+import { TransitInfo } from "@/components/transit/transit-info";
 
 export const metadata = { title: "İletişim" };
 
@@ -40,21 +41,10 @@ export default function ContactPage() {
             <h2 className="font-display text-xl mb-3">Adres</h2>
             <address className="not-italic text-base leading-relaxed">
               {biz.address.full}
-              <br />
-              <span className="block mt-2 text-sm text-[color:var(--color-muted)]">
-                Yakın metro: <strong className="font-normal">{biz.transit.nearestMetro}</strong>
-                {biz.transit.metroDistance && ` · ${biz.transit.metroDistance}`}
-                {biz.transit.metroWalkMinutes && ` · ${biz.transit.metroWalkMinutes} dk yürüyüş`}
-              </span>
-              {biz.transit.nearestBusStop && (
-                <span className="block mt-1 text-sm text-[color:var(--color-muted)]">
-                  Otobüs durağı: <strong className="font-normal">{biz.transit.nearestBusStop}</strong>
-                  {biz.transit.busStopWalkMinutes && ` · ${biz.transit.busStopWalkMinutes} dk`}
-                  {biz.transit.busLines && biz.transit.busLines.length > 0 &&
-                    ` · hatlar ${biz.transit.busLines.join(", ")}`}
-                </span>
-              )}
             </address>
+            <div className="mt-4">
+              <TransitInfo transit={biz.transit} />
+            </div>
           </section>
 
           <section>
@@ -100,9 +90,10 @@ export default function ContactPage() {
           <section>
             <h2 className="font-display text-xl mb-3">Atölye ziyareti</h2>
             <p className="text-sm leading-relaxed text-[color:var(--color-muted)] max-w-prose">
-              Atölyemize randevulu ya da randevusuz uğrayabilirsiniz. Atölye,
-              Küçükesat&apos;ta Bülbülderesi Caddesi&apos;nde, Kolej metro
-              durağına yürüme mesafesindedir.
+              Atölyemize randevulu ya da randevusuz uğrayabilirsiniz. Yine de
+              gelmeden önce telefon ya da Instagram&apos;dan bize ulaşmanızı
+              öneririz — atölyede olduğumuzdan emin olur, ilgilendiğiniz
+              baskı veya malzeme için kısa bir ön bilgi alırsınız.
             </p>
           </section>
         </div>

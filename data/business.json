@@ -4,6 +4,13 @@
   "owner": {
     "instagram": "duygu.sinan.printmaker"
   },
+  "artist": {
+    "name": "Duygu Sinan",
+    "title": "Sanatçı · Atölye kurucusu",
+    "instagramHandle": "duygu.sinan.printmaker",
+    "instagramUrl": "https://www.instagram.com/duygu.sinan.printmaker/",
+    "note": "Atölyenin gündelik hayatı ve iş gününden vloglar"
+  },
   "address": {
     "neighborhood": "Küçükesat",
     "street": "Bülbülderesi Cd. No:90 D:B",
@@ -40,26 +47,36 @@
     {
       "title": "Suluboya Aylık Program",
       "instructor": "Tolga İNALÖZ",
+      "instructorInstagramHandle": "tlgnlz",
+      "instructorInstagramUrl": "https://www.instagram.com/tlgnlz/",
       "registration": "DM üzerinden"
     },
     {
       "title": "Linol Baskı Workshop",
       "instructor": "Duygu Sinan",
+      "instructorInstagramHandle": "duygu.sinan.printmaker",
+      "instructorInstagramUrl": "https://www.instagram.com/duygu.sinan.printmaker/",
       "registration": "DM veya 0506 588 92 77"
     },
     {
       "title": "Linol Aylık Ders",
       "instructor": "Duygu Sinan",
+      "instructorInstagramHandle": "duygu.sinan.printmaker",
+      "instructorInstagramUrl": "https://www.instagram.com/duygu.sinan.printmaker/",
       "registration": "DM veya 0506 588 92 77"
     },
     {
       "title": "Çanta Baskı Workshop",
       "instructor": "Duygu Sinan",
+      "instructorInstagramHandle": "duygu.sinan.printmaker",
+      "instructorInstagramUrl": "https://www.instagram.com/duygu.sinan.printmaker/",
       "registration": "DM veya 0506 588 92 77"
     },
     {
       "title": "El Yapımı Kâğıt Workshop",
       "instructor": "Duygu Sinan",
+      "instructorInstagramHandle": "duygu.sinan.printmaker",
+      "instructorInstagramUrl": "https://www.instagram.com/duygu.sinan.printmaker/",
       "registration": "DM veya 0506 588 92 77"
     }
   ],

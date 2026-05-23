@@ -1,33 +1,40 @@
+import fs from "node:fs";
+import path from "node:path";
 import Image from "next/image";
 import { getBusiness, getWorkshops } from "@/lib/data";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { WhatsappComingSoon } from "@/components/inquiry/whatsapp-coming-soon";
+import { WORKSHOP_IMAGES } from "@/lib/workshop-images";
+import { InstructorAvatar } from "@/components/instructor/instructor-avatar";
+
+/**
+ * Eğitmen adından lokal avatar yolu (varsa). public/images/instructors/<slug>.jpg
+ * formatında dosya beklenir. Kullanıcı dosyayı koyduğunda otomatik render olur.
+ */
+function instructorAvatarPath(name: string): string | undefined {
+  const slug = name
+    .toLocaleLowerCase("tr-TR")
+    .replace(/[ıİ]/g, "i")
+    .replace(/[şŞ]/g, "s")
+    .replace(/[çÇ]/g, "c")
+    .replace(/[öÖ]/g, "o")
+    .replace(/[üÜ]/g, "u")
+    .replace(/[ğĞ]/g, "g")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  const filePath = path.join(
+    process.cwd(),
+    "public",
+    "images",
+    "instructors",
+    `${slug}.jpg`,
+  );
+  return fs.existsSync(filePath)
+    ? `/images/instructors/${slug}.jpg`
+    : undefined;
+}
 
 export const metadata = { title: "Atölyeler" };
-
-// Workshop slug → görsel eşlemesi
-const WORKSHOP_IMAGES: Record<string, { src: string; alt: string }> = {
-  "suluboya-aylik-program": {
-    src: "/images/atolye/watercolor-framed.jpg",
-    alt: "Suluboya · zeytin dalı, Duygu Sinan tarafından çerçeveli bir çalışma",
-  },
-  "linol-baski-workshop": {
-    src: "/images/atolye/linol-workshop.jpg",
-    alt: "Linol baskı · oyulmuş kalıp ve taze basılmış kare yan yana",
-  },
-  "linol-aylik-ders": {
-    src: "/images/atolye/print-drying.jpg",
-    alt: "Linol aylık ders · taze baskıların atölyede kurutulması",
-  },
-  "canta-baski-workshop": {
-    src: "/images/atolye/tools-grid.jpg",
-    alt: "Çanta baskı · atölyedeki alet ve malzeme düzeni",
-  },
-  "el-yapimi-kagit-workshop": {
-    src: "/images/atolye/window-and-press.jpg",
-    alt: "El yapımı kâğıt · atölye penceresinden pres ve çalışma alanı",
-  },
-};
 
 export default function AtolyelerPage() {
   const biz = getBusiness();
@@ -82,56 +89,67 @@ export default function AtolyelerPage() {
           return (
             <StaggerItem
               key={w.slug}
-              className="border border-[color:var(--color-border)] bg-[color:var(--color-surface)] overflow-hidden flex flex-col group hover:-translate-y-1 transition-transform duration-500"
+              className="border border-[color:var(--color-border)] bg-[color:var(--color-surface)] overflow-hidden group hover:-translate-y-1 transition-transform duration-500 md:flex md:items-stretch"
             >
               {img && (
-                <div className="relative w-full aspect-[4/3] bg-[color:var(--color-surface-2)] overflow-hidden">
+                <div className="relative w-full aspect-[4/5] md:w-[40%] md:aspect-auto md:self-stretch md:min-h-[260px] md:max-h-[340px] bg-[color:var(--color-surface-2)] overflow-hidden shrink-0">
                   <Image
                     src={img.src}
                     alt={img.alt}
                     fill
-                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    sizes="(max-width: 768px) 100vw, 22vw"
+                    quality={88}
                     className="object-cover atolye-tint transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
                   />
                 </div>
               )}
-              <div className="p-10 lg:p-14 flex flex-col flex-1">
+              <div className="relative p-6 lg:p-7 flex flex-col flex-1 min-w-0">
+                {/* Eğitmen mini avatar — yuvarlak, tıklanmaz */}
+                <div className="absolute top-5 right-5 z-10">
+                  <InstructorAvatar
+                    name={w.instructor}
+                    avatarSrc={instructorAvatarPath(w.instructor)}
+                    size={44}
+                  />
+                </div>
+
                 <p
-                  className="text-[10px] tracking-[0.35em] uppercase"
+                  className="text-[10px] tracking-[0.35em] uppercase pr-14"
                   style={{ color: "var(--color-walnut)" }}
                 >
-                  Eğitmen · {w.instructor}
+                  Eğitmen ·{" "}
+                  {w.instructorInstagramUrl ? (
+                    <a
+                      href={w.instructorInstagramUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="underline underline-offset-4 hover:text-[color:var(--color-foreground)]"
+                    >
+                      {w.instructor}
+                    </a>
+                  ) : (
+                    w.instructor
+                  )}
                 </p>
 
                 <h2
-                  className="font-display mt-5 leading-[0.95]"
+                  className="font-display mt-3 leading-[1.02]"
                   style={{ color: "var(--color-walnut-dark)" }}
                 >
-                  <span className="block text-4xl lg:text-5xl italic">
+                  <span className="block text-2xl lg:text-3xl italic">
                     {firstWord}
                   </span>
                   {rest && (
-                    <span className="block text-4xl lg:text-5xl mt-1">
+                    <span className="block text-2xl lg:text-3xl mt-0.5">
                       {rest}
                     </span>
                   )}
                 </h2>
 
-                <p
-                  className="mt-8 text-base leading-relaxed flex-1 max-w-md"
-                  style={{ color: "var(--color-muted)" }}
-                >
-                  Bilgi ve kayıt için{" "}
-                  <a href={phoneHref} className="underline underline-offset-4">
-                    {biz.contact.phonePrimary}
-                  </a>{" "}
-                  numarasını arayabilirsiniz.
-                </p>
-
-                <div className="mt-10 flex flex-wrap gap-3">
+                <div className="mt-auto pt-6 flex flex-wrap gap-2">
                   <a
                     href={phoneHref}
-                    className="inline-flex h-11 px-6 items-center text-xs tracking-[0.22em] uppercase transition-opacity hover:opacity-90"
+                    className="inline-flex h-9 px-4 items-center text-[10px] tracking-[0.2em] uppercase transition-opacity hover:opacity-90"
                     style={{
                       background: "var(--color-walnut-dark)",
                       color: "var(--color-background)",
@@ -143,7 +161,7 @@ export default function AtolyelerPage() {
                     href={biz.contact.instagram}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex h-11 px-6 items-center text-xs tracking-[0.22em] uppercase border transition-colors hover:bg-[color:var(--color-foreground)] hover:text-[color:var(--color-background)]"
+                    className="inline-flex h-9 px-4 items-center text-[10px] tracking-[0.2em] uppercase border transition-colors hover:bg-[color:var(--color-foreground)] hover:text-[color:var(--color-background)]"
                     style={{
                       borderColor: "var(--color-foreground)",
                       color: "var(--color-foreground)",
@@ -151,7 +169,10 @@ export default function AtolyelerPage() {
                   >
                     Instagram DM
                   </a>
-                  <WhatsappComingSoon variant="button" />
+                  <WhatsappComingSoon
+                    variant="button"
+                    className="h-9 px-4 text-[10px] tracking-[0.2em]"
+                  />
                 </div>
               </div>
             </StaggerItem>

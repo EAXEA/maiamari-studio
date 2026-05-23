@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getBusiness } from "@/lib/data";
 import { Reveal } from "@/components/motion/reveal";
+import { TransitInfo } from "@/components/transit/transit-info";
 
 export const metadata = { title: "Hakkımızda" };
 
@@ -185,10 +186,36 @@ export default function AboutPage() {
                 Maiamari, Ankara&apos;nın Küçükesat semtinde,
                 Bülbülderesi Caddesi&apos;nde bulunan bir baskı atölyesi ve
                 galeridir. Atölyenin kurucusu{" "}
-                <strong>Duygu Sinan</strong>, baskı tekniklerine kendini
-                adamış bir sanatçı ve eğitmen olarak linol baskı, kâğıt
-                yapımı ve atölye programları etrafında küçük ama derinlikli
-                bir pratik yürütüyor.
+                {biz.artist?.instagramUrl ? (
+                  <a
+                    href={biz.artist.instagramUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline underline-offset-4 hover:opacity-70"
+                  >
+                    <strong className="font-normal">Duygu Sinan</strong>
+                  </a>
+                ) : (
+                  <strong>Duygu Sinan</strong>
+                )}
+                , baskı tekniklerine kendini adamış bir sanatçı ve eğitmen
+                olarak linol baskı, kâğıt yapımı ve atölye programları
+                etrafında küçük ama derinlikli bir pratik yürütüyor.
+                {biz.artist?.instagramUrl && (
+                  <>
+                    {" "}
+                    Atölye gündelik hayatı ve iş günü vlogları sanatçının{" "}
+                    <a
+                      href={biz.artist.instagramUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="underline underline-offset-4 hover:opacity-70"
+                    >
+                      kişisel Instagram hesabında
+                    </a>
+                    .
+                  </>
+                )}
               </p>
               <p>
                 Atölyenin envanteri; özgün linol baskıları, atölyede el
@@ -227,22 +254,9 @@ export default function AboutPage() {
                 <address className="not-italic mt-3 leading-relaxed">
                   {biz.address.full}
                 </address>
-                <p className="mt-3 text-[color:var(--color-muted)] leading-relaxed">
-                  Metro: {biz.transit.nearestMetro}
-                  {biz.transit.metroDistance && ` · ${biz.transit.metroDistance}`}
-                  {biz.transit.metroWalkMinutes && ` · ${biz.transit.metroWalkMinutes} dk`}
-                </p>
-                {biz.transit.nearestBusStop && (
-                  <p className="mt-1 text-[color:var(--color-muted)] leading-relaxed">
-                    Otobüs: {biz.transit.nearestBusStop}
-                    {biz.transit.busStopWalkMinutes && ` · ${biz.transit.busStopWalkMinutes} dk`}
-                    {biz.transit.busLines && biz.transit.busLines.length > 0 && (
-                      <span className="block text-xs mt-0.5">
-                        Hatlar: {biz.transit.busLines.join(", ")}
-                      </span>
-                    )}
-                  </p>
-                )}
+                <div className="mt-4">
+                  <TransitInfo transit={biz.transit} />
+                </div>
               </div>
               <div>
                 <p className="text-[11px] tracking-[0.28em] uppercase text-[color:var(--color-muted)]">

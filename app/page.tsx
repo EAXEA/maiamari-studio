@@ -1,61 +1,22 @@
+import Image from "next/image";
 import Link from "next/link";
-import {
-  getAllProducts,
-  getCategories,
-  getProductsByCategory,
-  getBusiness,
-  getWorkshops,
-  getPortfolio,
-} from "@/lib/data";
-import { ProductCard } from "@/components/product/product-card";
+import { getBusiness, getWorkshops, getPortfolio } from "@/lib/data";
 import { InterestHero } from "@/components/sections/interest-hero";
 import {
   HorizontalRail,
   RailTile,
 } from "@/components/sections/horizontal-rail";
 import { FeatureBanner } from "@/components/sections/feature-banner";
-import { DiscoverGrid, type DiscoverItem } from "@/components/sections/discover-grid";
 import { Reveal } from "@/components/motion/reveal";
-import { DISCOVER_THEMES } from "@/lib/discover-themes";
+import { WORKSHOP_IMAGES } from "@/lib/workshop-images";
 import { WhatsappComingSoon } from "@/components/inquiry/whatsapp-coming-soon";
+import { TransitInfo } from "@/components/transit/transit-info";
 
 export default function HomePage() {
-  const all = getAllProducts();
-  const inStock = all.filter((p) => p.status !== "out_of_stock");
-  const materials = inStock
-    .filter((p) =>
-      ["linol-boyalari", "linolyum", "merdaneler", "aletler"].includes(
-        p.categorySlug,
-      ),
-    )
-    .slice(0, 8);
-  const paper = inStock
-    .filter((p) => p.categorySlug === "el-yapimi-kagitlar")
-    .slice(0, 8);
-  const cats = getCategories();
   const biz = getBusiness();
   const workshops = getWorkshops();
   const portfolio = getPortfolio();
   const phoneHref = `tel:${biz.contact.phonePrimary.replace(/\s/g, "")}`;
-
-  // Tema ile keşfet — 4 mecra (tutarlı /atolyeler bağlantısı)
-  const themes: DiscoverItem[] = DISCOVER_THEMES.map((t) => ({
-    ...t,
-    href: "/atolyeler",
-  }));
-
-  // Tüm koleksiyonlar — her kategori için bir cover bul
-  const collections: DiscoverItem[] = cats.map((c) => {
-    const cover =
-      getProductsByCategory(c.slug)[0]?.coverImage ??
-      "/images/portfolio/print_01.jpg";
-    return {
-      label: c.name,
-      meta: c.nameEn,
-      image: cover,
-      href: `/shop/${c.slug}`,
-    };
-  });
 
   return (
     <>
@@ -118,20 +79,7 @@ export default function HomePage() {
       />
 
       {/* ============================================================
-          4. Discover by Theme
-         ============================================================ */}
-      <DiscoverGrid
-        eyebrow="Tema ile keşfet"
-        title="Atölyenin"
-        italicTail="mecraları"
-        description="Linol baskıdan suluboyaya, el yapımı kâğıttan çanta baskıya — Maiamari'nin etrafında dönen disiplinler. Her birinin kendi atölye programı, kendi malzemesi."
-        items={themes}
-        aspect="portrait"
-        cols={4}
-      />
-
-      {/* ============================================================
-          5. Workshops rail
+          4. Workshops — atölye programı (görselli kartlar)
          ============================================================ */}
       <section
         className="py-16 lg:py-24"
@@ -146,46 +94,85 @@ export default function HomePage() {
                   Kalıbın <span className="italic">altına bakın.</span>
                 </h2>
                 <p className="mt-5 max-w-xl text-base leading-relaxed text-[color:var(--color-muted)]">
-                  Küçük gruplarla linol baskı, suluboya ve çanta baskı atölyeleri.
-                  Maiamari mekânında, atölyenin kendi ekipmanlarıyla.
+                  Küçük gruplarla linol baskı, suluboya, çanta baskı ve
+                  el yapımı kâğıt atölyeleri. Maiamari mekânında, atölyenin
+                  kendi ekipmanlarıyla.
                 </p>
               </div>
-              <Link href="/atolyeler" className="hidden md:inline text-sm editorial-link">
+              <Link
+                href="/atolyeler"
+                className="hidden md:inline text-sm editorial-link shrink-0"
+              >
                 Tüm program →
               </Link>
             </div>
           </Reveal>
 
-          <div className="grid sm:grid-cols-2 gap-5 lg:gap-7">
-            {workshops.map((w) => (
-              <div
-                key={w.slug}
-                className="bg-[color:var(--color-background)] p-7 lg:p-9 flex flex-col group hover:-translate-y-1 transition-transform duration-500"
-              >
-                <p className="eyebrow">{w.instructor}</p>
-                <h3 className="font-display text-2xl lg:text-3xl mt-3 leading-snug">
-                  {w.title}
-                </h3>
-                {w.schedule && (
-                  <p className="mt-3 text-sm text-[color:var(--color-muted)]">
-                    {w.schedule}
-                  </p>
-                )}
-                <a
-                  href={phoneHref}
-                  className="mt-7 inline-flex h-10 px-5 items-center self-start border text-[11px] tracking-[0.2em] uppercase hover:bg-[color:var(--color-foreground)] hover:text-[color:var(--color-background)] transition-colors"
-                  style={{ borderColor: "var(--color-foreground)" }}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
+            {workshops.map((w) => {
+              const img = WORKSHOP_IMAGES[w.slug];
+              return (
+                <article
+                  key={w.slug}
+                  className="bg-[color:var(--color-background)] border border-[color:var(--color-border)] overflow-hidden flex flex-col group hover:-translate-y-1 transition-transform duration-500"
                 >
-                  Telefonla bilgi al
-                </a>
-              </div>
-            ))}
+                  {img && (
+                    <div className="relative w-full aspect-[4/3] bg-[color:var(--color-surface-2)] overflow-hidden">
+                      <Image
+                        src={img.src}
+                        alt={img.alt}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover atolye-tint transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
+                      />
+                    </div>
+                  )}
+                  <div className="p-6 lg:p-7 flex flex-col flex-1">
+                    <p className="eyebrow">
+                      {w.instructorInstagramUrl ? (
+                        <a
+                          href={w.instructorInstagramUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="underline underline-offset-4 hover:text-[color:var(--color-foreground)]"
+                        >
+                          {w.instructor}
+                        </a>
+                      ) : (
+                        w.instructor
+                      )}
+                    </p>
+                    <h3 className="font-display text-xl lg:text-2xl mt-2 leading-snug">
+                      {w.title}
+                    </h3>
+                    <a
+                      href={phoneHref}
+                      className="mt-5 inline-flex h-10 px-5 items-center self-start border text-[11px] tracking-[0.2em] uppercase hover:bg-[color:var(--color-foreground)] hover:text-[color:var(--color-background)] transition-colors"
+                      style={{ borderColor: "var(--color-foreground)" }}
+                    >
+                      Telefonla bilgi al
+                    </a>
+                  </div>
+                </article>
+              );
+            })}
           </div>
+
+          <Reveal delay={0.2}>
+            <div className="mt-10 md:hidden">
+              <Link
+                href="/atolyeler"
+                className="inline-block text-sm editorial-link"
+              >
+                Tüm program →
+              </Link>
+            </div>
+          </Reveal>
         </div>
       </section>
 
       {/* ============================================================
-          6. Featured story — El yapımı kâğıt (sağ-aligned)
+          5. Featured story — Kâğıt fabrikası (/kagit'e yönleniyor)
          ============================================================ */}
       <FeatureBanner
         kicker="Hikaye · Kâğıt"
@@ -201,62 +188,73 @@ export default function HomePage() {
       />
 
       {/* ============================================================
-          7. Materials rail — Atölyenin envanteri
+          6. Mağaza teaser — atölye envanteri davet kartı
+             (linol baskıları "yakında" kartı tarzında, içerik mağaza)
          ============================================================ */}
-      <HorizontalRail
-        eyebrow="Atölye envanteri"
-        title={
-          <>
-            Baskı <span className="italic">malzemeleri</span>
-          </>
-        }
-        ctaHref="/shop"
-        ctaLabel="Tüm mağaza"
-      >
-        {materials.map((p) => (
-          <div key={p.id} className="w-[260px]">
-            <ProductCard product={p} />
-          </div>
-        ))}
-      </HorizontalRail>
-
-      {/* ============================================================
-          8. Paper rail
-         ============================================================ */}
-      {paper.length > 0 && (
-        <HorizontalRail
-          eyebrow="El yapımı kâğıt"
-          title={
-            <>
-              Doğal liften, <span className="italic">tek tek dökülen</span>
-            </>
-          }
-          ctaHref="/shop/el-yapimi-kagitlar"
-          ctaLabel="Tüm kâğıtlar"
-          bg="bg-[color:var(--color-surface)]"
-        >
-          {paper.map((p) => (
-            <div key={p.id} className="w-[260px]">
-              <ProductCard product={p} />
+      <section className="container-x py-16 lg:py-24">
+        <Reveal>
+          <div className="border border-[color:var(--color-border)] bg-[color:var(--color-surface)] grid lg:grid-cols-[1fr_1.2fr] gap-10 lg:gap-16 items-center p-10 lg:p-16">
+            <div className="relative aspect-square w-full max-w-[460px] mx-auto lg:mx-0 overflow-hidden bg-[color:var(--color-surface-2)]">
+              <Image
+                src="/images/atolye/tools-grid.jpg"
+                alt="Atölye envanteri — merdaneler ve oyma aletleri"
+                fill
+                sizes="(max-width: 1024px) 80vw, 40vw"
+                className="object-cover atolye-tint"
+              />
+              <span
+                className="absolute top-4 left-4 text-[10px] tracking-[0.35em] uppercase px-3 py-1.5"
+                style={{
+                  background: "var(--color-walnut-dark)",
+                  color: "var(--color-background)",
+                }}
+              >
+                Mağaza
+              </span>
             </div>
-          ))}
-        </HorizontalRail>
-      )}
+
+            <div>
+              <p className="eyebrow">Atölye envanteri</p>
+              <h2 className="font-display mt-4 leading-[0.98] text-[clamp(2.3rem,4.8vw,4.2rem)] tracking-tight">
+                <span className="block italic">Maiamari mağaza.</span>
+                <span className="block text-[0.55em] mt-3 tracking-tight">
+                  atölyenin envanteri raflarda.
+                </span>
+              </h2>
+              <p className="mt-7 max-w-md text-base lg:text-lg leading-relaxed text-[color:var(--color-muted)]">
+                Amber cam kavanozda baskı boyaları, kauçuk merdaneler, oyma
+                aletleri, linolyum plakalar ve doğal liflerden el yapımı
+                kâğıtlar. Tüm ürünler aynı atölyede üretilir; mağazadan
+                çıkan her parça bir dökümün, bir kalıbın ya da bir elin
+                izini taşır.
+              </p>
+
+              <div className="mt-9 flex flex-wrap gap-3">
+                <Link
+                  href="/shop"
+                  className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase"
+                  style={{
+                    background: "var(--color-walnut-dark)",
+                    color: "var(--color-background)",
+                  }}
+                >
+                  Mağazaya göz at
+                </Link>
+                <Link
+                  href="/shop/linol-baskilari"
+                  className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase border"
+                  style={{ borderColor: "var(--color-walnut-dark)" }}
+                >
+                  Linol Baskıları · Yakında
+                </Link>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </section>
 
       {/* ============================================================
-          9. Discover — Tüm koleksiyonlar
-         ============================================================ */}
-      <DiscoverGrid
-        eyebrow="Koleksiyonlar"
-        title="Atölyeden"
-        italicTail="çıkanlar"
-        items={collections}
-        aspect="square"
-        cols={4}
-      />
-
-      {/* ============================================================
-          10. Visit — Atölyeyi gez
+          7. Visit — atölyeyi gez
          ============================================================ */}
       <section className="py-20 lg:py-28 border-t border-[color:var(--color-hairline)]">
         <div className="container-x grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
@@ -278,26 +276,10 @@ export default function HomePage() {
               </dd>
               <dt className="text-[color:var(--color-muted)]">Çalışma</dt>
               <dd>Kapanış {biz.hours.closingTime}</dd>
-              <dt className="text-[color:var(--color-muted)]">Metro</dt>
+              <dt className="text-[color:var(--color-muted)]">Ulaşım</dt>
               <dd>
-                {biz.transit.nearestMetro}
-                {biz.transit.metroDistance && ` · ${biz.transit.metroDistance}`}
-                {biz.transit.metroWalkMinutes && ` · ${biz.transit.metroWalkMinutes} dk`}
+                <TransitInfo transit={biz.transit} size="sm" />
               </dd>
-              {biz.transit.nearestBusStop && (
-                <>
-                  <dt className="text-[color:var(--color-muted)]">Otobüs</dt>
-                  <dd>
-                    {biz.transit.nearestBusStop}
-                    {biz.transit.busStopWalkMinutes && ` · ${biz.transit.busStopWalkMinutes} dk`}
-                    {biz.transit.busLines && biz.transit.busLines.length > 0 && (
-                      <span className="block text-[color:var(--color-muted)] text-xs mt-0.5">
-                        Hatlar: {biz.transit.busLines.join(", ")}
-                      </span>
-                    )}
-                  </dd>
-                </>
-              )}
               <dt className="text-[color:var(--color-muted)]">Instagram</dt>
               <dd>
                 <a href={biz.contact.instagram} target="_blank" rel="noreferrer">

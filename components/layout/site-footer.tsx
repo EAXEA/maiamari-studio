@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getBusiness } from "@/lib/data";
 import { WhatsappComingSoon } from "@/components/inquiry/whatsapp-coming-soon";
+import { TransitInfo } from "@/components/transit/transit-info";
 
 export function SiteFooter() {
   const biz = getBusiness();
@@ -19,22 +20,10 @@ export function SiteFooter() {
           </p>
           <address className="not-italic mt-6 text-sm leading-relaxed text-[color:var(--color-muted)]">
             {biz.address.full}
-            <br />
-            <span className="block mt-1 opacity-70">
-              Yakın metro: {biz.transit.nearestMetro}
-              {biz.transit.metroWalkMinutes
-                ? ` · ${biz.transit.metroWalkMinutes} dk yürüyüş`
-                : ""}
-            </span>
-            {biz.transit.nearestBusStop && (
-              <span className="block mt-1 opacity-70">
-                Otobüs: {biz.transit.nearestBusStop}
-                {biz.transit.busStopWalkMinutes
-                  ? ` · ${biz.transit.busStopWalkMinutes} dk`
-                  : ""}
-              </span>
-            )}
           </address>
+          <div className="mt-4">
+            <TransitInfo transit={biz.transit} size="sm" />
+          </div>
         </div>
 
         <div className="text-sm">

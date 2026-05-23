@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { SiteSearch } from "@/components/search/site-search";
 
 const NAV = [
   { href: "/galeri", label: "Galeri" },
@@ -32,34 +33,8 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        {/* Search — A&C style centered input */}
-        <form
-          role="search"
-          action="/shop"
-          method="get"
-          className="hidden md:flex flex-1 max-w-[520px] mx-auto items-center gap-2 h-10 px-4 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface)]/60 focus-within:border-[color:var(--color-foreground)] transition-colors"
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            className="opacity-60 shrink-0"
-            aria-hidden
-          >
-            <circle cx="11" cy="11" r="7" />
-            <path d="m20 20-3.5-3.5" strokeLinecap="round" />
-          </svg>
-          <input
-            type="search"
-            name="q"
-            placeholder="Sanatçı, baskı, atölye ara…"
-            className="bg-transparent outline-none w-full text-sm placeholder:text-[color:var(--color-soft)]"
-            aria-label="Sitede ara"
-          />
-        </form>
+        {/* Search — A&C tarzı fuzzy autocomplete */}
+        <SiteSearch />
 
         <div className="flex items-center gap-5 text-sm ml-auto md:ml-0">
           <Link
