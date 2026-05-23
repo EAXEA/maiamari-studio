@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { SiteSearch } from "@/components/search/site-search";
+import { MobileMenu } from "@/components/layout/mobile-menu";
+import { getBusiness } from "@/lib/data";
 
 const NAV = [
   { href: "/galeri", label: "Galeri" },
@@ -12,10 +14,12 @@ const NAV = [
 ];
 
 export function SiteHeader() {
+  const biz = getBusiness();
+
   return (
     <header className="sticky top-0 z-40 backdrop-blur-md bg-[color:var(--color-background)]/90 border-b border-[color:var(--color-hairline)]">
-      {/* Top row — brand · search · cart */}
-      <div className="container-wide flex items-center gap-6 h-16 lg:h-[72px]">
+      {/* Üst satır — brand · arama · aksiyonlar */}
+      <div className="container-wide flex items-center gap-4 lg:gap-6 h-16 lg:h-[72px]">
         <Link
           href="/"
           className="flex items-center gap-3 shrink-0"
@@ -28,15 +32,16 @@ export function SiteHeader() {
             height={32}
             priority
           />
-          <span className="font-display text-xl lg:text-[22px] tracking-tight leading-none">
+          <span className="font-display text-lg sm:text-xl lg:text-[22px] tracking-tight leading-none">
             MAIAMARI
           </span>
         </Link>
 
-        {/* Search — A&C tarzı fuzzy autocomplete */}
+        {/* Search — md+ inline; mobilde alt satıra düşer */}
         <SiteSearch />
 
-        <div className="flex items-center gap-5 text-sm ml-auto md:ml-0">
+        {/* Sağ ikonlar */}
+        <div className="ml-auto flex items-center gap-2 lg:gap-5">
           <Link
             href="/cart"
             className="relative inline-flex items-center gap-2 hover:opacity-60"
@@ -56,7 +61,7 @@ export function SiteHeader() {
               <circle cx="17" cy="21" r="1.2" />
             </svg>
             <span
-              className="text-[10px] tracking-[0.22em] uppercase px-2 py-0.5"
+              className="hidden sm:inline-flex text-[10px] tracking-[0.22em] uppercase px-2 py-0.5"
               style={{
                 background: "var(--color-surface-2)",
                 color: "var(--color-muted)",
@@ -65,22 +70,35 @@ export function SiteHeader() {
               Yakında
             </span>
           </Link>
+
+          {/* Mobil menü trigger */}
+          <MobileMenu nav={NAV} instagramUrl={biz.contact.instagram} />
         </div>
       </div>
 
-      {/* Bottom row — quiet nav */}
+      {/* Mobil arama çubuğu — üst satırın altında, sade hairline ile ayrılır */}
+      <div className="md:hidden border-t border-[color:var(--color-hairline)] px-5 py-2.5">
+        <SiteSearch variant="mobile" />
+      </div>
+
+      {/* Alt satır — md+ editoryal nav */}
       <nav
         aria-label="Ana"
-        className="border-t border-[color:var(--color-hairline)]"
+        className="hidden md:block border-t border-[color:var(--color-hairline)]"
       >
-        <div className="container-wide flex items-center gap-7 lg:gap-10 h-11 overflow-x-auto no-scrollbar text-[13px] tracking-[0.04em]">
+        <div className="container-wide flex items-center justify-center gap-9 lg:gap-12 h-12">
           {NAV.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="text-[color:var(--color-foreground)] hover:opacity-60 transition-opacity whitespace-nowrap"
+              className="relative group text-[12px] tracking-[0.22em] uppercase text-[color:var(--color-foreground)] hover:text-[color:var(--color-walnut-dark)] transition-colors whitespace-nowrap"
             >
-              {item.label}
+              <span>{item.label}</span>
+              <span
+                aria-hidden
+                className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-[-10px] h-px w-0 group-hover:w-[28px] transition-[width] duration-300"
+                style={{ background: "var(--color-walnut-dark)" }}
+              />
             </Link>
           ))}
         </div>

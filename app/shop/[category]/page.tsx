@@ -144,18 +144,6 @@ export default async function CategoryPage({
               arayarak da bilgi alabilirsin.
             </p>
 
-            {cat.slug === "linol-baskilari" && (
-              <p className="mt-5 text-sm italic" style={{ color: "var(--color-walnut)" }}>
-                Sanatçı Duygu Sinan&apos;ın <span className="not-italic">&quot;Kapılar&quot;</span> serisi şu an{" "}
-                <Link
-                  href="/galeri"
-                  className="underline underline-offset-4 not-italic hover:text-[color:var(--color-foreground)]"
-                >
-                  galeride sergileniyor →
-                </Link>
-              </p>
-            )}
-
             <div className="mt-9 flex flex-wrap gap-3">
               <a
                 href={biz.contact.instagram}

@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
-import { getBusiness } from "@/lib/data";
+import { PHONE_PRIMARY_TEL } from "@/lib/contact";
 
 type Variant = "button" | "outline" | "inline" | "link" | "bare";
 
@@ -35,8 +35,6 @@ export function PhoneCTA({
   className,
   style,
 }: Props) {
-  const biz = getBusiness();
-  const tel = biz.contact.phonePrimary.replace(/\s/g, "");
   const base = BASE[variant];
   const cls = [base, className].filter(Boolean).join(" ");
 
@@ -53,7 +51,7 @@ export function PhoneCTA({
 
   return (
     <a
-      href={`tel:${tel}`}
+      href={`tel:${PHONE_PRIMARY_TEL}`}
       className={cls}
       style={defaultStyle}
       aria-label={ariaLabel ?? "Atölyeyi telefonla ara"}

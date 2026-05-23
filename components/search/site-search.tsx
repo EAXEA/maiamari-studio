@@ -16,7 +16,14 @@ import type { SearchItem } from "@/app/api/search/route";
 const PLACEHOLDER = "Sanatçı, baskı, atölye ara…";
 const MAX_RESULTS = 8;
 
-export function SiteSearch() {
+type Props = {
+  /** "desktop" — header üst satırı (md+ inline); "mobile" — drawer içi tam genişlik */
+  variant?: "desktop" | "mobile";
+  /** Sonuç tıklandığında çağrılır (mobile drawer'ı kapatmak için) */
+  onNavigate?: () => void;
+};
+
+export function SiteSearch({ variant = "desktop", onNavigate }: Props = {}) {
   const [query, setQuery] = useState("");
   const [items, setItems] = useState<SearchItem[]>([]);
   const [loaded, setLoaded] = useState(false);
@@ -96,14 +103,20 @@ export function SiteSearch() {
   return (
     <div
       ref={containerRef}
-      className="relative flex-1 max-w-[520px] mx-auto hidden md:block"
+      className={`relative ${
+        variant === "mobile"
+          ? "w-full"
+          : "flex-1 max-w-[520px] mx-auto hidden md:block"
+      }`}
     >
       <form
         role="search"
         action="/shop"
         method="get"
         onSubmit={onSubmit}
-        className="flex items-center gap-2 h-10 px-4 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface)]/60 focus-within:border-[color:var(--color-foreground)] transition-colors"
+        className={`flex items-center gap-2 ${
+          variant === "mobile" ? "h-12 px-5" : "h-10 px-4"
+        } rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface)]/60 focus-within:border-[color:var(--color-foreground)] transition-colors`}
       >
         <svg
           width="16"
@@ -155,7 +168,7 @@ export function SiteSearch() {
               <Link
                 href="/shop"
                 className="underline underline-offset-4"
-                onClick={() => setOpen(false)}
+                onClick={() => { setOpen(false); onNavigate?.(); }}
               >
                 tüm ürünler
               </Link>
@@ -167,7 +180,7 @@ export function SiteSearch() {
                 <li key={`${r.kind}-${r.url}-${i}`}>
                   <Link
                     href={r.url}
-                    onClick={() => setOpen(false)}
+                    onClick={() => { setOpen(false); onNavigate?.(); }}
                     onMouseEnter={() => setActiveIdx(i)}
                     className={`flex items-center gap-3 p-3 border-b border-[color:var(--color-hairline)] last:border-b-0 transition-colors ${
                       i === activeIdx ? "bg-[color:var(--color-surface)]" : ""

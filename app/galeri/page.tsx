@@ -138,61 +138,21 @@ export default function GaleriLandingPage() {
         </div>
       </section>
 
-      {/* 3. Yakında — mağaza teaser */}
+      {/* 3. Edisyon bilgisi — telefon ile soruluyor */}
       <section className="container-x pb-24 border-t border-[color:var(--color-hairline)] pt-14">
         <Reveal>
-          <div className="grid lg:grid-cols-[1fr_1.2fr] gap-10 lg:gap-16 items-center">
-            <div>
-              <p className="eyebrow">Yakında · Mağaza</p>
-              <h2 className="font-display mt-4 leading-[0.98] text-[clamp(2rem,4vw,3.5rem)] tracking-tight">
-                <span className="block italic">Yakında.</span>
-                <span className="block text-[0.55em] mt-3 tracking-tight">
-                  galerideki eserler mağaza rafına geliyor.
-                </span>
-              </h2>
-              <p className="mt-7 max-w-md text-base leading-relaxed text-[color:var(--color-muted)]">
-                İki seride yer alan baskıların tamamı önümüzdeki haftalarda
-                mağazada{" "}
-                <Link
-                  href="/shop/linol-baskilari"
-                  className="underline underline-offset-4 hover:text-[color:var(--color-foreground)]"
-                >
-                  Linol Baskıları
-                </Link>{" "}
-                kategorisinde açılıyor. Şimdilik edisyon, boyut ve fiyat
-                bilgisi için bize ulaşabilirsiniz.
-              </p>
-              <div className="mt-7 flex flex-wrap gap-3">
-                <Link
-                  href="/shop/linol-baskilari"
-                  className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase"
-                  style={{
-                    background: "var(--color-walnut-dark)",
-                    color: "var(--color-background)",
-                  }}
-                >
-                  Mağazada gör
-                </Link>
-                <PhoneCTA variant="outline" label="Telefonla bilgi al" />
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              {series.map((s) =>
-                s.coverImage ? (
-                  <div
-                    key={s.slug}
-                    className="relative aspect-square w-full overflow-hidden bg-[color:var(--color-surface-2)]"
-                  >
-                    <Image
-                      src={s.coverImage}
-                      alt={s.title}
-                      fill
-                      sizes="(max-width: 1024px) 50vw, 25vw"
-                      className="object-cover"
-                    />
-                  </div>
-                ) : null,
-              )}
+          <div className="max-w-2xl">
+            <p className="eyebrow">Eserler hakkında</p>
+            <h2 className="font-display mt-4 leading-[0.98] text-[clamp(1.8rem,3.5vw,2.6rem)] tracking-tight">
+              <span className="italic">Edisyon, boyut ve fiyat</span>{" "}
+              bilgisi için bize ulaşın.
+            </h2>
+            <p className="mt-6 text-base leading-relaxed text-[color:var(--color-muted)]">
+              Her baskı atölyede tek tek elle çoğaltılır. Eser detayları için
+              telefon ya da Instagram&apos;dan iletişime geçebilirsiniz.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <PhoneCTA variant="button" label="Telefonla bilgi al" />
             </div>
           </div>
         </Reveal>

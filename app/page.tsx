@@ -326,13 +326,6 @@ export default function HomePage() {
                 >
                   Mağazaya göz at
                 </Link>
-                <Link
-                  href="/shop/linol-baskilari"
-                  className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase border"
-                  style={{ borderColor: "var(--color-walnut-dark)" }}
-                >
-                  Linol Baskıları · Yakında
-                </Link>
               </div>
             </div>
           </div>
