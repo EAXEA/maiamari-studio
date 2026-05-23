@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getBusiness } from "@/lib/data";
 import { WhatsappComingSoon } from "@/components/inquiry/whatsapp-coming-soon";
+import { PhoneCTA } from "@/components/inquiry/phone-cta";
 import { TransitInfo } from "@/components/transit/transit-info";
 
 export function SiteFooter() {
@@ -51,9 +52,7 @@ export function SiteFooter() {
           <h3 className="eyebrow mb-5">İletişim</h3>
           <ul className="space-y-3">
             <li>
-              <a href={`tel:${biz.contact.phonePrimary.replace(/\s/g, "")}`}>
-                {biz.contact.phonePrimary}
-              </a>
+              <PhoneCTA variant="link" label="Telefon" />
             </li>
             <li>
               <a href={biz.contact.instagram} target="_blank" rel="noreferrer">

@@ -201,7 +201,9 @@ export function SiteSearch() {
                               .toUpperCase()
                           : r.kind === "category"
                             ? "K"
-                            : ""}
+                            : r.kind === "series"
+                              ? "S"
+                              : ""}
                       </div>
                     )}
 

@@ -1,9 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import Image from "next/image";
-import { getBusiness, getWorkshops } from "@/lib/data";
+import { getWorkshops } from "@/lib/data";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { WhatsappComingSoon } from "@/components/inquiry/whatsapp-coming-soon";
+import { PhoneCTA } from "@/components/inquiry/phone-cta";
 import { WORKSHOP_IMAGES } from "@/lib/workshop-images";
 import { InstructorAvatar } from "@/components/instructor/instructor-avatar";
 
@@ -37,9 +38,7 @@ function instructorAvatarPath(name: string): string | undefined {
 export const metadata = { title: "Atölyeler" };
 
 export default function AtolyelerPage() {
-  const biz = getBusiness();
   const workshops = getWorkshops();
-  const phoneHref = `tel:${biz.contact.phonePrimary.replace(/\s/g, "")}`;
 
   return (
     <div className="container-x py-16 lg:py-24">
@@ -69,10 +68,7 @@ export default function AtolyelerPage() {
             Suluboya, çanta baskı, el yapımı kâğıt ve linol baskı atölyelerimiz
             Maiamari atölyesinde küçük gruplar halinde düzenlenir. Bilgi ve
             kayıt için{" "}
-            <a href={phoneHref} className="underline underline-offset-4">
-              {biz.contact.phonePrimary}
-            </a>{" "}
-            numarasını arayın.
+            <PhoneCTA variant="inline" label="atölye telefonunu" /> arayın.
           </p>
         </header>
       </Reveal>
@@ -86,37 +82,51 @@ export default function AtolyelerPage() {
           const [firstWord, ...restWords] = w.title.split(" ");
           const rest = restWords.join(" ");
           const img = WORKSHOP_IMAGES[w.slug];
+          const isWorkshop = /workshop/i.test(w.title);
           return (
             <StaggerItem
               key={w.slug}
-              className="border border-[color:var(--color-border)] bg-[color:var(--color-surface)] overflow-hidden group hover:-translate-y-1 transition-transform duration-500 md:flex md:items-stretch"
+              className="border border-[color:var(--color-border)] bg-[color:var(--color-surface)] overflow-hidden group hover:-translate-y-1 transition-transform duration-500 flex items-stretch"
             >
               {img && (
-                <div className="relative w-full aspect-[4/5] md:w-[40%] md:aspect-auto md:self-stretch md:min-h-[260px] md:max-h-[340px] bg-[color:var(--color-surface-2)] overflow-hidden shrink-0">
+                <div className="relative w-[38%] sm:w-[34%] md:w-[30%] self-stretch min-h-[180px] sm:min-h-[200px] lg:min-h-[240px] bg-[color:var(--color-surface-2)] overflow-hidden shrink-0">
                   <Image
                     src={img.src}
                     alt={img.alt}
                     fill
-                    sizes="(max-width: 768px) 100vw, 22vw"
+                    sizes="(max-width: 640px) 40vw, (max-width: 1024px) 25vw, 18vw"
                     quality={88}
                     className="object-cover atolye-tint transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
                   />
                 </div>
               )}
-              <div className="relative p-6 lg:p-7 flex flex-col flex-1 min-w-0">
-                {/* Eğitmen mini avatar — yuvarlak, tıklanmaz */}
-                <div className="absolute top-5 right-5 z-10">
+              <div className="relative p-5 lg:p-7 flex flex-col flex-1 min-w-0">
+                <div className="flex items-start justify-between gap-3">
+                  <span className="text-[10px] lg:text-[11px] tracking-[0.3em] uppercase text-[color:var(--color-muted)]">
+                    {isWorkshop ? "Workshop" : "Aylık · Küçük grup"}
+                  </span>
                   <InstructorAvatar
                     name={w.instructor}
                     avatarSrc={instructorAvatarPath(w.instructor)}
-                    size={44}
+                    size={36}
                   />
                 </div>
 
-                <p
-                  className="text-[10px] tracking-[0.35em] uppercase pr-14"
-                  style={{ color: "var(--color-walnut)" }}
+                <h2
+                  className="font-display mt-3 lg:mt-4 leading-[1.04]"
+                  style={{ color: "var(--color-walnut-dark)" }}
                 >
+                  <span className="block text-xl sm:text-2xl lg:text-3xl italic">
+                    {firstWord}
+                  </span>
+                  {rest && (
+                    <span className="block text-xl sm:text-2xl lg:text-3xl mt-0.5">
+                      {rest}
+                    </span>
+                  )}
+                </h2>
+
+                <p className="mt-3 lg:mt-4 text-[11px] tracking-[0.18em] uppercase text-[color:var(--color-muted)]">
                   Eğitmen ·{" "}
                   {w.instructorInstagramUrl ? (
                     <a
@@ -131,49 +141,6 @@ export default function AtolyelerPage() {
                     w.instructor
                   )}
                 </p>
-
-                <h2
-                  className="font-display mt-3 leading-[1.02]"
-                  style={{ color: "var(--color-walnut-dark)" }}
-                >
-                  <span className="block text-2xl lg:text-3xl italic">
-                    {firstWord}
-                  </span>
-                  {rest && (
-                    <span className="block text-2xl lg:text-3xl mt-0.5">
-                      {rest}
-                    </span>
-                  )}
-                </h2>
-
-                <div className="mt-auto pt-6 flex flex-wrap gap-2">
-                  <a
-                    href={phoneHref}
-                    className="inline-flex h-9 px-4 items-center text-[10px] tracking-[0.2em] uppercase transition-opacity hover:opacity-90"
-                    style={{
-                      background: "var(--color-walnut-dark)",
-                      color: "var(--color-background)",
-                    }}
-                  >
-                    Telefonla bilgi al
-                  </a>
-                  <a
-                    href={biz.contact.instagram}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex h-9 px-4 items-center text-[10px] tracking-[0.2em] uppercase border transition-colors hover:bg-[color:var(--color-foreground)] hover:text-[color:var(--color-background)]"
-                    style={{
-                      borderColor: "var(--color-foreground)",
-                      color: "var(--color-foreground)",
-                    }}
-                  >
-                    Instagram DM
-                  </a>
-                  <WhatsappComingSoon
-                    variant="button"
-                    className="h-9 px-4 text-[10px] tracking-[0.2em]"
-                  />
-                </div>
               </div>
             </StaggerItem>
           );
@@ -207,16 +174,15 @@ export default function AtolyelerPage() {
             Yer kontenjanı sınırlıdır. Kayıt önceliği telefonla yapılır.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <a
-              href={phoneHref}
+            <PhoneCTA
+              variant="bare"
+              label="Telefon · Randevu al"
               className="inline-flex h-12 px-8 items-center text-xs tracking-[0.25em] uppercase"
               style={{
                 background: "var(--color-walnut-dark)",
                 color: "var(--color-background)",
               }}
-            >
-              Telefonla ara · {biz.contact.phonePrimary}
-            </a>
+            />
             <WhatsappComingSoon variant="button" className="h-12" />
           </div>
         </div>

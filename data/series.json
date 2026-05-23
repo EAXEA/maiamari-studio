@@ -1,0 +1,19 @@
+[
+  {
+    "slug": "kapilar",
+    "title": "Kapılar",
+    "subtitle": "Linol baskı · sayılı edisyon",
+    "year": 2018,
+    "description": "Duygu Sinan'ın atölyede elle bastığı, sayılı edisyondaki Kapılar serisi. Her bir tabaka atölyede tek tek üretilir; mürekkebin kâğıt üzerindeki izi ve her tabakanın çıkardığı küçük farklar koleksiyonun parçasıdır.",
+    "coverImage": "/images/portfolio/print_01.jpg"
+  },
+  {
+    "slug": "maskeler",
+    "title": "Lord of … Maskeler",
+    "subtitle": "Linol baskı · Japon el yapımı kâğıt · 2024",
+    "year": 2024,
+    "description": "Türk ve Japon kültürlerinde, kökleri şamanizme uzanan ortak ruhani kavramlardan beslenen \"Lord of…\" serisi, Japon Noh tiyatrosu maskelerinden ilham alır. Koruyucu ruhların vizyonlarını taşıyan kompozisyonlar, atölyede tek tek Japon el yapımı kâğıt üzerine elle basılır.",
+    "coverImage": "/images/portfolio/maskeler/maske-01.jpg",
+    "paperNote": "Japon el yapımı kâğıt üzerine elle basıldı"
+  }
+]

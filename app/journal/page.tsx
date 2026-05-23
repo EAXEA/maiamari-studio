@@ -120,24 +120,24 @@ export default function JournalPage() {
                       aria-hidden
                     />
 
-                    {/* CARD — image timeline'a yakın, text dışa açılır */}
+                    {/* CARD — foto her zaman yanda, metin yan tarafta */}
                     <article
-                      className={`group bg-[color:var(--color-surface)] border border-[color:var(--color-border)] overflow-hidden transition-all duration-500 ease-out md:hover:shadow-lg md:hover:-translate-y-1 md:flex ${
+                      className={`group bg-[color:var(--color-surface)] border border-[color:var(--color-border)] overflow-hidden transition-all duration-500 ease-out md:hover:shadow-lg md:hover:-translate-y-1 flex ${
                         isRight
                           ? "md:order-2 md:ml-10 md:flex-row"
                           : "md:order-1 md:mr-10 md:flex-row-reverse"
                       }`}
                     >
-                      {/* Cover — timeline tarafı. self-start + max-h ile sabit
-                          yükseklik; hover'da kart text expand olsa bile image
-                          cell büyümez → düşük çözünürlük asset pikselleşmez. */}
+                      {/* Cover — mobilde de yan (thumbnail), desktop'ta timeline tarafı.
+                          self-start + max-h ile sabit yükseklik; hover'da kart text expand
+                          olsa bile image cell büyümez. */}
                       {post.image && (
-                        <div className="relative w-full aspect-[4/5] md:w-[42%] md:aspect-auto md:self-start md:min-h-[300px] md:max-h-[420px] md:sticky md:top-24 bg-[color:var(--color-surface-2)] overflow-hidden shrink-0">
+                        <div className="relative w-[38%] sm:w-[34%] md:w-[42%] self-stretch md:self-start min-h-[180px] sm:min-h-[220px] md:min-h-[300px] md:max-h-[420px] md:sticky md:top-24 bg-[color:var(--color-surface-2)] overflow-hidden shrink-0">
                           <Image
                             src={post.image}
                             alt={post.imageAlt || post.title}
                             fill
-                            sizes="(max-width: 768px) 100vw, 30vw"
+                            sizes="(max-width: 640px) 38vw, (max-width: 1024px) 28vw, 22vw"
                             quality={90}
                             className="object-cover atolye-tint transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
                           />
@@ -145,7 +145,7 @@ export default function JournalPage() {
                       )}
 
                       {/* Mini meta — always visible */}
-                      <div className="p-6 lg:p-8 md:flex-1 md:min-w-0">
+                      <div className="p-5 sm:p-6 lg:p-8 flex-1 min-w-0">
                         <p className="text-[10px] tracking-[0.35em] uppercase text-[color:var(--color-walnut)]">
                           {post.category ?? "Atölyeden"}
                           {post.dateLabel && (

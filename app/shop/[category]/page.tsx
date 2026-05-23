@@ -12,6 +12,7 @@ import type { CategorySlug } from "@/lib/types";
 import { ProductCard } from "@/components/product/product-card";
 import { breadcrumbSchema, jsonLdScript } from "@/lib/structured-data";
 import { WhatsappComingSoon } from "@/components/inquiry/whatsapp-coming-soon";
+import { PhoneCTA } from "@/components/inquiry/phone-cta";
 
 const BASE_URL = "https://www.maiamari.art";
 
@@ -51,7 +52,6 @@ export default async function CategoryPage({
   const products = getProductsByCategory(category as CategorySlug);
   const allCats = getCategories();
   const biz = getBusiness();
-  const phoneHref = `tel:${biz.contact.phonePrimary.replace(/\s/g, "")}`;
 
   // Kategori-spesifik atölye banner görselleri (eklemek için slug:src ekle)
   const categoryBanner: Partial<Record<string, { src: string; alt: string }>> = {};
@@ -169,13 +169,10 @@ export default async function CategoryPage({
               >
                 Instagram&apos;da takip et
               </a>
-              <a
-                href={phoneHref}
-                className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase border"
-                style={{ borderColor: "var(--color-walnut-dark)" }}
-              >
-                Telefonla bilgi al
-              </a>
+              <PhoneCTA
+                variant="outline"
+                label="Telefonla bilgi al"
+              />
               <WhatsappComingSoon variant="button" />
             </div>
 

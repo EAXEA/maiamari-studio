@@ -24,6 +24,45 @@ function Mark({ char, label }: { char: string; label: string }) {
 }
 
 /**
+ * Yürüyüş süresinin önüne konan minimal "yürüyen adam" sembolü.
+ * Heroicons walking pictogram (stroke 1.5). Renk muted/walnut'a uyar.
+ */
+function WalkIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="12"
+      height="12"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className="inline-block -mt-px shrink-0"
+    >
+      <circle cx="13" cy="4.5" r="1.5" />
+      <path d="M11 21l2-6-3-3 1-4 3 2 3 1" />
+      <path d="M9 13l1-4" />
+      <path d="M13 15l-2 6" />
+    </svg>
+  );
+}
+
+function WalkTime({ minutes }: { minutes: number }) {
+  return (
+    <span
+      className="inline-flex items-center gap-1 align-baseline"
+      aria-label={`yürüyerek ${minutes} dakika`}
+      title="yürüyerek"
+    >
+      <WalkIcon />
+      <span>{minutes} dk</span>
+    </span>
+  );
+}
+
+/**
  * Atölyenin ulaşım bilgileri — M ve B daireli minimal mark'lar.
  * "Yakın metro: …" gibi etiket kullanmaz, sembol konuşur.
  */
@@ -38,9 +77,12 @@ export function TransitInfo({ transit, size = "md" }: Props) {
         <span>
           {transit.nearestMetro}
           {transit.metroDistance ? ` · ${transit.metroDistance}` : ""}
-          {transit.metroWalkMinutes !== undefined
-            ? ` · ${transit.metroWalkMinutes} dk`
-            : ""}
+          {transit.metroWalkMinutes !== undefined ? (
+            <>
+              {" · "}
+              <WalkTime minutes={transit.metroWalkMinutes} />
+            </>
+          ) : null}
         </span>
       </p>
       {transit.nearestBusStop && (
@@ -48,9 +90,12 @@ export function TransitInfo({ transit, size = "md" }: Props) {
           <Mark char="B" label="Otobüs" />
           <span>
             {transit.nearestBusStop}
-            {transit.busStopWalkMinutes !== undefined
-              ? ` · ${transit.busStopWalkMinutes} dk`
-              : ""}
+            {transit.busStopWalkMinutes !== undefined ? (
+              <>
+                {" · "}
+                <WalkTime minutes={transit.busStopWalkMinutes} />
+              </>
+            ) : null}
             {transit.busLines && transit.busLines.length > 0
               ? ` · ${transit.busLines.join(", ")}`
               : ""}

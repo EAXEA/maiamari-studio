@@ -1,66 +1,189 @@
 [
   {
     "id": "print-01",
-    "slug": "baski-01",
+    "slug": "kapilar-01",
     "title": "Baskı № 1",
-    "description": "Sanatçı Duygu Sinan'ın atölyede çoğaltılmış linol baskısı. Detaylı bilgi ve edisyon bilgisi için iletişime geçin.",
+    "description": "Sanatçı Duygu Sinan'ın Kapılar serisinden, atölyede elle çoğaltılmış linol baskı. Edisyon, boyut ve fiyat bilgisi için iletişime geçin.",
     "image": "/images/portfolio/print_01.jpg",
-    "year": 2018
+    "year": 2018,
+    "series": "kapilar",
+    "width": 1125,
+    "height": 1125
   },
   {
     "id": "print-02",
-    "slug": "baski-02",
+    "slug": "kapilar-02",
     "title": "Baskı № 2",
-    "description": "Sanatçı Duygu Sinan'ın atölyede çoğaltılmış linol baskısı. Detaylı bilgi ve edisyon bilgisi için iletişime geçin.",
+    "description": "Sanatçı Duygu Sinan'ın Kapılar serisinden, atölyede elle çoğaltılmış linol baskı. Edisyon, boyut ve fiyat bilgisi için iletişime geçin.",
     "image": "/images/portfolio/print_02.jpg",
-    "year": 2018
+    "year": 2018,
+    "series": "kapilar",
+    "width": 1125,
+    "height": 1125
   },
   {
     "id": "print-03",
-    "slug": "baski-03",
+    "slug": "kapilar-03",
     "title": "Baskı № 3",
-    "description": "Sanatçı Duygu Sinan'ın atölyede çoğaltılmış linol baskısı. Detaylı bilgi ve edisyon bilgisi için iletişime geçin.",
+    "description": "Sanatçı Duygu Sinan'ın Kapılar serisinden, atölyede elle çoğaltılmış linol baskı. Edisyon, boyut ve fiyat bilgisi için iletişime geçin.",
     "image": "/images/portfolio/print_03.jpg",
-    "year": 2018
+    "year": 2018,
+    "series": "kapilar",
+    "width": 1125,
+    "height": 1125
   },
   {
     "id": "print-04",
-    "slug": "baski-04",
+    "slug": "kapilar-04",
     "title": "Baskı № 4",
-    "description": "Sanatçı Duygu Sinan'ın atölyede çoğaltılmış linol baskısı. Detaylı bilgi ve edisyon bilgisi için iletişime geçin.",
+    "description": "Sanatçı Duygu Sinan'ın Kapılar serisinden, atölyede elle çoğaltılmış linol baskı. Edisyon, boyut ve fiyat bilgisi için iletişime geçin.",
     "image": "/images/portfolio/print_04.jpg",
-    "year": 2018
+    "year": 2018,
+    "series": "kapilar",
+    "width": 1125,
+    "height": 1125
   },
   {
     "id": "print-05",
-    "slug": "baski-05",
+    "slug": "kapilar-05",
     "title": "Baskı № 5",
-    "description": "Sanatçı Duygu Sinan'ın atölyede çoğaltılmış linol baskısı. Detaylı bilgi ve edisyon bilgisi için iletişime geçin.",
+    "description": "Sanatçı Duygu Sinan'ın Kapılar serisinden, atölyede elle çoğaltılmış linol baskı. Edisyon, boyut ve fiyat bilgisi için iletişime geçin.",
     "image": "/images/portfolio/print_05.jpg",
-    "year": 2018
+    "year": 2018,
+    "series": "kapilar",
+    "width": 1271,
+    "height": 1586
   },
   {
     "id": "print-06",
-    "slug": "baski-06",
+    "slug": "kapilar-06",
     "title": "Baskı № 6",
-    "description": "Sanatçı Duygu Sinan'ın atölyede çoğaltılmış linol baskısı. Detaylı bilgi ve edisyon bilgisi için iletişime geçin.",
+    "description": "Sanatçı Duygu Sinan'ın Kapılar serisinden, atölyede elle çoğaltılmış linol baskı. Edisyon, boyut ve fiyat bilgisi için iletişime geçin.",
     "image": "/images/portfolio/print_06.jpg",
-    "year": 2018
+    "year": 2018,
+    "series": "kapilar",
+    "width": 1333,
+    "height": 2000
   },
   {
     "id": "print-07",
-    "slug": "baski-07",
+    "slug": "kapilar-07",
     "title": "Baskı № 7",
-    "description": "Sanatçı Duygu Sinan'ın atölyede çoğaltılmış linol baskısı. Detaylı bilgi ve edisyon bilgisi için iletişime geçin.",
+    "description": "Sanatçı Duygu Sinan'ın Kapılar serisinden, atölyede elle çoğaltılmış linol baskı. Edisyon, boyut ve fiyat bilgisi için iletişime geçin.",
     "image": "/images/portfolio/print_07.jpg",
-    "year": 2018
+    "year": 2018,
+    "series": "kapilar",
+    "width": 1005,
+    "height": 2000
   },
   {
     "id": "print-08",
-    "slug": "baski-08",
+    "slug": "kapilar-08",
     "title": "Baskı № 8",
-    "description": "Sanatçı Duygu Sinan'ın atölyede çoğaltılmış linol baskısı. Detaylı bilgi ve edisyon bilgisi için iletişime geçin.",
+    "description": "Sanatçı Duygu Sinan'ın Kapılar serisinden, atölyede elle çoğaltılmış linol baskı. Edisyon, boyut ve fiyat bilgisi için iletişime geçin.",
     "image": "/images/portfolio/print_08.jpg",
-    "year": 2021
+    "year": 2021,
+    "series": "kapilar",
+    "width": 1500,
+    "height": 2000
+  },
+  {
+    "id": "maske-01",
+    "slug": "maske-01",
+    "title": "Baskı № 1",
+    "description": "Sanatçı Duygu Sinan'ın \"Lord of…\" maske serisinden, Japon el yapımı kâğıt üzerine elle bastığı linol baskı. Edisyon, boyut ve fiyat bilgisi için iletişime geçin.",
+    "image": "/images/portfolio/maskeler/maske-01.jpg",
+    "year": 2024,
+    "series": "maskeler",
+    "width": 2229,
+    "height": 2400
+  },
+  {
+    "id": "maske-02",
+    "slug": "maske-02",
+    "title": "Baskı № 2",
+    "description": "Sanatçı Duygu Sinan'ın \"Lord of…\" maske serisinden, Japon el yapımı kâğıt üzerine elle bastığı linol baskı. Edisyon, boyut ve fiyat bilgisi için iletişime geçin.",
+    "image": "/images/portfolio/maskeler/maske-02.jpg",
+    "year": 2024,
+    "series": "maskeler",
+    "width": 2285,
+    "height": 2400
+  },
+  {
+    "id": "maske-03",
+    "slug": "maske-03",
+    "title": "Baskı № 3",
+    "description": "Sanatçı Duygu Sinan'ın \"Lord of…\" maske serisinden, Japon el yapımı kâğıt üzerine elle bastığı linol baskı. Edisyon, boyut ve fiyat bilgisi için iletişime geçin.",
+    "image": "/images/portfolio/maskeler/maske-03.jpg",
+    "year": 2024,
+    "series": "maskeler",
+    "width": 2206,
+    "height": 2400
+  },
+  {
+    "id": "maske-04",
+    "slug": "maske-04",
+    "title": "Baskı № 4",
+    "description": "Sanatçı Duygu Sinan'ın \"Lord of…\" maske serisinden, Japon el yapımı kâğıt üzerine elle bastığı linol baskı. Edisyon, boyut ve fiyat bilgisi için iletişime geçin.",
+    "image": "/images/portfolio/maskeler/maske-04.jpg",
+    "year": 2024,
+    "series": "maskeler",
+    "width": 2187,
+    "height": 2400
+  },
+  {
+    "id": "maske-05",
+    "slug": "maske-05",
+    "title": "Baskı № 5",
+    "description": "Sanatçı Duygu Sinan'ın \"Lord of…\" maske serisinden, Japon el yapımı kâğıt üzerine elle bastığı linol baskı. Edisyon, boyut ve fiyat bilgisi için iletişime geçin.",
+    "image": "/images/portfolio/maskeler/maske-05.jpg",
+    "year": 2024,
+    "series": "maskeler",
+    "width": 2174,
+    "height": 2400
+  },
+  {
+    "id": "maske-06",
+    "slug": "maske-06",
+    "title": "Baskı № 6",
+    "description": "Sanatçı Duygu Sinan'ın \"Lord of…\" maske serisinden, Japon el yapımı kâğıt üzerine elle bastığı linol baskı. Edisyon, boyut ve fiyat bilgisi için iletişime geçin.",
+    "image": "/images/portfolio/maskeler/maske-06.jpg",
+    "year": 2024,
+    "series": "maskeler",
+    "width": 2253,
+    "height": 2400
+  },
+  {
+    "id": "maske-07",
+    "slug": "maske-07",
+    "title": "Baskı № 7",
+    "description": "Sanatçı Duygu Sinan'ın \"Lord of…\" maske serisinden, Japon el yapımı kâğıt üzerine elle bastığı linol baskı. Edisyon, boyut ve fiyat bilgisi için iletişime geçin.",
+    "image": "/images/portfolio/maskeler/maske-07.jpg",
+    "year": 2024,
+    "series": "maskeler",
+    "width": 2133,
+    "height": 2400
+  },
+  {
+    "id": "maske-08",
+    "slug": "maske-08",
+    "title": "Baskı № 8",
+    "description": "Sanatçı Duygu Sinan'ın \"Lord of…\" maske serisinden, Japon el yapımı kâğıt üzerine elle bastığı linol baskı. Edisyon, boyut ve fiyat bilgisi için iletişime geçin.",
+    "image": "/images/portfolio/maskeler/maske-08.jpg",
+    "year": 2024,
+    "series": "maskeler",
+    "width": 2191,
+    "height": 2400
+  },
+  {
+    "id": "maske-09",
+    "slug": "maske-09",
+    "title": "Baskı № 9",
+    "description": "Sanatçı Duygu Sinan'ın \"Lord of…\" maske serisinden, Japon el yapımı kâğıt üzerine elle bastığı linol baskı. Edisyon, boyut ve fiyat bilgisi için iletişime geçin.",
+    "image": "/images/portfolio/maskeler/maske-09.jpg",
+    "year": 2024,
+    "series": "maskeler",
+    "width": 2143,
+    "height": 2400
   }
 ]

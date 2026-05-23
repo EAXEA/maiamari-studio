@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { getBusiness } from "@/lib/data";
 import { WhatsappComingSoon } from "@/components/inquiry/whatsapp-coming-soon";
+import { PhoneCTA } from "@/components/inquiry/phone-cta";
 import { TransitInfo } from "@/components/transit/transit-info";
 
 export const metadata = { title: "İletişim" };
@@ -10,7 +11,7 @@ export default function ContactPage() {
 
   return (
     <div>
-      {/* Storefront banner — atölyenin sokağa açılan yüzü */}
+      {/* Storefront banner — atölyenin sokağa açılan yüzü, sakin filtre */}
       <section className="relative w-full aspect-[21/9] max-h-[520px] overflow-hidden bg-[color:var(--color-surface-2)]">
         <Image
           src="/images/atolye/storefront.jpg"
@@ -19,6 +20,26 @@ export default function ContactPage() {
           priority
           sizes="100vw"
           className="object-cover atolye-tint"
+          style={{
+            filter: "grayscale(0.55) contrast(0.94) brightness(0.92)",
+          }}
+        />
+        {/* sıcak tonda ince bir overlay — markanın walnut paletine yaslar */}
+        <div
+          aria-hidden
+          className="absolute inset-0 pointer-events-none mix-blend-multiply"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(60,40,28,0.18) 0%, rgba(60,40,28,0.35) 100%)",
+          }}
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(120% 80% at 50% 10%, transparent 40%, rgba(0,0,0,0.18) 100%)",
+          }}
         />
         <figcaption className="absolute bottom-4 lg:bottom-6 left-6 lg:left-10 text-[10px] tracking-[0.32em] uppercase text-white drop-shadow-md">
           Bülbülderesi Cd. · Küçükesat
@@ -49,14 +70,19 @@ export default function ContactPage() {
 
           <section>
             <h2 className="font-display text-xl mb-3">İletişim</h2>
-            <dl className="grid grid-cols-[max-content_1fr] gap-x-8 gap-y-2 text-sm">
+            <dl className="grid grid-cols-[max-content_1fr] gap-x-8 gap-y-3 text-sm">
               <dt className="text-[color:var(--color-muted)] uppercase tracking-wider">
                 Telefon
               </dt>
               <dd>
                 <a
                   href={`tel:${biz.contact.phonePrimary.replace(/\s/g, "")}`}
-                  className="underline underline-offset-4"
+                  className="inline-flex h-10 px-4 items-center justify-center text-[12px] tracking-[0.18em] uppercase w-fit"
+                  style={{
+                    background: "var(--color-walnut-dark)",
+                    color: "var(--color-background)",
+                  }}
+                  aria-label={`Atölyeyi telefonla ara: ${biz.contact.phonePrimary}`}
                 >
                   {biz.contact.phonePrimary}
                 </a>
@@ -80,21 +106,26 @@ export default function ContactPage() {
                   @maiamari.studio
                 </a>
               </dd>
-              <dt className="text-[color:var(--color-muted)] uppercase tracking-wider">
-                Çalışma
-              </dt>
-              <dd>Kapanış {biz.hours.closingTime}</dd>
             </dl>
           </section>
 
           <section>
-            <h2 className="font-display text-xl mb-3">Atölye ziyareti</h2>
+            <h2 className="font-display text-xl mb-3">Atölye ziyareti · randevu</h2>
             <p className="text-sm leading-relaxed text-[color:var(--color-muted)] max-w-prose">
-              Atölyemize randevulu ya da randevusuz uğrayabilirsiniz. Yine de
-              gelmeden önce telefon ya da Instagram&apos;dan bize ulaşmanızı
-              öneririz — atölyede olduğumuzdan emin olur, ilgilendiğiniz
-              baskı veya malzeme için kısa bir ön bilgi alırsınız.
+              Atölyemizi ziyaret etmeden önce telefonla kısa bir randevu
+              almanızı rica ediyoruz. Böylece sizi bekliyor olur,
+              ilgilendiğiniz baskı, malzeme ya da atölye programı için yeterli
+              zaman ayırırız. Randevular en geç bir gün öncesinden alınır.
             </p>
+            <ul className="mt-5 space-y-1.5 text-sm text-[color:var(--color-muted)] max-w-prose">
+              <li>· Eser, edisyon ve fiyat bilgisi</li>
+              <li>· Atölye programı ve aylık ders rezervasyonu</li>
+              <li>· Malzeme ve sipariş için ön görüşme</li>
+            </ul>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <PhoneCTA variant="button" label="Telefon · Randevu al" />
+              <WhatsappComingSoon variant="button" />
+            </div>
           </section>
         </div>
 

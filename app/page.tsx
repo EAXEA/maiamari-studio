@@ -1,22 +1,23 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getBusiness, getWorkshops, getPortfolio } from "@/lib/data";
-import { InterestHero } from "@/components/sections/interest-hero";
 import {
-  HorizontalRail,
-  RailTile,
-} from "@/components/sections/horizontal-rail";
+  getBusiness,
+  getWorkshops,
+  getSeries,
+  getPortfolioBySeries,
+} from "@/lib/data";
+import { InterestHero } from "@/components/sections/interest-hero";
 import { FeatureBanner } from "@/components/sections/feature-banner";
 import { Reveal } from "@/components/motion/reveal";
 import { WORKSHOP_IMAGES } from "@/lib/workshop-images";
 import { WhatsappComingSoon } from "@/components/inquiry/whatsapp-coming-soon";
+import { PhoneCTA } from "@/components/inquiry/phone-cta";
 import { TransitInfo } from "@/components/transit/transit-info";
 
 export default function HomePage() {
   const biz = getBusiness();
   const workshops = getWorkshops();
-  const portfolio = getPortfolio();
-  const phoneHref = `tel:${biz.contact.phonePrimary.replace(/\s/g, "")}`;
+  const series = getSeries();
 
   return (
     <>
@@ -35,144 +36,98 @@ export default function HomePage() {
       />
 
       {/* ============================================================
-          2. Today — Sanatçının baskıları rail
+          2. Galeride — sanatçının iki serisi (editoryal kartlar)
          ============================================================ */}
-      <HorizontalRail
-        eyebrow="Bugün · Atölyeden"
-        title={
-          <>
-            Sanatçının <span className="italic">öne çıkanları</span>
-          </>
-        }
-        ctaHref="/galeri"
-        ctaLabel="Tüm galeri"
-      >
-        {portfolio.map((w) => (
-          <RailTile
-            key={w.id}
-            href="/galeri"
-            image={w.image}
-            imageAlt={w.title}
-            caption={`Duygu Sinan · ${w.year ?? ""}`}
-            title={w.title}
-            meta="Linol baskı · Sayılı edisyon"
-            width={300}
-            aspect="portrait"
-          />
-        ))}
-      </HorizontalRail>
-
-      {/* ============================================================
-          3. Featured story — Bir baskı nasıl doğar
-         ============================================================ */}
-      <FeatureBanner
-        kicker="Hikaye · Atölyede"
-        title="Bir baskı"
-        italicTail="nasıl doğar?"
-        description="Linol plakanın oyulmasından mürekkebin kâğıdı buluşmasına kadar her aşama atölyede tek elden geçer. Her tabakanın çıkardığı küçük farklar koleksiyonun parçasıdır."
-        image="/images/atolye/press-and-brayers.jpg"
-        imageAlt="Atölyenin baskı presi ve merdaneleri"
-        href="/journal"
-        ctaLabel="Hikayeyi oku"
-        align="left"
-        tone="dark"
-      />
-
-      {/* ============================================================
-          4. Workshops — atölye programı (görselli kartlar)
-         ============================================================ */}
-      <section
-        className="py-16 lg:py-24"
-        style={{ background: "var(--color-surface)" }}
-      >
-        <div className="container-x">
-          <Reveal>
-            <div className="flex items-end justify-between gap-6 mb-10 lg:mb-14">
-              <div>
-                <p className="eyebrow">Atölye Programı</p>
-                <h2 className="font-display mt-3 text-3xl md:text-5xl leading-[1.02] tracking-tight">
-                  Kalıbın <span className="italic">altına bakın.</span>
-                </h2>
-                <p className="mt-5 max-w-xl text-base leading-relaxed text-[color:var(--color-muted)]">
-                  Küçük gruplarla linol baskı, suluboya, çanta baskı ve
-                  el yapımı kâğıt atölyeleri. Maiamari mekânında, atölyenin
-                  kendi ekipmanlarıyla.
-                </p>
-              </div>
-              <Link
-                href="/atolyeler"
-                className="hidden md:inline text-sm editorial-link shrink-0"
-              >
-                Tüm program →
-              </Link>
+      <section className="container-x py-16 lg:py-24">
+        <Reveal>
+          <div className="flex items-end justify-between gap-6 mb-10 lg:mb-14">
+            <div>
+              <p className="eyebrow">Bugün · Galeride</p>
+              <h2 className="font-display mt-3 text-3xl md:text-5xl leading-[1.02] tracking-tight max-w-2xl">
+                Sanatçının iki{" "}
+                <span className="italic">öne çıkan serisi.</span>
+              </h2>
             </div>
-          </Reveal>
+            <Link
+              href="/galeri"
+              className="hidden md:inline text-sm editorial-link shrink-0"
+            >
+              Tüm galeri →
+            </Link>
+          </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
-            {workshops.map((w) => {
-              const img = WORKSHOP_IMAGES[w.slug];
+          <div className="grid lg:grid-cols-2 gap-6 lg:gap-10">
+            {series.map((s, i) => {
+              const works = getPortfolioBySeries(s.slug);
+              const tone =
+                s.slug === "maskeler"
+                  ? { label: "II", year: s.year ?? 2024 }
+                  : { label: "I", year: s.year ?? 2018 };
               return (
-                <article
-                  key={w.slug}
-                  className="bg-[color:var(--color-background)] border border-[color:var(--color-border)] overflow-hidden flex flex-col group hover:-translate-y-1 transition-transform duration-500"
+                <Link
+                  key={s.slug}
+                  href={`/galeri/${s.slug}`}
+                  className="group block border border-[color:var(--color-border)] bg-[color:var(--color-surface)] overflow-hidden hover:-translate-y-1 transition-transform duration-500"
+                  aria-label={`${s.title} serisine git`}
                 >
-                  {img && (
-                    <div className="relative w-full aspect-[4/3] bg-[color:var(--color-surface-2)] overflow-hidden">
+                  <div className="relative aspect-[5/3] w-full overflow-hidden bg-[color:var(--color-surface-2)]">
+                    {s.coverImage && (
                       <Image
-                        src={img.src}
-                        alt={img.alt}
+                        src={s.coverImage}
+                        alt={`${s.title} serisinden bir eser`}
                         fill
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        className="object-cover atolye-tint transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
+                        priority={i === 0}
+                        sizes="(max-width: 1024px) 100vw, 50vw"
+                        className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
                       />
+                    )}
+                    <div className="absolute inset-x-0 top-0 flex items-start justify-between p-5 lg:p-7 pointer-events-none">
+                      <span
+                        className="text-[10px] tracking-[0.32em] uppercase px-3 py-1.5"
+                        style={{
+                          background: "var(--color-walnut-dark)",
+                          color: "var(--color-background)",
+                        }}
+                      >
+                        Seri {tone.label}
+                      </span>
+                      <span className="font-display text-xs tracking-[0.25em] text-white drop-shadow-md">
+                        {tone.year}
+                      </span>
                     </div>
-                  )}
-                  <div className="p-6 lg:p-7 flex flex-col flex-1">
-                    <p className="eyebrow">
-                      {w.instructorInstagramUrl ? (
-                        <a
-                          href={w.instructorInstagramUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="underline underline-offset-4 hover:text-[color:var(--color-foreground)]"
-                        >
-                          {w.instructor}
-                        </a>
-                      ) : (
-                        w.instructor
-                      )}
-                    </p>
-                    <h3 className="font-display text-xl lg:text-2xl mt-2 leading-snug">
-                      {w.title}
-                    </h3>
-                    <a
-                      href={phoneHref}
-                      className="mt-5 inline-flex h-10 px-5 items-center self-start border text-[11px] tracking-[0.2em] uppercase hover:bg-[color:var(--color-foreground)] hover:text-[color:var(--color-background)] transition-colors"
-                      style={{ borderColor: "var(--color-foreground)" }}
-                    >
-                      Telefonla bilgi al
-                    </a>
                   </div>
-                </article>
+                  <div className="p-6 lg:p-9">
+                    <p className="eyebrow">{s.subtitle}</p>
+                    <h3 className="font-display mt-3 text-2xl lg:text-4xl leading-[1.05] tracking-tight italic">
+                      {s.title}
+                    </h3>
+                    <p className="mt-4 text-sm lg:text-base leading-relaxed text-[color:var(--color-muted)] max-w-prose">
+                      {s.description}
+                    </p>
+                    <div className="mt-6 flex items-center justify-between text-xs tracking-[0.2em] uppercase text-[color:var(--color-muted)]">
+                      <span>{works.length} eser</span>
+                      <span className="text-[color:var(--color-foreground)] group-hover:translate-x-1 transition-transform">
+                        Seriye gir →
+                      </span>
+                    </div>
+                  </div>
+                </Link>
               );
             })}
           </div>
 
           <Reveal delay={0.2}>
             <div className="mt-10 md:hidden">
-              <Link
-                href="/atolyeler"
-                className="inline-block text-sm editorial-link"
-              >
-                Tüm program →
+              <Link href="/galeri" className="inline-block text-sm editorial-link">
+                Tüm galeri →
               </Link>
             </div>
           </Reveal>
-        </div>
+        </Reveal>
       </section>
 
       {/* ============================================================
-          5. Featured story — Kâğıt fabrikası (/kagit'e yönleniyor)
+          3. Featured story — Kâğıt fabrikası (/kagit'e yönleniyor)
          ============================================================ */}
       <FeatureBanner
         kicker="Hikaye · Kâğıt"
@@ -182,6 +137,137 @@ export default function HomePage() {
         image="/images/atolye/window-and-press.jpg"
         imageAlt="Atölye penceresinden — baskı presi ve sokak"
         href="/kagit"
+        ctaLabel="Hikayeyi oku"
+        align="left"
+        tone="dark"
+      />
+
+      {/* ============================================================
+          4. Workshops — editoryal program bileti (foto yok, metin önde)
+         ============================================================ */}
+      <section
+        className="py-16 lg:py-24"
+        style={{ background: "var(--color-surface)" }}
+      >
+        <div className="container-x">
+          <Reveal>
+            <div className="grid lg:grid-cols-[1.1fr_1fr] gap-8 lg:gap-16 items-end mb-10 lg:mb-14">
+              <div>
+                <p className="eyebrow">Atölye Programı</p>
+                <h2 className="font-display mt-3 text-3xl md:text-5xl leading-[1.02] tracking-tight">
+                  Kalıbın <span className="italic">altına bakın.</span>
+                </h2>
+              </div>
+              <p className="text-base leading-relaxed text-[color:var(--color-muted)] lg:text-right max-w-md lg:ml-auto">
+                Küçük gruplarla linol baskı, suluboya, çanta baskı ve el yapımı
+                kâğıt atölyeleri. Maiamari mekânında, atölyenin kendi
+                ekipmanlarıyla.
+              </p>
+            </div>
+          </Reveal>
+
+          {/* Program bileti */}
+          <Reveal delay={0.1}>
+            <div
+              className="bg-[color:var(--color-background)] border border-[color:var(--color-walnut-dark)]"
+              style={{
+                boxShadow:
+                  "0 1px 2px rgba(60,40,28,0.06), 0 22px 48px -28px rgba(60,40,28,0.28)",
+              }}
+            >
+              {/* Bilet başlığı */}
+              <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-3 px-6 lg:px-10 py-5 lg:py-6 border-b border-dashed border-[color:var(--color-hairline)]">
+                <div className="flex items-baseline gap-4">
+                  <span className="text-[10px] tracking-[0.35em] uppercase text-[color:var(--color-muted)]">
+                    Maiamari · Atölye Programı
+                  </span>
+                </div>
+                <span className="text-[10px] tracking-[0.32em] uppercase text-[color:var(--color-muted)]">
+                  Aylık · Küçük grup · Küçükesat
+                </span>
+              </div>
+
+              {/* Atölye satırları */}
+              <ol className="divide-y divide-[color:var(--color-hairline)]">
+                {workshops.map((w) => {
+                  const isWorkshop = /workshop/i.test(w.title);
+                  const img = WORKSHOP_IMAGES[w.slug];
+                  return (
+                    <li
+                      key={w.slug}
+                      className="grid grid-cols-[auto_1fr_auto] items-center gap-x-4 lg:gap-x-6 px-5 lg:px-10 py-4 lg:py-5"
+                    >
+                      <div className="relative w-12 h-12 lg:w-14 lg:h-14 overflow-hidden bg-[color:var(--color-surface-2)] shrink-0">
+                        {img && (
+                          <Image
+                            src={img.src}
+                            alt=""
+                            fill
+                            sizes="56px"
+                            className="object-cover atolye-tint"
+                          />
+                        )}
+                      </div>
+                      <div className="min-w-0">
+                        <h3 className="font-display text-lg lg:text-xl leading-tight truncate">
+                          {w.title}
+                        </h3>
+                        <p className="mt-1 text-xs tracking-[0.18em] uppercase text-[color:var(--color-muted)] truncate">
+                          {w.instructorInstagramUrl ? (
+                            <a
+                              href={w.instructorInstagramUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="underline underline-offset-4 hover:text-[color:var(--color-foreground)]"
+                            >
+                              {w.instructor}
+                            </a>
+                          ) : (
+                            w.instructor
+                          )}
+                        </p>
+                      </div>
+                      <span className="text-[10px] lg:text-[11px] tracking-[0.22em] uppercase text-[color:var(--color-muted)] whitespace-nowrap">
+                        {isWorkshop ? "Workshop" : "Aylık"}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ol>
+
+              {/* Bilet ayağı — yırtık dikey, tek CTA */}
+              <div className="border-t border-dashed border-[color:var(--color-hairline)] px-6 lg:px-10 py-6 lg:py-7 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <p className="text-sm text-[color:var(--color-muted)] max-w-md">
+                  Kontenjan sınırlıdır. Kayıt ve bilgi için telefonla
+                  randevu alınır.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <Link
+                    href="/atolyeler"
+                    className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase border"
+                    style={{ borderColor: "var(--color-walnut-dark)" }}
+                  >
+                    Tüm program
+                  </Link>
+                  <PhoneCTA variant="button" label="Telefon · Randevu al" />
+                </div>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ============================================================
+          5. Featured story — Bir baskı nasıl doğar
+         ============================================================ */}
+      <FeatureBanner
+        kicker="Hikaye · Atölyede"
+        title="Bir baskı"
+        italicTail="nasıl doğar?"
+        description="Linol plakanın oyulmasından mürekkebin kâğıdı buluşmasına kadar her aşama atölyede tek elden geçer. Her tabakanın çıkardığı küçük farklar koleksiyonun parçasıdır."
+        image="/images/atolye/press-and-brayers.jpg"
+        imageAlt="Atölyenin baskı presi ve merdaneleri"
+        href="/journal"
         ctaLabel="Hikayeyi oku"
         align="right"
         tone="dark"
@@ -270,12 +356,8 @@ export default function HomePage() {
             <dl className="mt-8 grid grid-cols-[max-content_1fr] gap-x-10 gap-y-2.5 text-sm">
               <dt className="text-[color:var(--color-muted)]">Telefon</dt>
               <dd>
-                <a href={`tel:${biz.contact.phonePrimary.replace(/\s/g, "")}`}>
-                  {biz.contact.phonePrimary}
-                </a>
+                <PhoneCTA variant="link" label="Telefon · randevu için arayın" />
               </dd>
-              <dt className="text-[color:var(--color-muted)]">Çalışma</dt>
-              <dd>Kapanış {biz.hours.closingTime}</dd>
               <dt className="text-[color:var(--color-muted)]">Ulaşım</dt>
               <dd>
                 <TransitInfo transit={biz.transit} size="sm" />
@@ -287,17 +369,13 @@ export default function HomePage() {
                 </a>
               </dd>
             </dl>
+            <p className="mt-6 text-sm leading-relaxed text-[color:var(--color-muted)] max-w-md">
+              Atölyeye gelmeden önce telefonla kısa bir randevu almanızı
+              öneririz — böylece atölyede olduğumuzdan emin olur, ilgilendiğiniz
+              baskı ya da malzeme için size zaman ayırabiliriz.
+            </p>
             <div className="mt-10 flex flex-wrap gap-3">
-              <a
-                href={phoneHref}
-                className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase"
-                style={{
-                  background: "var(--color-walnut-dark)",
-                  color: "var(--color-background)",
-                }}
-              >
-                Telefonla ara
-              </a>
+              <PhoneCTA variant="button" label="Telefon · Randevu al" />
               <Link
                 href="/contact"
                 className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase border"

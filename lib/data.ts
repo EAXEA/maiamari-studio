@@ -15,6 +15,8 @@ import type {
   Workshop,
   PortfolioWork,
   JournalPost,
+  Series,
+  SeriesSlug,
 } from "./types";
 
 // ----------------------------------------------------------------
@@ -245,6 +247,18 @@ export function getWorkshops(): Workshop[] {
 
 export function getPortfolio(): PortfolioWork[] {
   return readJson<PortfolioWork[]>("portfolio.json");
+}
+
+export function getSeries(): Series[] {
+  return readJson<Series[]>("series.json");
+}
+
+export function getSeriesBySlug(slug: SeriesSlug): Series | null {
+  return getSeries().find((s) => s.slug === slug) || null;
+}
+
+export function getPortfolioBySeries(slug: SeriesSlug): PortfolioWork[] {
+  return getPortfolio().filter((w) => (w.series ?? "kapilar") === slug);
 }
 
 export function getJournalPosts(): JournalPost[] {

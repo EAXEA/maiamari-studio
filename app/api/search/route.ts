@@ -4,10 +4,11 @@ import {
   getCategories,
   getBusiness,
   getWorkshops,
+  getSeries,
 } from "@/lib/data";
 
 export type SearchItem = {
-  kind: "product" | "artist" | "category";
+  kind: "product" | "artist" | "category" | "series";
   title: string;
   subtitle?: string;
   cover?: string;
@@ -50,6 +51,18 @@ export async function GET() {
       subtitle: "Eğitmen · Atölye",
       url: w.instructorInstagramUrl ?? "/atolyeler",
       keywords: `${w.instructor} ${w.instructorInstagramHandle ?? ""} eğitmen workshop atölye ${w.title}`,
+    });
+  }
+
+  // Galeri serileri
+  for (const s of getSeries()) {
+    items.push({
+      kind: "series",
+      title: s.title,
+      subtitle: s.subtitle ?? "Linol baskı serisi",
+      cover: s.coverImage,
+      url: `/galeri/${s.slug}`,
+      keywords: `${s.title} ${s.subtitle ?? ""} galeri seri linol baskı duygu sinan`,
     });
   }
 

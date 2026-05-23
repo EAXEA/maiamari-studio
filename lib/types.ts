@@ -35,13 +35,29 @@ export interface Product {
   sourceUrl: string;         // shopier URL
 }
 
+export type SeriesSlug = "kapilar" | "maskeler";
+
+export interface Series {
+  slug: SeriesSlug;
+  title: string;             // "Kapılar", "Lord of… Maskeler"
+  subtitle?: string;          // küçük üst eyebrow ("Linol Baskı · 2018")
+  year?: number;              // baskın üretim yılı
+  description: string;        // 1-2 paragraflık seri tanıtım
+  coverImage?: string;        // landing kartı için kapak
+  paperNote?: string;         // "Japon el yapımı kâğıt" vb.
+}
+
 export interface PortfolioWork {
   id: string;
   slug: string;
   title: string;
   description: string;
   image: string;
+  /** Görselin orijinal piksel boyutları — galeri grid'inde aspect korumak için */
+  width?: number;
+  height?: number;
   year?: number;
+  series?: SeriesSlug;        // hangi seriye ait — boşsa eski kayıtlar "kapilar" varsayılır
 }
 
 export interface JournalPost {
@@ -104,7 +120,6 @@ export interface Business {
   };
   contact: {
     phonePrimary: string;
-    phoneSecondary?: string;
     instagram: string;
     shopier: string;
   };

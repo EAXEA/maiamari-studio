@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getBusiness } from "@/lib/data";
 import { Reveal } from "@/components/motion/reveal";
+import { PhoneCTA } from "@/components/inquiry/phone-cta";
 import { TransitInfo } from "@/components/transit/transit-info";
 
 export const metadata = { title: "Hakkımızda" };
@@ -16,7 +17,6 @@ const VALUES = [
 
 export default function AboutPage() {
   const biz = getBusiness();
-  const phoneHref = `tel:${biz.contact.phonePrimary.replace(/\s/g, "")}`;
 
   return (
     <article>
@@ -263,12 +263,10 @@ export default function AboutPage() {
                   Telefon
                 </p>
                 <p className="mt-3">
-                  <a href={phoneHref} className="underline underline-offset-4">
-                    {biz.contact.phonePrimary}
-                  </a>
+                  <PhoneCTA variant="inline" label="Telefon · randevu için arayın" />
                 </p>
                 <p className="mt-2 text-[color:var(--color-muted)]">
-                  Kapanış {biz.hours.closingTime}
+                  Atölye ziyareti telefon randevusu ile düzenlenir.
                 </p>
               </div>
               <div>
