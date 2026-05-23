@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import {
   getPortfolioBySeries,
@@ -8,7 +9,6 @@ import { Reveal } from "@/components/motion/reveal";
 import { InstagramInquiryButton } from "@/components/inquiry/instagram-inquiry-button";
 import { WhatsappComingSoon } from "@/components/inquiry/whatsapp-coming-soon";
 import { PhoneCTA } from "@/components/inquiry/phone-cta";
-import { WorkPlate } from "@/components/portfolio/work-plate";
 import { WorksMasonry } from "@/components/portfolio/works-masonry";
 
 export const metadata = {
@@ -129,12 +129,23 @@ export default function KapilarSerisiPage() {
         <section className="container-x pb-16 lg:pb-24">
           <Reveal>
             <div className="grid lg:grid-cols-[1.4fr_1fr] gap-10 lg:gap-16 items-start">
-              <WorkPlate
-                work={highlight}
-                priority
-                spacing="loose"
-                sizes="(max-width: 1024px) 100vw, 56vw"
-              />
+              <figure
+                className="bg-[color:var(--color-paper,var(--color-surface))] p-5 sm:p-7 lg:p-9 ring-1 ring-[color:var(--color-hairline)]
+                           shadow-[0_1px_2px_rgba(60,40,28,0.05),0_18px_40px_-22px_rgba(60,40,28,0.20)]"
+              >
+                <div className="relative ring-[0.5px] ring-[color:var(--color-hairline)] overflow-hidden bg-[color:var(--color-surface-2)]">
+                  <Image
+                    src={highlight.image}
+                    alt={highlight.title}
+                    width={highlight.width ?? 1200}
+                    height={highlight.height ?? 1200}
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 56vw"
+                    className="block w-full h-auto select-none"
+                    draggable={false}
+                  />
+                </div>
+              </figure>
               <div className="lg:pt-8">
                 <p className="eyebrow">Öne çıkan eser</p>
                 <h2 className="font-display mt-4 text-3xl md:text-4xl lg:text-5xl leading-[1.05] tracking-tight">

@@ -205,29 +205,6 @@ export function getCategoryBySlug(slug: string): Category | null {
   return CATEGORIES.find((c) => c.slug === slug) || null;
 }
 
-export function getFeaturedProducts(limit = 8): Product[] {
-  // İlk seçim: kıyaslama amaçlı, status === "in_stock" olanların ilk N'i.
-  const all = loadProducts();
-  const inStock = all.filter((p) => p.status !== "out_of_stock");
-  // Çeşitli kategoriden öne çıkar
-  const byCat = new Map<CategorySlug, Product[]>();
-  for (const p of inStock) {
-    if (!byCat.has(p.categorySlug)) byCat.set(p.categorySlug, []);
-    byCat.get(p.categorySlug)!.push(p);
-  }
-  const result: Product[] = [];
-  const cats = Array.from(byCat.keys());
-  let i = 0;
-  while (result.length < limit) {
-    const cat = cats[i % cats.length];
-    const list = byCat.get(cat)!;
-    if (list.length > 0) result.push(list.shift()!);
-    i++;
-    if (i > cats.length * 20) break;
-  }
-  return result;
-}
-
 export function getBusiness(): Business {
   return readJson<Business>("business.json");
 }
