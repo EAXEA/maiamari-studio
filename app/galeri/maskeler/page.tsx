@@ -176,9 +176,13 @@ export default function MaskelerSerisiPage() {
         </div>
       </section>
 
-      {/* 4. Masonry — orijinal aspect, pasapartu, başlıksız */}
+      {/* 4. Galeri kartları — her eser için özgün künye + foto */}
       <section className="container-x py-16 lg:py-24">
-        <WorksMasonry works={rest} columns={{ sm: 1, md: 2, lg: 3 }} />
+        <WorksMasonry
+          works={rest}
+          seriesName="Lord of … Maskeler"
+          inquiryPath="/galeri/maskeler"
+        />
       </section>
 
       {/* Diğer seri → cross-link */}

@@ -40,7 +40,6 @@ export function SiteFooter() {
         <div className="text-sm">
           <h3 className="eyebrow mb-5">Mağaza</h3>
           <ul className="space-y-3">
-            <li><Link href="/shop/linol-baskilari">Linol Baskıları</Link></li>
             <li><Link href="/shop/el-yapimi-kagitlar">Kâğıtlar</Link></li>
             <li><Link href="/shop/linol-boyalari">Boyalar</Link></li>
             <li><Link href="/shop/aletler">Aletler</Link></li>

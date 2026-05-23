@@ -3,7 +3,6 @@
  */
 
 export type CategorySlug =
-  | "linol-baskilari"      // Linol Baskıları (originals — gallery)
   | "linol-boyalari"        // İnks
   | "linolyum"              // Linol blocks
   | "merdaneler"            // Brayers

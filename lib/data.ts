@@ -48,12 +48,6 @@ function slugify(s: string): string {
 // ----------------------------------------------------------------
 export const CATEGORIES: Category[] = [
   {
-    slug: "linol-baskilari",
-    name: "Linol Baskıları",
-    nameEn: "Linocut Prints",
-    description: "Atölyede elle çoğaltılmış, sayılı baskı serileri.",
-  },
-  {
     slug: "linol-boyalari",
     name: "Linol Boyaları",
     nameEn: "Block Printing Inks",
@@ -113,7 +107,8 @@ function classify(title: string): CategorySlug {
     t.includes("strip") // stripping tabs
   ) return "aletler";
   if (t.includes("çanta") || t.includes("canta")) return "cantalar";
-  return "linol-baskilari";
+  // Düşmeyen ürün için en yakın varsayılan: malzeme
+  return "aletler";
 }
 
 function deriveStatus(statuses: string[]): ProductStatus {

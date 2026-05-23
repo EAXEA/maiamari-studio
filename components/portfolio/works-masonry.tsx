@@ -1,54 +1,30 @@
-import { WorkPlate } from "./work-plate";
+import { WorkCard } from "./work-card";
 import type { PortfolioWork } from "@/lib/types";
 
 type Props = {
   works: PortfolioWork[];
-  /** Görsellerin doğal aspect'lerine göre dengeli kolon sayısı */
-  columns?: { sm?: number; md?: number; lg?: number };
+  seriesName: string;
+  inquiryPath: string;
 };
 
-const COLUMN_PRESET = {
-  1: "columns-1",
-  2: "columns-2",
-  3: "columns-3",
-  4: "columns-4",
-} as const;
-
-function colClass(n?: number, prefix = ""): string {
-  if (!n) return "";
-  const c = COLUMN_PRESET[n as keyof typeof COLUMN_PRESET];
-  if (!c) return "";
-  return prefix ? `${prefix}:${c}` : c;
-}
-
 /**
- * Eserleri pasapartu kartlarda, CSS columns ile masonry düzeninde sunar.
- * Görseller orijinal aspect oranında kalır; başlık/etiket KULLANMAZ —
- * sanat eseri hissi yalnızca tasarımla (kâğıt zemin + gölge + boşluk)
- * verilir.
+ * Eserleri "öne çıkan eser" tarzında, foto + metadata içeren kartlarla
+ * 2-kolon (lg+ 3) grid'de sunar. Her kartın genişliği grid kolonuna
+ * bağlı; böylece foto rastgele büyük görünmez ve her eser kendi
+ * sunumuyla yer alır.
  */
-export function WorksMasonry({
-  works,
-  columns = { sm: 1, md: 2, lg: 3 },
-}: Props) {
-  const cls = [
-    colClass(columns.sm),
-    colClass(columns.md, "sm"),
-    colClass(columns.lg, "lg"),
-    "gap-5 sm:gap-7 lg:gap-9",
-  ]
-    .filter(Boolean)
-    .join(" ");
-
+export function WorksMasonry({ works, seriesName, inquiryPath }: Props) {
   return (
-    <div className={cls}>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-9">
       {works.map((w, i) => (
-        <div
+        <WorkCard
           key={w.id}
-          className="mb-5 sm:mb-7 lg:mb-9 break-inside-avoid"
-        >
-          <WorkPlate work={w} priority={i < 2} />
-        </div>
+          work={w}
+          seriesName={seriesName}
+          inquiryPath={inquiryPath}
+          priority={i < 2}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        />
       ))}
     </div>
   );
