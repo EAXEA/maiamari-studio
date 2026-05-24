@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Product } from "@/lib/types";
 import { formatTRY } from "@/lib/format";
+import { Watermark } from "@/components/brand/watermark";
 
 const easeOut = [0.22, 1, 0.36, 1] as const;
 
@@ -37,6 +38,14 @@ export function ProductCard({ product }: { product: Product }) {
               className="object-cover"
             />
           </motion.div>
+
+          {/* Brand watermark — alt sağ, hover'da hafifçe vurgulanır */}
+          <Watermark
+            position="bottom-right"
+            opacity={0.42}
+            scale={0.28}
+            className="transition-opacity duration-500 group-hover:opacity-60"
+          />
 
           {/* Hover overlay sweep */}
           <div

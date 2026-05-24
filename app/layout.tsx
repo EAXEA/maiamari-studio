@@ -70,6 +70,15 @@ export default function RootLayout({
       className={`${inter.variable} ${display.variable} h-full`}
     >
       <head>
+        {/* Brand watermark — tüm ürün/eser kartlarında kullanılır.
+            Tek dosya, low priority preload (LCP değil dekoratif). */}
+        <link
+          rel="preload"
+          as="image"
+          href="/brand/watermark.webp"
+          type="image/webp"
+          fetchPriority="low"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={jsonLdScript(localBusinessSchema())}

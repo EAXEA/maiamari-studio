@@ -3,7 +3,7 @@
 /* ============================================================
    MAIAMARI.STUDIO — Brand Design Tokens
    ------------------------------------------------------------
-   Google Arts & Culture estetiği ile harmanlanmış sade palet:
+   Müze/galeri estetiği ile harmanlanmış sade palet:
    - Açık krema-beyaz zemin (museum/gallery feel)
    - Cevizahşap koyu kahve sadece accent
    - Pembe / nane / press-red spot vurgular
@@ -28,6 +28,27 @@
 
   --color-success: #4A7C59;
   --color-warning: #C49A2F;
+
+  /* Brand watermark — tek source of truth.
+     Tüm <Watermark> instance'ları bu URL'i paylaşır → tek HTTP request,
+     tek decode, tek GPU texture. */
+  --watermark-url: url("/brand/watermark.webp");
+}
+
+/* Watermark katmanı için ortak performans optimizasyonları.
+   - translateZ(0): kendi compositor layer'ına promote, paint birlikte değil.
+   - contain: paint → boyama scope'u sınırla, scroll'da liste re-paint etmesin. */
+.watermark-layer {
+  transform: translateZ(0);
+  contain: paint;
+}
+
+/* Ürün/eser grid'lerinde off-screen kartların paint maliyetini bypass.
+   `contain-intrinsic-size` aşağı yukarı kart yüksekliği ile match etsin
+   ki initial scrollbar doğru hesaplansın. */
+.perf-grid > * {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 380px;
 }
 
 @theme inline {

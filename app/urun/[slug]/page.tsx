@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -8,6 +7,7 @@ import {
 } from "@/lib/data";
 import { formatTRY } from "@/lib/format";
 import { ProductCard } from "@/components/product/product-card";
+import { ProductGallery } from "@/components/product/product-gallery";
 import {
   productSchema,
   breadcrumbSchema,
@@ -86,37 +86,13 @@ export default async function ProductPage({
       </nav>
 
       <div className="grid lg:grid-cols-[1.2fr_1fr] gap-12 lg:gap-20 items-start">
-        {/* Gallery */}
-        <div className="space-y-3">
-          <div className="relative aspect-[4/5] bg-[color:var(--color-surface-2)] overflow-hidden">
-            <Image
-              src={product.coverImage}
-              alt={product.title}
-              fill
-              priority
-              sizes="(max-width: 1024px) 100vw, 60vw"
-              className="object-cover"
-            />
-          </div>
-          {product.gallery.length > 1 && (
-            <div className="grid grid-cols-4 gap-3">
-              {product.gallery.slice(1).map((img, idx) => (
-                <div
-                  key={img + idx}
-                  className="relative aspect-square bg-[color:var(--color-surface-2)] overflow-hidden"
-                >
-                  <Image
-                    src={img}
-                    alt={`${product.title} – ${idx + 2}`}
-                    fill
-                    sizes="20vw"
-                    className="object-cover"
-                  />
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        {/* Gallery — interaktif: thumb değişimi + lightbox zoom */}
+        <ProductGallery
+          images={
+            product.gallery.length > 0 ? product.gallery : [product.coverImage]
+          }
+          title={product.title}
+        />
 
         {/* Detail */}
         <div className="lg:sticky lg:top-28">

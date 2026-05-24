@@ -2,6 +2,7 @@ import Image from "next/image";
 import type { PortfolioWork } from "@/lib/types";
 import { InstagramInquiryButton } from "@/components/inquiry/instagram-inquiry-button";
 import { PhoneCTA } from "@/components/inquiry/phone-cta";
+import { Watermark } from "@/components/brand/watermark";
 
 type Props = {
   work: PortfolioWork;
@@ -50,6 +51,12 @@ export function WorkCard({
             sizes={sizes}
             className="block w-full h-auto select-none"
             draggable={false}
+          />
+          {/* Eser sahipliği — hafif watermark, eser fotoğrafını boğmasın */}
+          <Watermark
+            position="bottom-right"
+            opacity={0.32}
+            scale={0.22}
           />
         </div>
       </div>
