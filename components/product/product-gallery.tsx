@@ -21,6 +21,11 @@ type Props = {
 export function ProductGallery({ images, title }: Props) {
   const [activeIdx, setActiveIdx] = useState(0);
   const [lightbox, setLightbox] = useState(false);
+
+  // Guard — boş images dizisi component'i savunmasız bırakır
+  // (modulo NaN, src=undefined). Tüketici garanti etse de bileşen kendini korusun.
+  if (!images.length) return null;
+
   const active = images[activeIdx] ?? images[0];
 
   const next = useCallback(
