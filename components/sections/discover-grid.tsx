@@ -23,7 +23,7 @@ type Props = {
 };
 
 /**
- * Google Arts & Culture "Browse by theme/artist/medium" stili kâşif grid.
+ * Müze/galeri "Browse by theme/artist/medium" stili kâşif grid.
  */
 export function DiscoverGrid({
   eyebrow,

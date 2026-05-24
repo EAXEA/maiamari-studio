@@ -9,7 +9,7 @@ export default function ShopPage() {
   const cats = getCategories();
   return (
     <div className="container-x py-12 lg:py-16">
-      <header className="mb-12">
+      <header className="mb-10">
         <p className="text-xs tracking-[0.3em] uppercase text-[color:var(--color-muted)]">
           Mağaza
         </p>
@@ -20,6 +20,29 @@ export default function ShopPage() {
           {products.length} eser ve malzeme
         </p>
       </header>
+
+      {/* Galeri ↔ Mağaza ayrım metni — koleksiyoner ile malzeme arayan
+          ziyaretçilerin kafasını karıştırmamak için kısa editorial blok. */}
+      <section className="mb-12 border-y border-[color:var(--color-hairline)] py-7 lg:py-9 grid lg:grid-cols-[1fr_1.4fr] gap-6 lg:gap-12">
+        <p className="text-[11px] tracking-[0.3em] uppercase text-[color:var(--color-muted)]">
+          Galeri &amp; Mağaza
+        </p>
+        <div className="text-sm lg:text-base leading-relaxed max-w-prose">
+          <p>
+            <strong className="font-normal italic">Galeri</strong>, sanatçı
+            Duygu Sinan&apos;ın özgün baskı eserlerini sunar.{" "}
+            <strong className="font-normal italic">Mağaza</strong> ise bu
+            eserlerin doğduğu atölyenin malzemelerini — linol boyaları,
+            merdaneler, plakalar, el yapımı kâğıtlar ve oyma aletlerini —
+            ve hediyelik atölye dokunuşlarını derler.
+          </p>
+          <p className="mt-3">
+            <Link href="/galeri" className="editorial-link">
+              Galeriyi gör →
+            </Link>
+          </p>
+        </div>
+      </section>
 
       <nav className="mb-12 flex flex-wrap gap-x-6 gap-y-3 text-sm border-b border-[color:var(--color-border)] pb-4">
         <Link href="/shop" className="font-medium underline underline-offset-4">

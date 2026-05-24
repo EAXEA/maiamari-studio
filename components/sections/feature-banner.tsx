@@ -16,7 +16,7 @@ type Props = {
 };
 
 /**
- * Google Arts & Culture "Featured story" bandı.
+ * Editorial "Featured story" bandı.
  * Tam genişlik görsel, üstüne editorial tipografi ve "Read story" linki.
  */
 export function FeatureBanner({
