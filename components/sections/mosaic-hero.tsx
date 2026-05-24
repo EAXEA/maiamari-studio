@@ -77,7 +77,7 @@ function MosaicCell({
         src={image}
         alt={imageAlt}
         fill
-        priority
+        priority={isPrimary}
         sizes={
           isPrimary
             ? "(max-width: 1024px) 100vw, 58vw"
@@ -104,18 +104,18 @@ function MosaicCell({
         >
           {eyebrow}
         </p>
-        <h2
-          className={`font-display mt-3 leading-[0.98] tracking-tight ${
-            isPrimary
-              ? "text-[clamp(2.4rem,4.5vw,4.5rem)]"
-              : "text-[clamp(1.6rem,2.4vw,2.6rem)]"
-          }`}
-        >
-          {title}
-          {titleItalic && (
-            <span className="block italic">{titleItalic}</span>
-          )}
-        </h2>
+        {/* Heading hiyerarşi: anasayfa h1 primary cell'de, h2 secondary'lerde */}
+        {isPrimary ? (
+          <h1 className="font-display mt-3 leading-[0.98] tracking-tight text-[clamp(2.4rem,4.5vw,4.5rem)]">
+            {title}
+            {titleItalic && <span className="block italic">{titleItalic}</span>}
+          </h1>
+        ) : (
+          <h2 className="font-display mt-3 leading-[0.98] tracking-tight text-[clamp(1.6rem,2.4vw,2.6rem)]">
+            {title}
+            {titleItalic && <span className="block italic">{titleItalic}</span>}
+          </h2>
+        )}
         <p
           className={`mt-4 tracking-[0.22em] uppercase ${
             isPrimary ? "text-[11px]" : "text-[10px]"

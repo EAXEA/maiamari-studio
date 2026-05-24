@@ -78,7 +78,7 @@ export function InterestHero({
             {eyebrow}
           </motion.p>
 
-          <motion.h1
+          <motion.h2
             initial={{ opacity: 0, y: 32 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.05, delay: 0.15, ease: easeOut }}
@@ -90,7 +90,7 @@ export function InterestHero({
             <span className="block italic text-[clamp(3rem,7vw,6.5rem)] leading-[0.98] tracking-tight">
               {topic}
             </span>
-          </motion.h1>
+          </motion.h2>
 
           {description && (
             <motion.p

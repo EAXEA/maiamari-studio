@@ -26,7 +26,7 @@ export function WorkCard({
   seriesName,
   inquiryPath,
   sizes = "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw",
-  priority,
+  priority = false,
 }: Props) {
   const w = work.width ?? 1200;
   const h = work.height ?? 1200;
