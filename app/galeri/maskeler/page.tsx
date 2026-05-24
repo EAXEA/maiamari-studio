@@ -15,6 +15,7 @@ export const metadata = {
   title: "Lord of … Maskeler · Galeri",
   description:
     "Sanatçı Duygu Sinan'ın Japon Noh tiyatrosu maskelerinden ilham alan, Japon el yapımı kâğıt üzerine elle basılmış \"Lord of …\" linol baskı serisi.",
+  alternates: { canonical: "/galeri/maskeler" },
 };
 
 export default function MaskelerSerisiPage() {

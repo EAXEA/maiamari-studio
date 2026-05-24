@@ -15,6 +15,7 @@ export const metadata = {
   title: "Kapılar · Galeri",
   description:
     "Sanatçı Duygu Sinan'ın atölyede elle çoğaltılmış Kapılar serisi — sayılı edisyon linol baskılar.",
+  alternates: { canonical: "/galeri/kapilar" },
 };
 
 export default function KapilarSerisiPage() {

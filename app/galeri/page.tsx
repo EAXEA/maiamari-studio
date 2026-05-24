@@ -14,6 +14,7 @@ export const metadata = {
   title: "Galeri",
   description:
     "Sanatçı Duygu Sinan'ın atölyede elle çoğaltılmış sayılı edisyon linol baskıları — Kapılar ve Lord of … Maskeler serileri.",
+  alternates: { canonical: "/galeri" },
 };
 
 export default function GaleriLandingPage() {
