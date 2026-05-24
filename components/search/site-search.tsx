@@ -14,7 +14,7 @@ import Link from "next/link";
 import Fuse from "fuse.js";
 import type { SearchItem } from "@/app/api/search/route";
 
-const PLACEHOLDER = "Ürün, eser, sanatçı, atölye…";
+const PLACEHOLDER = "Ara…";
 const MAX_RESULTS = 8;
 
 type Props = {

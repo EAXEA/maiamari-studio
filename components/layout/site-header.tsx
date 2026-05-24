@@ -18,70 +18,30 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 backdrop-blur-md bg-[color:var(--color-background)]/90 border-b border-[color:var(--color-hairline)]">
-      {/* Üst satır — brand · arama · aksiyonlar */}
-      <div className="container-wide flex items-center gap-4 lg:gap-6 h-16 lg:h-[72px]">
+      {/* Birleşik tek satır — brand · nav (ortalı) · arama · sepet · hamburger */}
+      <div className="container-wide flex items-center gap-4 lg:gap-6 h-16">
         <Link
           href="/"
-          className="flex items-center gap-3 shrink-0"
+          className="flex items-center gap-2.5 shrink-0"
           aria-label="Maiamari ana sayfa"
         >
           <Image
             src="/brand/maimari-logo.png"
             alt=""
-            width={32}
-            height={32}
+            width={28}
+            height={28}
             priority
           />
-          <span className="font-display text-lg sm:text-xl lg:text-[22px] tracking-tight leading-none">
+          <span className="font-display text-lg sm:text-xl lg:text-[20px] tracking-tight leading-none">
             MAIAMARI
           </span>
         </Link>
 
-        {/* Search — md+ inline; mobilde alt satıra düşer */}
-        <SiteSearch />
-
-        {/* Sağ ikonlar */}
-        <div className="ml-auto flex items-center gap-2 lg:gap-5">
-          <Link
-            href="/cart"
-            className="relative inline-flex items-center gap-2 hover:opacity-60"
-            aria-label="Sepet — yakında"
-          >
-            <svg
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.6"
-              aria-hidden
-            >
-              <path d="M3 6h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.5L21 9H6" />
-              <circle cx="10" cy="21" r="1.2" />
-              <circle cx="17" cy="21" r="1.2" />
-            </svg>
-            <span
-              className="hidden sm:inline-flex text-[10px] tracking-[0.22em] uppercase px-2 py-0.5"
-              style={{
-                background: "var(--color-surface-2)",
-                color: "var(--color-muted)",
-              }}
-            >
-              Yakında
-            </span>
-          </Link>
-
-          {/* Mobil menü trigger */}
-          <MobileMenu nav={NAV} instagramUrl={biz.contact.instagram} />
-        </div>
-      </div>
-
-      {/* Alt satır — md+ editoryal nav */}
-      <nav
-        aria-label="Ana"
-        className="hidden md:block border-t border-[color:var(--color-hairline)]"
-      >
-        <div className="container-wide flex items-center justify-center gap-9 lg:gap-12 h-12">
+        {/* Nav — md+, esnek ortalı */}
+        <nav
+          aria-label="Ana"
+          className="hidden md:flex items-center gap-6 lg:gap-9 mx-auto"
+        >
           {NAV.map((item) => (
             <Link
               key={item.href}
@@ -91,13 +51,51 @@ export function SiteHeader() {
               <span>{item.label}</span>
               <span
                 aria-hidden
-                className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-[-10px] h-px w-0 group-hover:w-[28px] transition-[width] duration-300"
+                className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-[-8px] h-px w-0 group-hover:w-[28px] transition-[width] duration-300"
                 style={{ background: "var(--color-walnut-dark)" }}
               />
             </Link>
           ))}
+        </nav>
+
+        {/* Search — md+ inline kompakt; mobilde hamburger içinde */}
+        <div className="hidden md:block w-[200px] lg:w-[240px] shrink-0">
+          <SiteSearch />
         </div>
-      </nav>
+
+        {/* Sepet */}
+        <Link
+          href="/cart"
+          className="relative inline-flex items-center gap-2 hover:opacity-60 shrink-0"
+          aria-label="Sepet — yakında"
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            aria-hidden
+          >
+            <path d="M3 6h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.5L21 9H6" />
+            <circle cx="10" cy="21" r="1.2" />
+            <circle cx="17" cy="21" r="1.2" />
+          </svg>
+          <span
+            className="hidden lg:inline-flex text-[10px] tracking-[0.22em] uppercase px-2 py-0.5"
+            style={{
+              background: "var(--color-surface-2)",
+              color: "var(--color-muted)",
+            }}
+          >
+            Yakında
+          </span>
+        </Link>
+
+        {/* Mobil menü trigger — md+'ta gizli */}
+        <MobileMenu nav={NAV} instagramUrl={biz.contact.instagram} />
+      </div>
     </header>
   );
 }
