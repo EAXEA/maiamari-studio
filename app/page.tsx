@@ -7,6 +7,7 @@ import {
   getPortfolioBySeries,
 } from "@/lib/data";
 import { InterestHero } from "@/components/sections/interest-hero";
+import { MosaicHero } from "@/components/sections/mosaic-hero";
 import { FeatureBanner } from "@/components/sections/feature-banner";
 import { Reveal } from "@/components/motion/reveal";
 import { WORKSHOP_IMAGES } from "@/lib/workshop-images";
@@ -22,98 +23,38 @@ export default function HomePage() {
   return (
     <>
       {/* ============================================================
-          1. HERO — Maiamari Mağaza · sağda Hediyelik eklentisi
-             Tek border'lı container, 3 kolon: görsel · ana metin ·
-             hediyelik mini-sütun (dashed divider ile ayrılmış).
+          1. HERO — Magazine mosaic, 3 hücre / 3 offer
+             Sol büyük: atölyenin vitrini · Sağ üst: galeri eseri
+             (Lord of Maskeler) · Sağ alt: mağaza envanteri
          ============================================================ */}
-      <section className="container-x pt-8 lg:pt-12 pb-10 lg:pb-16">
-        <Reveal>
-          <div className="border border-[color:var(--color-border)] bg-[color:var(--color-surface)] grid lg:grid-cols-[1fr_1.05fr_0.8fr] gap-8 lg:gap-12 items-stretch p-8 lg:p-12">
-            {/* Sol — Mağaza kapak görseli */}
-            <div className="relative aspect-square w-full max-w-[460px] mx-auto lg:mx-0 overflow-hidden bg-[color:var(--color-surface-2)]">
-              <Image
-                src="/images/atolye/tools-grid.jpg"
-                alt="Atölye envanteri — merdaneler ve oyma aletleri"
-                fill
-                priority
-                sizes="(max-width: 1024px) 80vw, 32vw"
-                className="object-cover atolye-tint"
-              />
-              <span
-                className="absolute top-4 left-4 text-[10px] tracking-[0.35em] uppercase px-3 py-1.5"
-                style={{
-                  background: "var(--color-walnut-dark)",
-                  color: "var(--color-background)",
-                }}
-              >
-                Mağaza
-              </span>
-            </div>
-
-            {/* Orta — Mağaza ana metni */}
-            <div className="flex flex-col justify-center">
-              <p className="eyebrow">Atölye envanteri</p>
-              <h2 className="font-display mt-4 leading-[0.98] text-[clamp(2.1rem,4.2vw,3.6rem)] tracking-tight">
-                <span className="block italic">Maiamari mağaza.</span>
-                <span className="block text-[0.58em] mt-3 tracking-tight">
-                  atölyenin envanteri raflarda.
-                </span>
-              </h2>
-              <p className="mt-6 max-w-md text-base leading-relaxed text-[color:var(--color-muted)]">
-                Amber cam kavanozda baskı boyaları, kauçuk merdaneler, oyma
-                aletleri, linolyum plakalar ve doğal liflerden el yapımı
-                kâğıtlar. Mağazadan çıkan her parça bir dökümün, bir kalıbın
-                ya da bir elin izini taşır.
-              </p>
-              <div className="mt-8">
-                <Link
-                  href="/shop"
-                  className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase"
-                  style={{
-                    background: "var(--color-walnut-dark)",
-                    color: "var(--color-background)",
-                  }}
-                >
-                  Mağazaya göz at
-                </Link>
-              </div>
-            </div>
-
-            {/* Sağ — Hediyelik eklentisi (dashed divider) */}
-            <div className="lg:border-l lg:border-dashed lg:border-[color:var(--color-hairline)] lg:pl-8 flex flex-col">
-              <p className="eyebrow">Hediyelik</p>
-              <div className="relative aspect-square w-full max-w-[260px] mt-4 bg-[color:var(--color-surface-2)] overflow-hidden">
-                <Image
-                  src="/images/shopier/29182154/img_00.JPG"
-                  alt="Maiamari · antrasit kanvas çanta — hediyelik"
-                  fill
-                  sizes="(max-width: 1024px) 60vw, 22vw"
-                  className="object-contain p-2"
-                />
-              </div>
-              <h3 className="font-display mt-5 text-xl lg:text-2xl leading-snug">
-                Atölye dokunuşlu{" "}
-                <span className="italic">küçük bir hediye.</span>
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-[color:var(--color-muted)]">
-                Sanatçının tasarlayıp atölyede diktiği kitap çantaları, kâğıt
-                setleri ve küçük baskı malzemeleri.
-              </p>
-              <div className="mt-5 flex flex-col gap-1.5 text-sm">
-                <Link href="/shop/cantalar" className="editorial-link">
-                  Hediyelik çantalar →
-                </Link>
-                <Link
-                  href="/shop/el-yapimi-kagitlar"
-                  className="editorial-link"
-                >
-                  Kâğıt setleri →
-                </Link>
-              </div>
-            </div>
-          </div>
-        </Reveal>
-      </section>
+      <MosaicHero
+        primary={{
+          href: "/about",
+          image: "/images/atolye/storefront.jpg",
+          imageAlt: "Maiamari atölyesi · Bülbülderesi Cd. vitrin görünümü",
+          eyebrow: "Atölye · Ankara",
+          title: "Bir baskı atölyesi,",
+          titleItalic: "bir kâğıt fabrikası.",
+        }}
+        topRight={{
+          href: "/galeri/maskeler",
+          image:
+            series.find((s) => s.slug === "maskeler")?.coverImage ??
+            "/images/portfolio/maskeler/maske-01.jpg",
+          imageAlt: "Lord of Maskeler · sanatçı Duygu Sinan linol baskı",
+          eyebrow: "Galeri · Lord of Maskeler",
+          title: "Sayılı edisyon",
+          titleItalic: "linol baskılar.",
+        }}
+        bottomRight={{
+          href: "/shop",
+          image: "/images/atolye/tools-grid.jpg",
+          imageAlt: "Atölye envanteri — merdaneler, oyma aletleri, kavanozlar",
+          eyebrow: "Mağaza",
+          title: "Atölyenin envanteri",
+          titleItalic: "raflarda.",
+        }}
+      />
 
       {/* ============================================================
           2. Galeride — sanatçının iki serisi (editoryal kartlar)
@@ -352,6 +293,104 @@ export default function HomePage() {
         align="right"
         tone="dark"
       />
+
+      {/* ============================================================
+          6. Mağaza envanteri detay — hero CTA sonrası detaylı kart
+         ============================================================ */}
+      <section className="container-x py-16 lg:py-24">
+        <Reveal>
+          <div className="border border-[color:var(--color-border)] bg-[color:var(--color-surface)] grid lg:grid-cols-[1fr_1.2fr] gap-10 lg:gap-16 items-center p-10 lg:p-16">
+            <div className="relative aspect-square w-full max-w-[460px] mx-auto lg:mx-0 overflow-hidden bg-[color:var(--color-surface-2)]">
+              <Image
+                src="/images/atolye/tools-grid.jpg"
+                alt="Atölye envanteri — merdaneler ve oyma aletleri"
+                fill
+                sizes="(max-width: 1024px) 80vw, 40vw"
+                className="object-cover atolye-tint"
+              />
+              <span
+                className="absolute top-4 left-4 text-[10px] tracking-[0.35em] uppercase px-3 py-1.5"
+                style={{
+                  background: "var(--color-walnut-dark)",
+                  color: "var(--color-background)",
+                }}
+              >
+                Mağaza
+              </span>
+            </div>
+            <div>
+              <p className="eyebrow">Atölye envanteri</p>
+              <h2 className="font-display mt-4 leading-[0.98] text-[clamp(2.3rem,4.8vw,4.2rem)] tracking-tight">
+                <span className="block italic">Maiamari mağaza.</span>
+                <span className="block text-[0.55em] mt-3 tracking-tight">
+                  atölyenin envanteri raflarda.
+                </span>
+              </h2>
+              <p className="mt-7 max-w-md text-base lg:text-lg leading-relaxed text-[color:var(--color-muted)]">
+                Amber cam kavanozda baskı boyaları, kauçuk merdaneler, oyma
+                aletleri, linolyum plakalar ve doğal liflerden el yapımı
+                kâğıtlar. Tüm ürünler aynı atölyede üretilir; mağazadan
+                çıkan her parça bir dökümün, bir kalıbın ya da bir elin
+                izini taşır.
+              </p>
+              <div className="mt-9 flex flex-wrap gap-3">
+                <Link
+                  href="/shop"
+                  className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase"
+                  style={{
+                    background: "var(--color-walnut-dark)",
+                    color: "var(--color-background)",
+                  }}
+                >
+                  Mağazaya göz at
+                </Link>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* ============================================================
+          6b. Hediyelik — kompakt sunum kartı
+         ============================================================ */}
+      <section className="container-x pb-16 lg:pb-24">
+        <Reveal>
+          <div className="border border-[color:var(--color-border)] bg-[color:var(--color-background)] grid md:grid-cols-[1.3fr_1fr] gap-6 md:gap-10 items-stretch overflow-hidden">
+            <div className="p-8 lg:p-12 flex flex-col justify-center">
+              <p className="eyebrow">Hediyelik</p>
+              <h3 className="font-display mt-3 text-2xl lg:text-4xl leading-[1.1] tracking-tight">
+                Atölye dokunuşlu{" "}
+                <span className="italic">küçük bir hediye.</span>
+              </h3>
+              <p className="mt-5 text-sm lg:text-base leading-relaxed text-[color:var(--color-muted)] max-w-prose">
+                Sanatçının tasarlayıp atölyede diktiği kanvas ve puffer
+                kitap çantaları, doğal liflerden kâğıt setleri ve küçük
+                baskı malzemeleri — sevdiklerinize atölyeden bir selam.
+              </p>
+              <div className="mt-7 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+                <Link href="/shop/cantalar" className="editorial-link">
+                  Hediyelik çantalar →
+                </Link>
+                <Link
+                  href="/shop/el-yapimi-kagitlar"
+                  className="editorial-link"
+                >
+                  Kâğıt setleri →
+                </Link>
+              </div>
+            </div>
+            <div className="relative aspect-[4/3] md:aspect-auto md:min-h-[280px] bg-[color:var(--color-surface-2)]">
+              <Image
+                src="/images/shopier/29182154/img_00.JPG"
+                alt="Antrasit kanvas çanta — sanatçı tasarımı, hediyelik"
+                fill
+                sizes="(max-width: 768px) 100vw, 35vw"
+                className="object-contain p-4"
+              />
+            </div>
+          </div>
+        </Reveal>
+      </section>
 
       {/* ============================================================
           7. Visit — atölyeyi gez
