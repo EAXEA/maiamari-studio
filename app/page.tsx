@@ -22,18 +22,98 @@ export default function HomePage() {
   return (
     <>
       {/* ============================================================
-          1. Hero — Soru-bazlı (A&C)
+          1. HERO — Maiamari Mağaza · sağda Hediyelik eklentisi
+             Tek border'lı container, 3 kolon: görsel · ana metin ·
+             hediyelik mini-sütun (dashed divider ile ayrılmış).
          ============================================================ */}
-      <InterestHero
-        eyebrow="Bir baskı atölyesi · Ankara"
-        preLine="Şu an ilgileniyor musun?"
-        topic="Linol baskı"
-        description="Maiamari, sanatçı Duygu Sinan'ın atölyesi. Atölyede elle çoğaltılan baskılar, doğal liflerden el yapımı kâğıtlar ve baskı programları."
-        image="/images/atolye/storefront.jpg"
-        imageAlt="Maiamari atölyesi · Bülbülderesi Cd. vitrin görünümü"
-        primary={{ href: "/galeri", label: "Evet, keşfet" }}
-        secondary={{ href: "/atolyeler", label: "Atölye programı" }}
-      />
+      <section className="container-x pt-8 lg:pt-12 pb-10 lg:pb-16">
+        <Reveal>
+          <div className="border border-[color:var(--color-border)] bg-[color:var(--color-surface)] grid lg:grid-cols-[1fr_1.05fr_0.8fr] gap-8 lg:gap-12 items-stretch p-8 lg:p-12">
+            {/* Sol — Mağaza kapak görseli */}
+            <div className="relative aspect-square w-full max-w-[460px] mx-auto lg:mx-0 overflow-hidden bg-[color:var(--color-surface-2)]">
+              <Image
+                src="/images/atolye/tools-grid.jpg"
+                alt="Atölye envanteri — merdaneler ve oyma aletleri"
+                fill
+                priority
+                sizes="(max-width: 1024px) 80vw, 32vw"
+                className="object-cover atolye-tint"
+              />
+              <span
+                className="absolute top-4 left-4 text-[10px] tracking-[0.35em] uppercase px-3 py-1.5"
+                style={{
+                  background: "var(--color-walnut-dark)",
+                  color: "var(--color-background)",
+                }}
+              >
+                Mağaza
+              </span>
+            </div>
+
+            {/* Orta — Mağaza ana metni */}
+            <div className="flex flex-col justify-center">
+              <p className="eyebrow">Atölye envanteri</p>
+              <h2 className="font-display mt-4 leading-[0.98] text-[clamp(2.1rem,4.2vw,3.6rem)] tracking-tight">
+                <span className="block italic">Maiamari mağaza.</span>
+                <span className="block text-[0.58em] mt-3 tracking-tight">
+                  atölyenin envanteri raflarda.
+                </span>
+              </h2>
+              <p className="mt-6 max-w-md text-base leading-relaxed text-[color:var(--color-muted)]">
+                Amber cam kavanozda baskı boyaları, kauçuk merdaneler, oyma
+                aletleri, linolyum plakalar ve doğal liflerden el yapımı
+                kâğıtlar. Mağazadan çıkan her parça bir dökümün, bir kalıbın
+                ya da bir elin izini taşır.
+              </p>
+              <div className="mt-8">
+                <Link
+                  href="/shop"
+                  className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase"
+                  style={{
+                    background: "var(--color-walnut-dark)",
+                    color: "var(--color-background)",
+                  }}
+                >
+                  Mağazaya göz at
+                </Link>
+              </div>
+            </div>
+
+            {/* Sağ — Hediyelik eklentisi (dashed divider) */}
+            <div className="lg:border-l lg:border-dashed lg:border-[color:var(--color-hairline)] lg:pl-8 flex flex-col">
+              <p className="eyebrow">Hediyelik</p>
+              <div className="relative aspect-square w-full max-w-[260px] mt-4 bg-[color:var(--color-surface-2)] overflow-hidden">
+                <Image
+                  src="/images/shopier/29182154/img_00.JPG"
+                  alt="Maiamari · antrasit kanvas çanta — hediyelik"
+                  fill
+                  sizes="(max-width: 1024px) 60vw, 22vw"
+                  className="object-contain p-2"
+                />
+              </div>
+              <h3 className="font-display mt-5 text-xl lg:text-2xl leading-snug">
+                Atölye dokunuşlu{" "}
+                <span className="italic">küçük bir hediye.</span>
+              </h3>
+              <p className="mt-3 text-sm leading-relaxed text-[color:var(--color-muted)]">
+                Sanatçının tasarlayıp atölyede diktiği kitap çantaları, kâğıt
+                setleri ve küçük baskı malzemeleri.
+              </p>
+              <div className="mt-5 flex flex-col gap-1.5 text-sm">
+                <Link href="/shop/cantalar" className="editorial-link">
+                  Hediyelik çantalar →
+                </Link>
+                <Link
+                  href="/shop/el-yapimi-kagitlar"
+                  className="editorial-link"
+                >
+                  Kâğıt setleri →
+                </Link>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </section>
 
       {/* ============================================================
           2. Galeride — sanatçının iki serisi (editoryal kartlar)
@@ -274,65 +354,6 @@ export default function HomePage() {
       />
 
       {/* ============================================================
-          6. Mağaza teaser — atölye envanteri davet kartı
-             (linol baskıları "yakında" kartı tarzında, içerik mağaza)
-         ============================================================ */}
-      <section className="container-x py-16 lg:py-24">
-        <Reveal>
-          <div className="border border-[color:var(--color-border)] bg-[color:var(--color-surface)] grid lg:grid-cols-[1fr_1.2fr] gap-10 lg:gap-16 items-center p-10 lg:p-16">
-            <div className="relative aspect-square w-full max-w-[460px] mx-auto lg:mx-0 overflow-hidden bg-[color:var(--color-surface-2)]">
-              <Image
-                src="/images/atolye/tools-grid.jpg"
-                alt="Atölye envanteri — merdaneler ve oyma aletleri"
-                fill
-                sizes="(max-width: 1024px) 80vw, 40vw"
-                className="object-cover atolye-tint"
-              />
-              <span
-                className="absolute top-4 left-4 text-[10px] tracking-[0.35em] uppercase px-3 py-1.5"
-                style={{
-                  background: "var(--color-walnut-dark)",
-                  color: "var(--color-background)",
-                }}
-              >
-                Mağaza
-              </span>
-            </div>
-
-            <div>
-              <p className="eyebrow">Atölye envanteri</p>
-              <h2 className="font-display mt-4 leading-[0.98] text-[clamp(2.3rem,4.8vw,4.2rem)] tracking-tight">
-                <span className="block italic">Maiamari mağaza.</span>
-                <span className="block text-[0.55em] mt-3 tracking-tight">
-                  atölyenin envanteri raflarda.
-                </span>
-              </h2>
-              <p className="mt-7 max-w-md text-base lg:text-lg leading-relaxed text-[color:var(--color-muted)]">
-                Amber cam kavanozda baskı boyaları, kauçuk merdaneler, oyma
-                aletleri, linolyum plakalar ve doğal liflerden el yapımı
-                kâğıtlar. Tüm ürünler aynı atölyede üretilir; mağazadan
-                çıkan her parça bir dökümün, bir kalıbın ya da bir elin
-                izini taşır.
-              </p>
-
-              <div className="mt-9 flex flex-wrap gap-3">
-                <Link
-                  href="/shop"
-                  className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase"
-                  style={{
-                    background: "var(--color-walnut-dark)",
-                    color: "var(--color-background)",
-                  }}
-                >
-                  Mağazaya göz at
-                </Link>
-              </div>
-            </div>
-          </div>
-        </Reveal>
-      </section>
-
-      {/* ============================================================
           7. Visit — atölyeyi gez
          ============================================================ */}
       <section className="py-20 lg:py-28 border-t border-[color:var(--color-hairline)]">
@@ -395,6 +416,23 @@ export default function HomePage() {
           </Reveal>
         </div>
       </section>
+
+      {/* ============================================================
+          8. Closing hero — soru-bazlı epilogue
+             Sayfanın sonu, footer öncesi: ziyaretçiyi galeriye/atölyeye
+             yönlendiren bir son söz. Compact varyant.
+         ============================================================ */}
+      <InterestHero
+        compact
+        eyebrow="Bir baskı atölyesi · Ankara"
+        preLine="Şu an ilgileniyor musun?"
+        topic="Linol baskı"
+        description="Maiamari, sanatçı Duygu Sinan'ın atölyesi. Atölyede elle çoğaltılan baskılar, doğal liflerden el yapımı kâğıtlar ve baskı programları."
+        image="/images/atolye/storefront.jpg"
+        imageAlt="Maiamari atölyesi · Bülbülderesi Cd. vitrin görünümü"
+        primary={{ href: "/galeri", label: "Evet, keşfet" }}
+        secondary={{ href: "/atolyeler", label: "Atölye programı" }}
+      />
     </>
   );
 }

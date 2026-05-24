@@ -16,10 +16,12 @@ export type InterestHeroProps = {
   secondary?: { href: string; label: string };
   /** Hero zemin tonu — image üzerinde ne kadar washed overlay olsun */
   tone?: "light" | "dark";
+  /** Kompakt varyant — sayfa içi/finale yakın kullanım için daha az dikey alan */
+  compact?: boolean;
 };
 
 /**
- * Google Arts & Culture tarzı soru-bazlı hero.
+ * Soru-bazlı editorial hero.
  * "Are you interested in [topic]?" formatı:
  *   küçük üst satır + büyük serif blok + italic kapanış.
  */
@@ -33,15 +35,19 @@ export function InterestHero({
   primary,
   secondary,
   tone = "dark",
+  compact = false,
 }: InterestHeroProps) {
   const overlay =
     tone === "dark"
       ? "bg-gradient-to-b from-black/30 via-black/35 to-black/50"
       : "bg-gradient-to-b from-white/30 via-white/15 to-white/55";
   const textColor = tone === "dark" ? "text-white" : "text-[color:var(--color-walnut-dark)]";
+  const heightCls = compact
+    ? "h-[58vh] min-h-[440px] max-h-[620px]"
+    : "h-[88vh] min-h-[640px] max-h-[920px]";
 
   return (
-    <section className="relative w-full h-[88vh] min-h-[640px] max-h-[920px] overflow-hidden">
+    <section className={`relative w-full ${heightCls} overflow-hidden`}>
       {/* Background image — mobilde üst kısmı (tavan/spot ışığı) kesilsin diye object-position kayık */}
       <div className="absolute inset-0">
         <Image
@@ -56,7 +62,11 @@ export function InterestHero({
       </div>
 
       {/* Content */}
-      <div className="relative h-full container-wide flex flex-col justify-end pb-16 lg:pb-24">
+      <div
+        className={`relative h-full container-wide flex flex-col justify-end ${
+          compact ? "pb-10 lg:pb-14" : "pb-16 lg:pb-24"
+        }`}
+      >
         <div className={`max-w-4xl ${textColor}`}>
           <motion.p
             initial={{ opacity: 0, y: 12 }}
