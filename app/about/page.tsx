@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { getBusiness } from "@/lib/data";
 import { Reveal } from "@/components/motion/reveal";
@@ -34,34 +33,6 @@ export default function AboutPage() {
               bir kâğıt fabrikası.
             </span>
           </h1>
-        </Reveal>
-      </section>
-
-      {/* Top gallery — 2 görsel yan yana, dengeli yükseklik */}
-      <section className="container-x mt-12 lg:mt-16">
-        <Reveal delay={0.1}>
-          <div className="grid grid-cols-2 gap-3 lg:gap-5">
-            <div className="relative aspect-[4/5] bg-[color:var(--color-surface-2)] overflow-hidden">
-              <Image
-                src="/images/atolye/gallery-wall.jpg"
-                alt="Atölyenin galeri duvarı — sergilenen linol baskıları"
-                fill
-                sizes="(max-width: 1024px) 50vw, 35vw"
-                priority
-                className="object-cover atolye-tint"
-              />
-            </div>
-            <div className="relative aspect-[4/5] bg-[color:var(--color-surface-2)] overflow-hidden">
-              <Image
-                src="/images/atolye/storefront.jpg"
-                alt="Maiamari atölyesi — Bülbülderesi Cd. sokağa açılan vitrin"
-                fill
-                sizes="(max-width: 1024px) 50vw, 35vw"
-                priority
-                className="object-cover atolye-tint"
-              />
-            </div>
-          </div>
         </Reveal>
       </section>
 
@@ -219,11 +190,14 @@ export default function AboutPage() {
               </p>
               <p>
                 Atölyenin envanteri; özgün linol baskıları, atölyede el
-                yapımı üretilen kâğıtları, amber cam kavanozda sunulan
-                baskı boyalarını, kauçuk merdaneleri ve oyma aletlerini
-                kapsar. Tüm ürünler aynı atölyede üretilir;{" "}
-                <em>mağazadan çıkan her parça, bir dökümün, bir kalıbın ya
-                da bir elin izini taşır.</em>
+                yapımı üretilen kâğıtları, sanatçı dikimi kitap çantalarını,
+                amber cam kavanozda sunulan baskı boyalarını, kauçuk
+                merdaneleri ve oyma aletlerini kapsar. Bir kısmı atölyenin
+                kendi üretimidir (kâğıtlar, sanatçı dikimi çantalar);{" "}
+                <em>
+                  bir kısmı atölyenin günlük baskı pratiğinde denenmiş,
+                  piyasadan özenle seçilmiş malzemelerdir.
+                </em>
               </p>
               <p>
                 Düzenli atölye programlarımızla suluboya, çanta baskı, linol

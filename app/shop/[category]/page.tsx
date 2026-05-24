@@ -139,9 +139,9 @@ export default async function CategoryPage({
               </span>
             </h2>
             <p className="mt-7 max-w-md text-base lg:text-lg leading-relaxed text-[color:var(--color-muted)]">
-              Bu koleksiyon için baskılar atölyede tek tek çoğaltılıyor. Yayına
-              girer girmez Instagram&apos;da duyuracağız; istersen bizi
-              arayarak da bilgi alabilirsin.
+              Bu koleksiyon için ilk seçimler hazırlanıyor. Yayına girer
+              girmez Instagram&apos;da duyuracağız; istersen bizi arayarak da
+              bilgi alabilirsin.
             </p>
 
             <div className="mt-9 flex flex-wrap gap-3">

@@ -70,7 +70,7 @@ export const CATEGORIES: Category[] = [
     name: "El Yapımı Kâğıtlar",
     nameEn: "Handmade Papers",
     description:
-      "Atölyemizde tek tek üretilen, doğal liflerden el yapımı kâğıtlar.",
+      "Doğal liflerden el yapımı kâğıtlar — bir kısmı atölyenin kendi üretimi, bir kısmı özenle seçilen tedariktir.",
   },
   {
     slug: "aletler",

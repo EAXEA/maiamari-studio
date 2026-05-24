@@ -329,9 +329,9 @@ export default function HomePage() {
               <p className="mt-7 max-w-md text-base lg:text-lg leading-relaxed text-[color:var(--color-muted)]">
                 Amber cam kavanozda baskı boyaları, kauçuk merdaneler, oyma
                 aletleri, linolyum plakalar ve doğal liflerden el yapımı
-                kâğıtlar. Tüm ürünler aynı atölyede üretilir; mağazadan
-                çıkan her parça bir dökümün, bir kalıbın ya da bir elin
-                izini taşır.
+                kâğıtlar. Bir kısmı atölyenin üretimi (kâğıt, sanatçı dikimi
+                çanta), bir kısmı atölyede denenmiş, piyasadan özenle
+                seçilen malzemelerdir.
               </p>
               <div className="mt-9 flex flex-wrap gap-3">
                 <Link
