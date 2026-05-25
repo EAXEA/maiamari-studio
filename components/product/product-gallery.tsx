@@ -152,17 +152,30 @@ export function ProductGallery({ images, title }: Props) {
             </>
           )}
 
-          {/* Görsel */}
-          <div className="relative w-full h-full max-w-[1200px] max-h-[88vh]">
-            <Image
-              src={active}
-              alt={title}
-              fill
-              sizes="100vw"
-              priority
-              className="object-contain select-none"
-              draggable={false}
-            />
+          {/* Görsel — serilerle aynı pasapartu çerçeve yapısı */}
+          <div className="relative flex-1 w-full flex items-center justify-center pointer-events-none">
+            <figure
+              className="bg-[color:var(--color-surface)] p-5 sm:p-7 lg:p-9 ring-1 ring-[color:var(--color-hairline)]
+                         shadow-[0_1px_2px_rgba(60,40,28,0.05),0_22px_60px_-22px_rgba(0,0,0,0.55)]"
+            >
+              <div className="relative ring-[0.5px] ring-[color:var(--color-hairline)] overflow-hidden bg-[color:var(--color-surface-2)]">
+                <Image
+                  src={active}
+                  alt={title}
+                  width={1200}
+                  height={1200}
+                  priority
+                  sizes="100vw"
+                  className="block max-w-full max-h-[72vh] w-auto h-auto select-none"
+                  draggable={false}
+                />
+                <Watermark
+                  position="bottom-right"
+                  opacity={0.4}
+                  scale={0.16}
+                />
+              </div>
+            </figure>
           </div>
 
           {/* Sayaç */}
