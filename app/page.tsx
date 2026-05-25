@@ -329,9 +329,9 @@ export default function HomePage() {
               <p className="mt-7 max-w-md text-base lg:text-lg leading-relaxed text-[color:var(--color-muted)]">
                 Amber cam kavanozda baskı boyaları, kauçuk merdaneler, oyma
                 aletleri, linolyum plakalar ve doğal liflerden el yapımı
-                kâğıtlar. Bir kısmı atölyenin üretimi (kâğıt, sanatçı dikimi
-                çanta), bir kısmı atölyede denenmiş, piyasadan özenle
-                seçilen malzemelerdir.
+                kâğıtlar. Bir kısmı atölyenin ve sanatçının kendi üretimi
+                (kâğıt, sanatçının elden diktiği çanta), bir kısmı atölyede
+                denenmiş, piyasadan özenle seçilen malzemelerdir.
               </p>
               <div className="mt-9 flex flex-wrap gap-3">
                 <Link
@@ -363,19 +363,12 @@ export default function HomePage() {
                 <span className="italic">küçük bir hediye.</span>
               </h3>
               <p className="mt-5 text-sm lg:text-base leading-relaxed text-[color:var(--color-muted)] max-w-prose">
-                Sanatçının tasarlayıp atölyede diktiği kanvas ve puffer
-                kitap çantaları, doğal liflerden kâğıt setleri ve küçük
-                baskı malzemeleri — sevdiklerinize atölyeden bir selam.
+                Sanatçının elden tasarlayıp diktiği kanvas ve puffer kitap
+                çantaları — sevdiklerinize atölyeden bir selam.
               </p>
-              <div className="mt-7 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+              <div className="mt-7 text-sm">
                 <Link href="/shop/cantalar" className="editorial-link">
                   Hediyelik çantalar →
-                </Link>
-                <Link
-                  href="/shop/el-yapimi-kagitlar"
-                  className="editorial-link"
-                >
-                  Kâğıt setleri →
                 </Link>
               </div>
             </div>

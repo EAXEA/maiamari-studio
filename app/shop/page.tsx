@@ -34,7 +34,7 @@ export default function ShopPage() {
             <strong className="font-normal italic">Mağaza</strong> ise bu
             eserlerin doğduğu atölyenin malzemelerini — linol boyaları,
             merdaneler, plakalar, el yapımı kâğıtlar ve oyma aletlerini —
-            ve hediyelik atölye dokunuşlarını derler.
+            ve sanatçının elden diktiği hediyelik kitap çantalarını derler.
           </p>
           <p className="mt-3">
             <Link href="/galeri" className="editorial-link">
