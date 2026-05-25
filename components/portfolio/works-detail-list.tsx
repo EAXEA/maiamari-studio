@@ -5,7 +5,9 @@ import type { PortfolioWork } from "@/lib/types";
 import { Reveal } from "@/components/motion/reveal";
 import { InstagramInquiryButton } from "@/components/inquiry/instagram-inquiry-button";
 import { PhoneCTA } from "@/components/inquiry/phone-cta";
-import { Watermark } from "@/components/brand/watermark";
+// NOTE: Galeri görselleri arşivde baked-in watermark ile geliyor
+// (Masaüstü\duygu arşiv\images_watermarked\). CSS overlay watermark
+// kaldırıldı — çift watermark gerekmez.
 
 type Props = {
   works: PortfolioWork[];
@@ -92,11 +94,6 @@ export function WorksDetailList({
                       className="block w-full h-auto select-none"
                       draggable={false}
                     />
-                    <Watermark
-                      position="bottom-right"
-                      opacity={0.32}
-                      scale={0.22}
-                    />
                   </div>
                 </figure>
 
@@ -110,15 +107,21 @@ export function WorksDetailList({
                   </h2>
                   <dl className="mt-8 grid grid-cols-[max-content_1fr] gap-x-8 gap-y-2 text-sm">
                     <dt className="text-[color:var(--color-muted)]">Sanatçı</dt>
-                    <dd>Duygu Sinan</dd>
+                    <dd>{work.artist ?? "Duygu Sinan"}</dd>
                     <dt className="text-[color:var(--color-muted)]">Seri</dt>
                     <dd>{seriesName}</dd>
                     <dt className="text-[color:var(--color-muted)]">Teknik</dt>
-                    <dd>Linol baskı, elle çoğaltılmış</dd>
-                    {paperNote && (
+                    <dd>{work.technique ?? "Linol baskı, elle çoğaltılmış"}</dd>
+                    {(work.paper ?? paperNote) && (
                       <>
                         <dt className="text-[color:var(--color-muted)]">Kâğıt</dt>
-                        <dd>{paperNote}</dd>
+                        <dd>{work.paper ?? paperNote}</dd>
+                      </>
+                    )}
+                    {work.dimensions && (
+                      <>
+                        <dt className="text-[color:var(--color-muted)]">Boyut</dt>
+                        <dd className="leading-relaxed">{work.dimensions}</dd>
                       </>
                     )}
                     {work.year && (
@@ -128,7 +131,19 @@ export function WorksDetailList({
                       </>
                     )}
                     <dt className="text-[color:var(--color-muted)]">Edisyon</dt>
-                    <dd>Sayılı · DM üzerinden bilgi</dd>
+                    <dd>
+                      {work.editionSize
+                        ? `${work.editionSize} adetlik sayılı edisyon · fiyat DM'den`
+                        : "Sayılı · DM üzerinden bilgi"}
+                    </dd>
+                    {work.firstSerial && (
+                      <>
+                        <dt className="text-[color:var(--color-muted)]">Serial</dt>
+                        <dd className="font-mono text-xs tabular-nums tracking-tight">
+                          {work.firstSerial}
+                        </dd>
+                      </>
+                    )}
                   </dl>
                   {work.description && (
                     <p className="mt-8 text-base leading-relaxed text-[color:var(--color-muted)] max-w-prose">
@@ -211,11 +226,6 @@ export function WorksDetailList({
                   className="block max-w-full max-h-[68vh] w-auto h-auto select-none"
                   draggable={false}
                 />
-                <Watermark
-                  position="bottom-right"
-                  opacity={0.42}
-                  scale={0.18}
-                />
               </div>
             </figure>
           </div>
@@ -238,11 +248,19 @@ export function WorksDetailList({
                   className="mt-2 text-xs lg:text-sm"
                   style={{ color: "rgba(255,255,255,0.75)" }}
                 >
-                  Linol baskı, elle çoğaltılmış
-                  {paperNote ? ` · ${paperNote}` : ""}
+                  {active.technique ?? "Linol baskı, elle çoğaltılmış"}
+                  {active.paper ? ` · ${active.paper}` : paperNote ? ` · ${paperNote}` : ""}
                   {active.year ? ` · ${active.year}` : ""}
-                  {" · "}Sayılı edisyon
+                  {active.editionSize ? ` · ${active.editionSize} adetlik edisyon` : " · Sayılı edisyon"}
                 </p>
+                {active.dimensions && (
+                  <p
+                    className="mt-1 text-[11px] lg:text-xs"
+                    style={{ color: "rgba(255,255,255,0.55)" }}
+                  >
+                    {active.dimensions}
+                  </p>
+                )}
               </div>
               <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
                 <PhoneCTA

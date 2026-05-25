@@ -34,16 +34,27 @@ export interface Product {
   sourceUrl: string;         // shopier URL
 }
 
-export type SeriesSlug = "kapilar" | "maskeler";
+export type SeriesSlug =
+  | "kapilar"
+  | "lord-of"
+  | "odak"
+  | "turk-hukumdarlari"
+  | "dokuzlar"
+  | "unesco"
+  | "maia"
+  | "basilmis-ankara";
 
 export interface Series {
   slug: SeriesSlug;
-  title: string;             // "Kapılar", "Lord of… Maskeler"
-  subtitle?: string;          // küçük üst eyebrow ("Linol Baskı · 2018")
-  year?: number;              // baskın üretim yılı
+  title: string;             // "Kapılar", "Lord of …"
+  subtitle?: string;          // küçük üst eyebrow ("Linol Baskı · 2013–2018")
+  year?: number;              // baskın üretim yılı (seri tek yıldaysa)
+  yearRange?: string;         // çok yıllı seriler için ("2013–2018")
   description: string;        // 1-2 paragraflık seri tanıtım
   coverImage?: string;        // landing kartı için kapak
   paperNote?: string;         // "Japon el yapımı kâğıt" vb.
+  totalArtworks?: number;     // bu seride kaç eser var (görsel-li veya değil)
+  artworkCount?: number;      // görselli eser sayısı (site'da gösterilen)
 }
 
 export interface PortfolioWork {
@@ -57,6 +68,14 @@ export interface PortfolioWork {
   height?: number;
   year?: number;
   series?: SeriesSlug;        // hangi seriye ait — boşsa eski kayıtlar "kapilar" varsayılır
+  /** Arşiv senkronundan gelen müze künyesi alanları (Duygu SİNAN arşivi = source of truth) */
+  technique?: string;         // "X3- Linolyum Baskı"
+  paper?: string;             // "250 gr Amerikan Bristol"
+  dimensions?: string;        // "50 cm X 70 cm / ... (Kâğıt), 30 cm X 41 cm / ... (Baskı Alanı)"
+  editionSize?: number;       // 10 (1/10..10/10)
+  printCount?: number;        // arşivde kayıtlı baskı sayısı (genelde editionSize ile aynı)
+  firstSerial?: string;       // "#BASKI-2013-0577"
+  artist?: string;            // "Duygu SİNAN"
 }
 
 export interface JournalPost {

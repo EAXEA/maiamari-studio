@@ -37,12 +37,12 @@ export default function HomePage() {
           titleItalic: "bir kâğıt fabrikası.",
         }}
         topRight={{
-          href: "/galeri/maskeler",
+          href: "/galeri/lord-of",
           image:
-            series.find((s) => s.slug === "maskeler")?.coverImage ??
-            "/images/portfolio/maskeler/maske-01.jpg",
-          imageAlt: "Lord of Maskeler · sanatçı Duygu Sinan linol baskı",
-          eyebrow: "Galeri · Lord of Maskeler",
+            series.find((s) => s.slug === "lord-of")?.coverImage ??
+            "/images/portfolio/lord-of/lord-of-01.jpg",
+          imageAlt: "Lord of … · sanatçı Duygu Sinan iki renkli linol baskı serisi",
+          eyebrow: "Galeri · Lord of …",
           title: "Sayılı edisyon",
           titleItalic: "linol baskılar.",
         }}
@@ -78,12 +78,12 @@ export default function HomePage() {
           </div>
 
           <div className="grid lg:grid-cols-2 gap-6 lg:gap-10">
-            {series.map((s, i) => {
+            {series.slice(0, 2).map((s, i) => {
               const works = getPortfolioBySeries(s.slug);
               const tone =
-                s.slug === "maskeler"
-                  ? { label: "II", year: s.year ?? 2024 }
-                  : { label: "I", year: s.year ?? 2018 };
+                i === 0
+                  ? { label: "I", year: s.year ?? 2018 }
+                  : { label: "II", year: s.year ?? 2022 };
               return (
                 <Link
                   key={s.slug}

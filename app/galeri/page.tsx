@@ -13,7 +13,7 @@ import { PhoneCTA } from "@/components/inquiry/phone-cta";
 export const metadata = {
   title: "Galeri",
   description:
-    "Sanatçı Duygu Sinan'ın atölyede elle çoğaltılmış sayılı edisyon linol baskıları — Kapılar ve Lord of … Maskeler serileri.",
+    "Sanatçı Duygu Sinan'ın atölyede elle çoğaltılmış sayılı edisyon linol baskıları — Kapılar, Lord of …, Türk Hükümdarları, Odak, UNESCO, Basılmış Ankara, Dokuzlar ve Maia serileri.",
   alternates: { canonical: "/galeri" },
 };
 
@@ -53,7 +53,7 @@ export default function GaleriLandingPage() {
                     Duygu Sinan
                   </strong>
                 )}
-                &apos;ın atölyede elle bastığı, sayılı edisyondaki iki seri.
+                &apos;ın atölyede elle bastığı, sayılı edisyondaki {series.length} seri.
                 Her bir tabaka atölyede tek tek üretilir; mürekkebin kâğıt
                 üzerindeki izi ve her tabakanın çıkardığı küçük farklar
                 koleksiyonun parçasıdır.
@@ -89,9 +89,9 @@ export default function GaleriLandingPage() {
         </Reveal>
       </section>
 
-      {/* 2. İki seri kartı — equal heights, foto crop yok (object-contain) */}
+      {/* 2. Seri kartları — 8 seri, equal heights, foto crop yok (object-contain) */}
       <section className="container-x pb-16 lg:pb-24">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-10 items-stretch">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8 items-stretch">
           {series.map((s) => {
             const works = getPortfolioBySeries(s.slug);
             const count = works.length;
