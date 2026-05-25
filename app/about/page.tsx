@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { getBusiness } from "@/lib/data";
 import { Reveal } from "@/components/motion/reveal";
@@ -190,10 +191,11 @@ export default function AboutPage() {
               </p>
               <p>
                 Atölyenin envanteri; özgün linol baskıları, atölyede el
-                yapımı üretilen kâğıtları, sanatçı dikimi kitap çantalarını,
-                amber cam kavanozda sunulan baskı boyalarını, kauçuk
-                merdaneleri ve oyma aletlerini kapsar. Bir kısmı atölyenin
-                kendi üretimidir (kâğıtlar, sanatçı dikimi çantalar);{" "}
+                yapımı üretilen kâğıtları, sanatçının elden diktiği kitap
+                çantalarını, amber cam kavanozda sunulan baskı boyalarını,
+                kauçuk merdaneleri ve oyma aletlerini kapsar. Bir kısmı
+                atölyenin ve sanatçının kendi üretimidir (kâğıtlar,
+                sanatçının elden diktiği çantalar);{" "}
                 <em>
                   bir kısmı atölyenin günlük baskı pratiğinde denenmiş,
                   piyasadan özenle seçilmiş malzemelerdir.
@@ -205,6 +207,75 @@ export default function AboutPage() {
                 ziyaretlerine açığız — Kolej metrosundan yürüme
                 mesafesindeyiz.
               </p>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Mekân — atölye / vitrin / detay dizgisi (bento) */}
+      <section className="border-t border-[color:var(--color-hairline)]">
+        <div className="container-x py-20 lg:py-24 max-w-6xl mx-auto">
+          <Reveal>
+            <p className="text-xs tracking-[0.3em] uppercase text-[color:var(--color-muted)]">
+              Mekân
+            </p>
+            <h2
+              className="font-display mt-5 text-3xl lg:text-4xl leading-snug max-w-xl"
+              style={{ color: "var(--color-walnut-dark)" }}
+            >
+              Atölyenin{" "}
+              <span className="italic">gündelik kareleri.</span>
+            </h2>
+          </Reveal>
+
+          {/* Bento grid: 1 büyük (2×2) + 3 küçük + 1 yatay (2×1) */}
+          <Reveal delay={0.1}>
+            <div className="mt-10 lg:mt-14 grid grid-cols-2 sm:grid-cols-3 gap-2 lg:gap-3 auto-rows-[180px] sm:auto-rows-[220px] lg:auto-rows-[260px]">
+              <figure className="col-span-2 row-span-2 relative overflow-hidden bg-[color:var(--color-surface-2)]">
+                <Image
+                  src="/images/about/atolye-icerden.jpg"
+                  alt="Atölyenin içinden vitrine bakış — sergi duvarı ve spot ışıkları"
+                  fill
+                  sizes="(max-width: 640px) 100vw, 66vw"
+                  className="object-cover"
+                />
+              </figure>
+              <figure className="relative overflow-hidden bg-[color:var(--color-surface-2)]">
+                <Image
+                  src="/images/about/vitrin-frontal.jpg"
+                  alt="Maiamari vitrini · sokaktan görünüş"
+                  fill
+                  sizes="(max-width: 640px) 50vw, 33vw"
+                  className="object-cover"
+                />
+              </figure>
+              <figure className="relative overflow-hidden bg-[color:var(--color-surface-2)]">
+                <Image
+                  src="/images/about/pres-vitrin.jpg"
+                  alt="Atölyeden vitrine bakış — baskı presi ön planda"
+                  fill
+                  sizes="(max-width: 640px) 50vw, 33vw"
+                  className="object-cover"
+                />
+              </figure>
+              <figure className="relative overflow-hidden bg-[color:var(--color-surface-2)]">
+                <Image
+                  src="/images/about/aletler-duvar.jpg"
+                  alt="Atölye duvarında merdaneler ve oyma aletleri"
+                  fill
+                  sizes="(max-width: 640px) 50vw, 33vw"
+                  className="object-cover"
+                />
+              </figure>
+              <figure className="col-span-2 relative overflow-hidden bg-[color:var(--color-surface-2)]">
+                <Image
+                  src="/images/about/merdane-vitrin.jpg"
+                  alt="Kavanozda merdaneler — arka planda pres ve sokak manzarası"
+                  fill
+                  sizes="(max-width: 640px) 100vw, 66vw"
+                  className="object-cover"
+                />
+              </figure>
             </div>
           </Reveal>
         </div>
