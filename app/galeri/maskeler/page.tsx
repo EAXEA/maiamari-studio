@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import {
   getPortfolioBySeries,
@@ -9,7 +8,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { InstagramInquiryButton } from "@/components/inquiry/instagram-inquiry-button";
 import { WhatsappComingSoon } from "@/components/inquiry/whatsapp-coming-soon";
 import { PhoneCTA } from "@/components/inquiry/phone-cta";
-import { WorksMasonry } from "@/components/portfolio/works-masonry";
+import { WorksDetailList } from "@/components/portfolio/works-detail-list";
 
 export const metadata = {
   title: "Lord of … Maskeler · Galeri",
@@ -22,9 +21,6 @@ export default function MaskelerSerisiPage() {
   const works = getPortfolioBySeries("maskeler");
   const series = getSeriesBySlug("maskeler");
   const biz = getBusiness();
-
-  const highlight = works[0];
-  const rest = works.slice(1);
 
   return (
     <>
@@ -103,75 +99,7 @@ export default function MaskelerSerisiPage() {
         </Reveal>
       </section>
 
-      {/* 2. Highlight — orijinal aspect, pasapartu kart */}
-      {highlight && (
-        <section className="container-x pb-16 lg:pb-24">
-          <Reveal>
-            <div className="grid lg:grid-cols-[1.4fr_1fr] gap-10 lg:gap-16 items-start">
-              <figure
-                className="bg-[color:var(--color-paper,var(--color-surface))] p-5 sm:p-7 lg:p-9 ring-1 ring-[color:var(--color-hairline)]
-                           shadow-[0_1px_2px_rgba(60,40,28,0.05),0_18px_40px_-22px_rgba(60,40,28,0.20)]"
-              >
-                <div className="relative ring-[0.5px] ring-[color:var(--color-hairline)] overflow-hidden bg-[color:var(--color-surface-2)]">
-                  <Image
-                    src={highlight.image}
-                    alt={highlight.title}
-                    width={highlight.width ?? 1200}
-                    height={highlight.height ?? 1200}
-                    priority
-                    sizes="(max-width: 1024px) 100vw, 56vw"
-                    className="block w-full h-auto select-none"
-                    draggable={false}
-                  />
-                </div>
-              </figure>
-              <div className="lg:pt-8">
-                <p className="eyebrow">Öne çıkan eser</p>
-                <h2 className="font-display mt-4 text-3xl md:text-4xl lg:text-5xl leading-[1.05] tracking-tight">
-                  <span className="italic">{highlight.title}</span>
-                </h2>
-                <dl className="mt-8 grid grid-cols-[max-content_1fr] gap-x-8 gap-y-2 text-sm">
-                  <dt className="text-[color:var(--color-muted)]">Sanatçı</dt>
-                  <dd>Duygu Sinan</dd>
-                  <dt className="text-[color:var(--color-muted)]">Seri</dt>
-                  <dd>Lord of … Maskeler</dd>
-                  <dt className="text-[color:var(--color-muted)]">Teknik</dt>
-                  <dd>Linol baskı, elle çoğaltılmış</dd>
-                  <dt className="text-[color:var(--color-muted)]">Kâğıt</dt>
-                  <dd>Japon el yapımı kâğıt</dd>
-                  {highlight.year && (
-                    <>
-                      <dt className="text-[color:var(--color-muted)]">Yıl</dt>
-                      <dd>{highlight.year}</dd>
-                    </>
-                  )}
-                  <dt className="text-[color:var(--color-muted)]">Edisyon</dt>
-                  <dd>Sayılı · DM üzerinden bilgi</dd>
-                </dl>
-                <p className="mt-8 text-base leading-relaxed text-[color:var(--color-muted)] max-w-prose">
-                  {highlight.description}
-                </p>
-                <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm">
-                  <PhoneCTA
-                    variant="bare"
-                    label="Telefonla bilgi al →"
-                    className="editorial-link"
-                  />
-                  <InstagramInquiryButton
-                    title={highlight.title}
-                    path="/galeri/maskeler"
-                    label="Instagram'dan bilgi al →"
-                    className="editorial-link"
-                  />
-                  <WhatsappComingSoon variant="inline" />
-                </div>
-              </div>
-            </div>
-          </Reveal>
-        </section>
-      )}
-
-      {/* 3. Concept teaser */}
+      {/* 2. Concept teaser */}
       <section
         className="border-t border-b border-[color:var(--color-hairline)]"
         style={{ background: "var(--color-surface)" }}
@@ -188,12 +116,13 @@ export default function MaskelerSerisiPage() {
         </div>
       </section>
 
-      {/* 4. Galeri kartları — her eser için özgün künye + foto */}
+      {/* 3. Tüm eserler — her birinin kendi detay kartı (foto + künye + CTA) */}
       <section className="container-x py-16 lg:py-24">
-        <WorksMasonry
-          works={rest}
+        <WorksDetailList
+          works={works}
           seriesName="Lord of … Maskeler"
           inquiryPath="/galeri/maskeler"
+          paperNote="Japon el yapımı kâğıt"
         />
       </section>
 
