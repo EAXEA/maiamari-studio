@@ -74,7 +74,7 @@ export function WhatsappCTA({
         className={`editorial-link text-sm ${className ?? ""}`}
         style={style}
       >
-        WhatsApp'tan yaz →
+        WhatsApp&apos;tan yaz →
       </a>
     );
   }

@@ -22,19 +22,17 @@ export function ProductGallery({ images, title }: Props) {
   const [activeIdx, setActiveIdx] = useState(0);
   const [lightbox, setLightbox] = useState(false);
 
-  // Guard — boş images dizisi component'i savunmasız bırakır
-  // (modulo NaN, src=undefined). Tüketici garanti etse de bileşen kendini korusun.
-  if (!images.length) return null;
-
-  const active = images[activeIdx] ?? images[0];
-
+  // NOT: Hooks early-return'den ÖNCE çağrılır (react-hooks/rules-of-hooks).
+  // Modulo NaN'a karşı Math.max(1, len) defensive — images=[] iken render
+  // yine null döner, callback hiç çağrılmaz.
+  const len = images.length;
   const next = useCallback(
-    () => setActiveIdx((i) => (i + 1) % images.length),
-    [images.length],
+    () => setActiveIdx((i) => (i + 1) % Math.max(1, len)),
+    [len],
   );
   const prev = useCallback(
-    () => setActiveIdx((i) => (i - 1 + images.length) % images.length),
-    [images.length],
+    () => setActiveIdx((i) => (i - 1 + len) % Math.max(1, len)),
+    [len],
   );
 
   useEffect(() => {
@@ -52,6 +50,11 @@ export function ProductGallery({ images, title }: Props) {
       window.removeEventListener("keydown", onKey);
     };
   }, [lightbox, next, prev]);
+
+  // Guard — boş images dizisi component'i savunmasız bırakır (src=undefined).
+  if (!len) return null;
+
+  const active = images[activeIdx] ?? images[0];
 
   return (
     <div className="space-y-3">

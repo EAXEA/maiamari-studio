@@ -20,16 +20,6 @@ export default function HomePage() {
   const workshops = getWorkshops();
   const series = getSeries();
 
-  // Hero topRight — en güncel seri (yıl desc, ilki). Anasayfada hep "şu an üzerinde
-  // çalışılan" seri vurgusu olsun diye dinamik.
-  const newestSeries =
-    [...series].sort((a, b) => (b.year ?? 0) - (a.year ?? 0))[0] ?? series[0];
-  const newestWorks = newestSeries ? getPortfolioBySeries(newestSeries.slug) : [];
-  const newestEdition = newestWorks[0]?.editionSize;
-  const newestMeta = newestWorks.length
-    ? `${newestWorks.length} eser${newestEdition ? ` × ${newestEdition} baskı` : ""}${newestSeries?.year ? ` · ${newestSeries.year}` : ""}`
-    : undefined;
-
   return (
     <>
       {/* ============================================================
