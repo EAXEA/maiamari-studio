@@ -11,8 +11,9 @@ export default function ContactPage() {
 
   return (
     <div>
-      {/* Storefront banner — atölyenin sokağa açılan yüzü, sakin filtre */}
-      <section className="relative w-full aspect-[21/9] max-h-[520px] overflow-hidden bg-[color:var(--color-surface-2)]">
+      {/* Storefront banner — atölyenin sokağa açılan yüzü, sakin filtre.
+          Mobil 4/3 (storefront foto crop'u dürüst), tablet 16/9, desktop 21/9. */}
+      <section className="relative w-full aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9] max-h-[520px] overflow-hidden bg-[color:var(--color-surface-2)]">
         <Image
           src="/images/atolye/storefront.jpg"
           alt="Maiamari atölyesi — sokağa açılan vitrin"

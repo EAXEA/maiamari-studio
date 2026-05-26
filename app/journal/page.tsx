@@ -120,24 +120,26 @@ export default function JournalPage() {
                       aria-hidden
                     />
 
-                    {/* CARD — foto her zaman yanda, metin yan tarafta */}
+                    {/* CARD — mobilde dikey stack (foto üst, metin alt); desktop'ta
+                        timeline kenarında yan-yana. v1.18'e kadar mobil de flex-row
+                        idi; foto hücresi 38%×stretch yapısı dar+uzun olup object-cover
+                        ile aşırı zoom-in yapıyordu (mobile audit v1.19). */}
                     <article
-                      className={`group bg-[color:var(--color-surface)] border border-[color:var(--color-border)] overflow-hidden transition-all duration-500 ease-out md:hover:shadow-lg md:hover:-translate-y-1 flex ${
+                      className={`group bg-[color:var(--color-surface)] border border-[color:var(--color-border)] overflow-hidden transition-all duration-500 ease-out md:hover:shadow-lg md:hover:-translate-y-1 flex flex-col ${
                         isRight
                           ? "md:order-2 md:ml-10 md:flex-row"
                           : "md:order-1 md:mr-10 md:flex-row-reverse"
                       }`}
                     >
-                      {/* Cover — mobilde de yan (thumbnail), desktop'ta timeline tarafı.
-                          self-start + max-h ile sabit yükseklik; hover'da kart text expand
-                          olsa bile image cell büyümez. */}
+                      {/* Cover — mobil: tam-en, aspect-[16/9] landscape banner.
+                          Desktop: timeline tarafında sticky thumbnail (max-h sabit). */}
                       {post.image && (
-                        <div className="relative w-[38%] sm:w-[34%] md:w-[42%] self-stretch md:self-start min-h-[180px] sm:min-h-[220px] md:min-h-[300px] md:max-h-[420px] md:sticky md:top-24 bg-[color:var(--color-surface-2)] overflow-hidden shrink-0">
+                        <div className="relative w-full md:w-[42%] aspect-[16/9] md:aspect-auto md:self-start md:min-h-[300px] md:max-h-[420px] md:sticky md:top-24 bg-[color:var(--color-surface-2)] overflow-hidden shrink-0">
                           <Image
                             src={post.image}
                             alt={post.imageAlt || post.title}
                             fill
-                            sizes="(max-width: 640px) 38vw, (max-width: 1024px) 28vw, 22vw"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 28vw, 22vw"
                             quality={90}
                             className="object-cover atolye-tint transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
                           />

@@ -34,19 +34,28 @@ type Props = {
  */
 export function MosaicHero({ primary, topRight, bottomRight }: Props) {
   return (
-    <section
-      className="relative w-full overflow-hidden"
-      style={{ height: "78svh", minHeight: 560, maxHeight: 860 }}
-    >
-      <div className="grid h-full grid-cols-1 lg:grid-cols-[1fr_1.2fr] grid-rows-[1.4fr_1fr] lg:grid-rows-2 gap-1.5 lg:gap-2 p-1.5 lg:p-2 bg-[#1a1a1a]">
+    <section className="relative w-full overflow-hidden h-[calc(100svh-64px)] lg:h-[78svh] lg:min-h-[560px] lg:max-h-[860px]">
+      {/* Mobil: header (64px) sonrası kalan viewport'a 3 eşit hücre — header
+          + hero ilk ekrana sığar, scroll'da hero biter. lg+: 2-kolon mozaik. */}
+      <div className="grid h-full grid-cols-1 grid-rows-3 lg:grid-cols-[1fr_1.2fr] lg:grid-rows-2 gap-1.5 lg:gap-2 p-1.5 lg:p-2 bg-[#1a1a1a]">
         <MosaicCell
           {...primary}
           variant="primary"
           delay={0}
-          className="lg:row-span-2"
+          className="order-2 lg:order-none lg:row-span-2"
         />
-        <MosaicCell {...topRight} variant="secondary" delay={0.12} />
-        <MosaicCell {...bottomRight} variant="secondary" delay={0.24} />
+        <MosaicCell
+          {...topRight}
+          variant="secondary"
+          delay={0.12}
+          className="order-3 lg:order-none"
+        />
+        <MosaicCell
+          {...bottomRight}
+          variant="secondary"
+          delay={0.24}
+          className="order-1 lg:order-none"
+        />
       </div>
     </section>
   );

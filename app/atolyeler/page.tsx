@@ -89,7 +89,7 @@ export default function AtolyelerPage() {
               className="border border-[color:var(--color-border)] bg-[color:var(--color-surface)] overflow-hidden group hover:-translate-y-1 transition-transform duration-500 flex items-stretch"
             >
               {img && (
-                <div className="relative w-[38%] sm:w-[34%] md:w-[30%] self-stretch min-h-[180px] sm:min-h-[200px] lg:min-h-[240px] bg-[color:var(--color-surface-2)] overflow-hidden shrink-0">
+                <div className="relative w-[38%] sm:w-[34%] md:w-[30%] aspect-square self-start sm:aspect-auto sm:self-stretch sm:min-h-[200px] lg:min-h-[240px] bg-[color:var(--color-surface-2)] overflow-hidden shrink-0">
                   <Image
                     src={img.src}
                     alt={img.alt}

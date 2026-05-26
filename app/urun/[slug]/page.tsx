@@ -8,6 +8,8 @@ import {
 import { formatTRY } from "@/lib/format";
 import { ProductCard } from "@/components/product/product-card";
 import { ProductGallery } from "@/components/product/product-gallery";
+import { ProductTutorialReel } from "@/components/product/product-tutorial-reel";
+import { getTutorialsForProduct } from "@/lib/product-tutorials";
 import {
   productSchema,
   breadcrumbSchema,
@@ -50,6 +52,7 @@ export default async function ProductPage({
   if (!product) notFound();
 
   const cat = getCategoryBySlug(product.categorySlug);
+  const tutorials = getTutorialsForProduct(product.slug);
   const related = getAllProducts()
     .filter((p) => p.categorySlug === product.categorySlug && p.id !== product.id)
     .slice(0, 4);
@@ -206,6 +209,22 @@ export default async function ProductPage({
           </dl>
         </div>
       </div>
+
+      {tutorials.length > 0 && (
+        <section className="mt-20 lg:mt-24 border-t border-[color:var(--color-border)] pt-12">
+          <p className="text-xs tracking-[0.3em] uppercase text-[color:var(--color-muted)]">
+            Nasıl kullanılır
+          </p>
+          <h2 className="font-display mt-3 text-2xl lg:text-3xl">
+            {tutorials.length === 1 ? tutorials[0].title : "Kullanımı"}
+          </h2>
+          <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-3xl">
+            {tutorials.map((t) => (
+              <ProductTutorialReel key={t.reelId} tutorial={t} />
+            ))}
+          </div>
+        </section>
+      )}
 
       {related.length > 0 && (
         <section className="mt-24 border-t border-[color:var(--color-border)] pt-12">

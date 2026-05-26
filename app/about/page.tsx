@@ -389,6 +389,35 @@ export default function AboutPage() {
                   className="object-cover"
                 />
               </figure>
+              {/* Mobile only — bento'da figure-4 yanında doğal boşluk var (2-kol grid).
+                  Boşluğa atölye programı CTA kartı (buton gibi koyu, link). */}
+              <Link
+                href="/atolyeler"
+                className="relative overflow-hidden flex flex-col justify-between p-5 group sm:hidden"
+                style={{ background: "var(--color-walnut-dark)" }}
+                aria-label="Atölye programına git"
+              >
+                <p
+                  className="text-[10px] tracking-[0.32em] uppercase"
+                  style={{ color: "rgba(255,255,255,0.72)" }}
+                >
+                  Atölye · Program
+                </p>
+                <div>
+                  <h3
+                    className="font-display italic text-2xl leading-[1.05]"
+                    style={{ color: "var(--color-background)" }}
+                  >
+                    Aylık<br />program.
+                  </h3>
+                  <p
+                    className="mt-3 text-[10px] tracking-[0.22em] uppercase transition-transform group-hover:translate-x-1"
+                    style={{ color: "rgba(255,255,255,0.88)" }}
+                  >
+                    Tüm program →
+                  </p>
+                </div>
+              </Link>
               <figure className="col-span-2 relative overflow-hidden bg-[color:var(--color-surface-2)]">
                 <Image
                   src="/images/about/merdane-vitrin.jpg"
