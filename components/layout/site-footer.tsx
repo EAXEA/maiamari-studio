@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getBusiness } from "@/lib/data";
-import { WhatsappComingSoon } from "@/components/inquiry/whatsapp-coming-soon";
+import { WhatsappCTA } from "@/components/inquiry/whatsapp-cta";
 import { PhoneCTA } from "@/components/inquiry/phone-cta";
 import { TransitInfo } from "@/components/transit/transit-info";
 
@@ -59,7 +59,7 @@ export function SiteFooter() {
               </a>
             </li>
             <li>
-              <WhatsappComingSoon variant="list" />
+              <WhatsappCTA variant="list" context="Maiamari atölyesi" path="/" />
             </li>
             <li>
               <a href={biz.contact.shopier} target="_blank" rel="noreferrer">

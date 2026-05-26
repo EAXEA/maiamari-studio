@@ -11,7 +11,7 @@ import { MosaicHero } from "@/components/sections/mosaic-hero";
 import { FeatureBanner } from "@/components/sections/feature-banner";
 import { Reveal } from "@/components/motion/reveal";
 import { WORKSHOP_IMAGES } from "@/lib/workshop-images";
-import { WhatsappComingSoon } from "@/components/inquiry/whatsapp-coming-soon";
+import { WhatsappCTA } from "@/components/inquiry/whatsapp-cta";
 import { PhoneCTA } from "@/components/inquiry/phone-cta";
 import { TransitInfo } from "@/components/transit/transit-info";
 
@@ -45,6 +45,7 @@ export default function HomePage() {
           eyebrow: "Galeri · Lord of …",
           title: "Sayılı edisyon",
           titleItalic: "linol baskılar.",
+          fit: "contain",
         }}
         bottomRight={{
           href: "/shop",
@@ -88,36 +89,37 @@ export default function HomePage() {
                 <Link
                   key={s.slug}
                   href={`/galeri/${s.slug}`}
-                  className="group block border border-[color:var(--color-border)] bg-[color:var(--color-surface)] overflow-hidden hover:-translate-y-1 transition-transform duration-500"
+                  className="group flex flex-col h-full bg-[color:var(--color-surface)] ring-1 ring-[color:var(--color-hairline)]
+                             shadow-[0_1px_2px_rgba(60,40,28,0.05),0_18px_40px_-22px_rgba(60,40,28,0.20)]
+                             hover:shadow-[0_2px_3px_rgba(60,40,28,0.06),0_28px_56px_-22px_rgba(60,40,28,0.28)]
+                             hover:-translate-y-1 transition-all duration-500"
                   aria-label={`${s.title} serisine git`}
                 >
-                  <div className="relative aspect-[5/3] w-full overflow-hidden bg-[color:var(--color-surface-2)]">
-                    {s.coverImage && (
-                      <Image
-                        src={s.coverImage}
-                        alt={`${s.title} serisinden bir eser`}
-                        fill
-                        priority={i === 0}
-                        sizes="(max-width: 1024px) 100vw, 50vw"
-                        className="object-cover transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
-                      />
-                    )}
-                    <div className="absolute inset-x-0 top-0 flex items-start justify-between p-5 lg:p-7 pointer-events-none">
-                      <span
-                        className="text-[10px] tracking-[0.32em] uppercase px-3 py-1.5"
-                        style={{
-                          background: "var(--color-walnut-dark)",
-                          color: "var(--color-background)",
-                        }}
-                      >
-                        Seri {tone.label}
-                      </span>
-                      <span className="font-display text-xs tracking-[0.25em] text-white drop-shadow-md">
-                        {tone.year}
-                      </span>
+                  {/* Pasapartu foto bölümü — /galeri landing kartlarıyla aynı dil */}
+                  <div className="relative p-5 sm:p-7 lg:p-9">
+                    <div className="relative aspect-[5/3] w-full overflow-hidden bg-[color:var(--color-surface-2)] ring-[0.5px] ring-[color:var(--color-hairline)]">
+                      {s.coverImage && (
+                        <Image
+                          src={s.coverImage}
+                          alt={`${s.title} serisinden bir eser`}
+                          fill
+                          priority={i === 0}
+                          sizes="(max-width: 1024px) 100vw, 50vw"
+                          className="object-contain p-3 lg:p-4 transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
+                        />
+                      )}
                     </div>
+                    <span
+                      className="absolute top-8 left-8 lg:top-12 lg:left-12 text-[10px] tracking-[0.32em] uppercase px-3 py-1.5 z-10"
+                      style={{
+                        background: "var(--color-walnut-dark)",
+                        color: "var(--color-background)",
+                      }}
+                    >
+                      Seri {tone.label}
+                    </span>
                   </div>
-                  <div className="p-6 lg:p-9">
+                  <div className="px-5 sm:px-7 lg:px-9 pb-7 lg:pb-9 flex-1 flex flex-col border-t border-dashed border-[color:var(--color-hairline)] pt-6">
                     <p className="eyebrow">{s.subtitle}</p>
                     <h3 className="font-display mt-3 text-2xl lg:text-4xl leading-[1.05] tracking-tight italic">
                       {s.title}
@@ -125,7 +127,7 @@ export default function HomePage() {
                     <p className="mt-4 text-sm lg:text-base leading-relaxed text-[color:var(--color-muted)] max-w-prose">
                       {s.description}
                     </p>
-                    <div className="mt-6 flex items-center justify-between text-xs tracking-[0.2em] uppercase text-[color:var(--color-muted)]">
+                    <div className="mt-auto pt-6 flex items-center justify-between text-xs tracking-[0.2em] uppercase text-[color:var(--color-muted)]">
                       <span>{works.length} eser</span>
                       <span className="text-[color:var(--color-foreground)] group-hover:translate-x-1 transition-transform">
                         Seriye gir →
@@ -429,7 +431,7 @@ export default function HomePage() {
               >
                 İletişim
               </Link>
-              <WhatsappComingSoon variant="button" />
+              <WhatsappCTA variant="button" context="Maiamari atölyesi" path="/" />
             </div>
           </Reveal>
           <Reveal delay={0.15}>

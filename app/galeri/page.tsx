@@ -7,8 +7,7 @@ import {
 } from "@/lib/data";
 import { Reveal } from "@/components/motion/reveal";
 import { InstagramInquiryButton } from "@/components/inquiry/instagram-inquiry-button";
-import { WhatsappComingSoon } from "@/components/inquiry/whatsapp-coming-soon";
-import { PhoneCTA } from "@/components/inquiry/phone-cta";
+import { WhatsappCTA } from "@/components/inquiry/whatsapp-cta";
 
 export const metadata = {
   title: "Galeri",
@@ -76,14 +75,13 @@ export default function GaleriLandingPage() {
               )}
             </div>
             <div className="flex flex-wrap gap-3 lg:justify-end">
-              <PhoneCTA variant="button" label="Telefonla bilgi al" />
               <InstagramInquiryButton
                 path="/galeri"
                 label="Instagram'dan bilgi al"
                 className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase border whitespace-nowrap"
                 style={{ borderColor: "var(--color-foreground)" }}
               />
-              <WhatsappComingSoon variant="button" />
+              <WhatsappCTA variant="button" context="galerideki bir eser" path="/galeri" />
             </div>
           </div>
         </Reveal>
@@ -156,10 +154,16 @@ export default function GaleriLandingPage() {
             </h2>
             <p className="mt-6 text-base leading-relaxed text-[color:var(--color-muted)]">
               Her baskı atölyede tek tek elle çoğaltılır. Eser detayları için
-              telefon ya da Instagram&apos;dan iletişime geçebilirsiniz.
+              Instagram ya da WhatsApp&apos;tan iletişime geçebilirsiniz.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <PhoneCTA variant="button" label="Telefonla bilgi al" />
+              <InstagramInquiryButton
+                path="/galeri"
+                label="Instagram'dan bilgi al"
+                className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase border whitespace-nowrap"
+                style={{ borderColor: "var(--color-foreground)" }}
+              />
+              <WhatsappCTA variant="button" context="galerideki bir eser" path="/galeri" />
             </div>
           </div>
         </Reveal>

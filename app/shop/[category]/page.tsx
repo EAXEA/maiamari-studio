@@ -11,8 +11,7 @@ import {
 import type { CategorySlug } from "@/lib/types";
 import { ProductCard } from "@/components/product/product-card";
 import { breadcrumbSchema, jsonLdScript } from "@/lib/structured-data";
-import { WhatsappComingSoon } from "@/components/inquiry/whatsapp-coming-soon";
-import { PhoneCTA } from "@/components/inquiry/phone-cta";
+import { WhatsappCTA } from "@/components/inquiry/whatsapp-cta";
 
 const BASE_URL = "https://www.maiamari.art";
 
@@ -157,11 +156,7 @@ export default async function CategoryPage({
               >
                 Instagram&apos;da takip et
               </a>
-              <PhoneCTA
-                variant="outline"
-                label="Telefonla bilgi al"
-              />
-              <WhatsappComingSoon variant="button" />
+              <WhatsappCTA variant="button" context={`${cat.name} hakkında`} path={`/shop/${cat.slug}`} />
             </div>
 
             <p className="eyebrow mt-10">

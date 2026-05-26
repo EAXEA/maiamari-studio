@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { getBusiness } from "@/lib/data";
-import { WhatsappComingSoon } from "@/components/inquiry/whatsapp-coming-soon";
+import { WhatsappCTA } from "@/components/inquiry/whatsapp-cta";
 import { PhoneCTA } from "@/components/inquiry/phone-cta";
 import { TransitInfo } from "@/components/transit/transit-info";
 
@@ -91,7 +91,7 @@ export default function ContactPage() {
                 WhatsApp
               </dt>
               <dd>
-                <WhatsappComingSoon variant="inline" />
+                <WhatsappCTA variant="inline" context="atölye randevusu" path="/contact" />
               </dd>
               <dt className="text-[color:var(--color-muted)] uppercase tracking-wider">
                 Instagram
@@ -124,7 +124,7 @@ export default function ContactPage() {
             </ul>
             <div className="mt-6 flex flex-wrap gap-3">
               <PhoneCTA variant="button" label="Telefon · Randevu al" />
-              <WhatsappComingSoon variant="button" />
+              <WhatsappCTA variant="button" context="atölye randevusu" path="/contact" />
             </div>
           </section>
         </div>

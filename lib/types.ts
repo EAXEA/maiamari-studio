@@ -139,6 +139,8 @@ export interface Business {
   contact: {
     phonePrimary: string;
     instagram: string;
+    /** wa.me deep-link (uluslararası numara, "+" yok, boşluk yok). */
+    whatsapp?: string;
     shopier: string;
   };
   hours: { closingTime: string; note: string };

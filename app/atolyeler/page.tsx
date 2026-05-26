@@ -3,7 +3,7 @@ import path from "node:path";
 import Image from "next/image";
 import { getWorkshops } from "@/lib/data";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
-import { WhatsappComingSoon } from "@/components/inquiry/whatsapp-coming-soon";
+import { WhatsappCTA } from "@/components/inquiry/whatsapp-cta";
 import { PhoneCTA } from "@/components/inquiry/phone-cta";
 import { WORKSHOP_IMAGES } from "@/lib/workshop-images";
 import { InstructorAvatar } from "@/components/instructor/instructor-avatar";
@@ -183,7 +183,7 @@ export default function AtolyelerPage() {
                 color: "var(--color-background)",
               }}
             />
-            <WhatsappComingSoon variant="button" className="h-12" />
+            <WhatsappCTA variant="button" context="atölye programı" path="/atolyeler" className="h-12" />
           </div>
         </div>
       </Reveal>

@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from "react";
 import type { PortfolioWork } from "@/lib/types";
 import { Reveal } from "@/components/motion/reveal";
 import { InstagramInquiryButton } from "@/components/inquiry/instagram-inquiry-button";
-import { PhoneCTA } from "@/components/inquiry/phone-cta";
 // NOTE: Galeri görselleri arşivde baked-in watermark ile geliyor
 // (Masaüstü\duygu arşiv\images_watermarked\). CSS overlay watermark
 // kaldırıldı — çift watermark gerekmez.
@@ -144,6 +143,11 @@ export function WorksDetailList({
                         </dd>
                       </>
                     )}
+                    <dt className="text-[color:var(--color-muted)]">Filigran</dt>
+                    <dd className="text-[color:var(--color-muted)] text-xs leading-relaxed">
+                      MAIAMARI © · yalnızca dijital gösterimde.
+                      Teslim edilen fiziksel baskı filigransızdır.
+                    </dd>
                   </dl>
                   {work.description && (
                     <p className="mt-8 text-base leading-relaxed text-[color:var(--color-muted)] max-w-prose">
@@ -157,7 +161,7 @@ export function WorksDetailList({
                     className="mt-7 inline-flex items-center gap-2 text-sm editorial-link"
                   >
                     <ZoomIcon />
-                    Eseri büyük görüntüle ve bilgi al
+                    Eseri görüntüle
                   </button>
                 </div>
               </div>
@@ -261,19 +265,30 @@ export function WorksDetailList({
                     {active.dimensions}
                   </p>
                 )}
+                <p
+                  className="mt-2 text-[10px] tracking-[0.18em] uppercase"
+                  style={{ color: "rgba(255,255,255,0.45)" }}
+                >
+                  Filigran · MAIAMARI © · yalnızca dijital gösterimde
+                </p>
               </div>
               <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
-                <PhoneCTA
-                  variant="bare"
-                  label="Telefonla bilgi al →"
-                  className="text-white/90 hover:text-white underline underline-offset-4"
-                />
                 <InstagramInquiryButton
                   title={active.title}
                   path={inquiryPath}
                   label="Instagram'dan bilgi al →"
                   className="text-white/90 hover:text-white underline underline-offset-4"
                 />
+                <a
+                  href={`https://wa.me/905065889277?text=${encodeURIComponent(
+                    `Merhaba, "${active.title}" eseri hakkında bilgi almak istiyorum.\nhttps://www.maiamari.art${inquiryPath}`
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-white/90 hover:text-white underline underline-offset-4"
+                >
+                  WhatsApp&apos;tan yaz →
+                </a>
               </div>
             </div>
             {works.length > 1 && (

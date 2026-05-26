@@ -14,6 +14,8 @@ type Cell = {
   titleItalic?: string;
   /** Görsel pozisyonu — bazı fotoğraflarda konu üst kısımda */
   objectPos?: string;
+  /** "cover" (default, atölye foto) crop yapar; "contain" galeri eseri için pasapartu — kırpma yok. */
+  fit?: "cover" | "contain";
 };
 
 type Props = {
@@ -56,6 +58,7 @@ function MosaicCell({
   title,
   titleItalic,
   objectPos = "center",
+  fit = "cover",
   variant,
   delay,
   className = "",
@@ -65,6 +68,7 @@ function MosaicCell({
   className?: string;
 }) {
   const isPrimary = variant === "primary";
+  const isContain = fit === "contain";
 
   return (
     <motion.article
@@ -83,7 +87,9 @@ function MosaicCell({
             ? "(max-width: 1024px) 100vw, 58vw"
             : "(max-width: 1024px) 100vw, 42vw"
         }
-        className="object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]"
+        className={`${
+          isContain ? "object-contain p-6 lg:p-10" : "object-cover"
+        } transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]`}
         style={{ objectPosition: objectPos }}
       />
 

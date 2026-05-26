@@ -10,8 +10,7 @@ import {
 import type { SeriesSlug } from "@/lib/types";
 import { Reveal } from "@/components/motion/reveal";
 import { InstagramInquiryButton } from "@/components/inquiry/instagram-inquiry-button";
-import { WhatsappComingSoon } from "@/components/inquiry/whatsapp-coming-soon";
-import { PhoneCTA } from "@/components/inquiry/phone-cta";
+import { WhatsappCTA } from "@/components/inquiry/whatsapp-cta";
 import { WorksDetailList } from "@/components/portfolio/works-detail-list";
 
 const BASE_URL = "https://www.maiamari.art";
@@ -120,14 +119,13 @@ export default async function SeriPage({
               )}
             </div>
             <div className="flex flex-wrap gap-3 lg:justify-end">
-              <PhoneCTA variant="button" label="Telefonla bilgi al" />
               <InstagramInquiryButton
                 path={`/galeri/${series.slug}`}
                 label="Instagram'dan bilgi al"
                 className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase border whitespace-nowrap"
                 style={{ borderColor: "var(--color-foreground)" }}
               />
-              <WhatsappComingSoon variant="button" />
+              <WhatsappCTA variant="button" context={`${series.title} serisindeki bir eser`} path={`/galeri/${series.slug}`} />
             </div>
           </div>
         </Reveal>
