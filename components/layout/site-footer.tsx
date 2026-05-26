@@ -1,14 +1,60 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getBusiness } from "@/lib/data";
+import { getBusiness, getPortfolio, getSeries } from "@/lib/data";
 import { WhatsappCTA } from "@/components/inquiry/whatsapp-cta";
 import { PhoneCTA } from "@/components/inquiry/phone-cta";
 import { TransitInfo } from "@/components/transit/transit-info";
 
 export function SiteFooter() {
   const biz = getBusiness();
+
+  // Galeri alt rail — son üretilen 5 eser (yıl desc + ilk 5)
+  const galleryRail = getPortfolio()
+    .filter((w) => w.image && w.year)
+    .sort((a, b) => (b.year ?? 0) - (a.year ?? 0))
+    .slice(0, 5);
+  const seriesByslug = Object.fromEntries(getSeries().map((s) => [s.slug, s.title]));
+
   return (
     <footer className="mt-24 lg:mt-32 border-t border-[color:var(--color-hairline)]">
+      {/* Alt rail — son üretilen 5 eserin mini önizlemesi */}
+      {galleryRail.length > 0 && (
+        <div className="border-b border-[color:var(--color-hairline)] bg-[color:var(--color-surface)]">
+          <div className="container-wide py-8 lg:py-10">
+            <div className="flex items-end justify-between mb-5 gap-6">
+              <p className="eyebrow">Son üretimler · Galeride</p>
+              <Link href="/galeri" className="text-xs editorial-link shrink-0">
+                Tüm galeri →
+              </Link>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 lg:gap-4">
+              {galleryRail.map((w) => (
+                <Link
+                  key={w.id}
+                  href={`/galeri/${w.series ?? "kapilar"}`}
+                  className="group block bg-[color:var(--color-surface-2)] ring-[0.5px] ring-[color:var(--color-hairline)] hover:ring-[color:var(--color-walnut)] transition"
+                  aria-label={`${seriesByslug[w.series ?? ""] ?? ""} · ${w.title}`}
+                >
+                  <div className="relative aspect-square overflow-hidden">
+                    <Image
+                      src={w.image}
+                      alt={w.title}
+                      fill
+                      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                      className="object-contain p-2 transition-transform duration-[900ms] ease-out group-hover:scale-[1.04]"
+                    />
+                  </div>
+                  <div className="px-2 py-2 text-[10px] tracking-[0.18em] uppercase text-[color:var(--color-muted)] flex items-center justify-between">
+                    <span className="truncate">{seriesByslug[w.series ?? ""] ?? "—"}</span>
+                    <span className="font-mono tabular-nums shrink-0 ml-2">{w.year}</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="container-wide py-16 lg:py-20 grid grid-cols-1 lg:grid-cols-[1.5fr_1fr_1fr_1fr] gap-12 lg:gap-16">
         <div>
           <div className="flex items-center gap-3">

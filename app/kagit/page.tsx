@@ -73,7 +73,7 @@ export default function KagitPage() {
             <div className="relative aspect-[3/4] bg-[color:var(--color-surface-2)] overflow-hidden border border-[color:var(--color-hairline)]">
               <Image
                 src="/images/journal/kagit-kilavuzu/kapak.jpg"
-                alt="El Yapımı Kâğıt kılavuzu — kapak. Sanatçı Duygu Sinan tarafından hazırlanmıştır."
+                alt="El Yapımı Kâğıt kılavuzu — kapak. Duygu Sinan tarafından hazırlanmıştır."
                 fill
                 sizes="(max-width: 1024px) 90vw, 35vw"
                 className="object-cover"
@@ -101,7 +101,7 @@ export default function KagitPage() {
                 On iki adım, bir kâğıt.
               </h2>
               <p className="mt-6 max-w-2xl text-base leading-relaxed text-[color:var(--color-muted)]">
-                Sanatçı Duygu Sinan&apos;ın hazırladığı görsel kılavuzdan;
+                Duygu Sinan&apos;ın hazırladığı görsel kılavuzdan;
                 atölyemizdeki üretim sürecinin altı sayfası.
               </p>
             </div>
@@ -133,7 +133,7 @@ export default function KagitPage() {
 
           <Reveal delay={0.2}>
             <p className="mt-12 text-xs tracking-[0.25em] uppercase text-[color:var(--color-muted)] text-center">
-              Görseller ve kılavuz — Sanatçı Duygu Sinan
+              Görseller ve kılavuz — Duygu Sinan
             </p>
           </Reveal>
         </div>

@@ -16,6 +16,8 @@ type Cell = {
   objectPos?: string;
   /** "cover" (default, atölye foto) crop yapar; "contain" galeri eseri için pasapartu — kırpma yok. */
   fit?: "cover" | "contain";
+  /** Eyebrow altında küçük müze etiketi (ör. "X3 Linolyum · Handmade Paper · 12 eser × 10 baskı"). */
+  meta?: string;
 };
 
 type Props = {
@@ -36,7 +38,7 @@ export function MosaicHero({ primary, topRight, bottomRight }: Props) {
       className="relative w-full overflow-hidden"
       style={{ height: "78svh", minHeight: 560, maxHeight: 860 }}
     >
-      <div className="grid h-full grid-cols-1 lg:grid-cols-[1.4fr_1fr] grid-rows-[1.4fr_1fr] lg:grid-rows-2 gap-1.5 lg:gap-2 p-1.5 lg:p-2 bg-[color:var(--color-walnut-dark)]">
+      <div className="grid h-full grid-cols-1 lg:grid-cols-[1fr_1.2fr] grid-rows-[1.4fr_1fr] lg:grid-rows-2 gap-1.5 lg:gap-2 p-1.5 lg:p-2 bg-[#1a1a1a]">
         <MosaicCell
           {...primary}
           variant="primary"
@@ -59,6 +61,7 @@ function MosaicCell({
   titleItalic,
   objectPos = "center",
   fit = "cover",
+  meta,
   variant,
   delay,
   className = "",
@@ -75,7 +78,7 @@ function MosaicCell({
       initial={{ opacity: 0, scale: 1.02 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 1.1, delay, ease: easeOut }}
-      className={`relative overflow-hidden bg-[color:var(--color-walnut-dark)] group ${className}`}
+      className={`relative overflow-hidden bg-[#1a1a1a] group ${className}`}
     >
       <Image
         src={image}
@@ -110,6 +113,14 @@ function MosaicCell({
         >
           {eyebrow}
         </p>
+        {meta && (
+          <p
+            className="mt-1.5 text-[10px] tracking-[0.16em] uppercase font-mono"
+            style={{ color: "rgba(255,255,255,0.55)" }}
+          >
+            {meta}
+          </p>
+        )}
         {/* Heading hiyerarşi: anasayfa h1 primary cell'de, h2 secondary'lerde */}
         {isPrimary ? (
           <h1 className="font-display mt-3 leading-[0.98] tracking-tight text-[clamp(2.4rem,4.5vw,4.5rem)]">

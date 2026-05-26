@@ -20,15 +20,38 @@ export default function HomePage() {
   const workshops = getWorkshops();
   const series = getSeries();
 
+  // Hero topRight — en güncel seri (yıl desc, ilki). Anasayfada hep "şu an üzerinde
+  // çalışılan" seri vurgusu olsun diye dinamik.
+  const newestSeries =
+    [...series].sort((a, b) => (b.year ?? 0) - (a.year ?? 0))[0] ?? series[0];
+  const newestWorks = newestSeries ? getPortfolioBySeries(newestSeries.slug) : [];
+  const newestEdition = newestWorks[0]?.editionSize;
+  const newestMeta = newestWorks.length
+    ? `${newestWorks.length} eser${newestEdition ? ` × ${newestEdition} baskı` : ""}${newestSeries?.year ? ` · ${newestSeries.year}` : ""}`
+    : undefined;
+
   return (
     <>
       {/* ============================================================
           1. HERO — Magazine mosaic, 3 hücre / 3 offer
-             Sol büyük: atölyenin vitrini · Sağ üst: galeri eseri
-             (Lord of Maskeler) · Sağ alt: mağaza envanteri
+             Sol büyük: Mağaza (atölye envanteri) ·
+             Sağ üst: Atölye (Ankara vitrin) ·
+             Sağ alt: Atölyeler (workshop programı)
          ============================================================ */}
       <MosaicHero
         primary={{
+          href: "/shop",
+          // Pre-cropped (1152×1600, image daha dikey > cell aspect → cover'da alt
+          // clip olur). objectPos "center top" ile köpek illüstrasyon üstte yaslı,
+          // saplı aletler + bıçak uçları altta mümkün olduğunca görünür.
+          image: "/images/atolye/tools-grid-hero.jpg",
+          imageAlt: "Atölye envanteri — merdaneler, oyma aletleri, kavanozlar",
+          eyebrow: "Mağaza · Atölyenin envanteri",
+          title: "Boyalar, kâğıtlar,",
+          titleItalic: "aletler, çantalar.",
+          objectPos: "center top",
+        }}
+        topRight={{
           href: "/about",
           image: "/images/atolye/storefront.jpg",
           imageAlt: "Maiamari atölyesi · Bülbülderesi Cd. vitrin görünümü",
@@ -36,24 +59,15 @@ export default function HomePage() {
           title: "Bir baskı atölyesi,",
           titleItalic: "bir kâğıt fabrikası.",
         }}
-        topRight={{
-          href: "/galeri/lord-of",
-          image:
-            series.find((s) => s.slug === "lord-of")?.coverImage ??
-            "/images/portfolio/lord-of/lord-of-01.jpg",
-          imageAlt: "Lord of … · sanatçı Duygu Sinan iki renkli linol baskı serisi",
-          eyebrow: "Galeri · Lord of …",
-          title: "Sayılı edisyon",
-          titleItalic: "linol baskılar.",
-          fit: "contain",
-        }}
         bottomRight={{
-          href: "/shop",
-          image: "/images/atolye/tools-grid.jpg",
-          imageAlt: "Atölye envanteri — merdaneler, oyma aletleri, kavanozlar",
-          eyebrow: "Mağaza",
-          title: "Atölyenin envanteri",
-          titleItalic: "raflarda.",
+          href: "/atolyeler",
+          image: "/images/portfolio/basilmis-ankara/basilmis-ankara-01.jpg",
+          imageAlt:
+            "Atölyelerde basılabilecek bir örnek — Duygu Sinan lögar kapağı linol baskı",
+          eyebrow: "Atölyeler · Program",
+          title: "Linol, suluboya,",
+          titleItalic: "çanta ve kâğıt.",
+          fit: "contain",
         }}
       />
 
@@ -79,8 +93,13 @@ export default function HomePage() {
           </div>
 
           <div className="grid lg:grid-cols-2 gap-6 lg:gap-10">
-            {series.slice(0, 2).map((s, i) => {
+            {(["kapilar", "odak"] as const)
+              .map((slug) => series.find((s) => s.slug === slug))
+              .filter((s): s is NonNullable<typeof s> => !!s)
+              .map((s, i) => {
               const works = getPortfolioBySeries(s.slug);
+              const papers = Array.from(new Set(works.map((w) => w.paper).filter(Boolean)));
+              const totalPrints = works.reduce((sum, w) => sum + (w.editionSize ?? 0), 0);
               const tone =
                 i === 0
                   ? { label: "I", year: s.year ?? 2018 }
@@ -127,9 +146,28 @@ export default function HomePage() {
                     <p className="mt-4 text-sm lg:text-base leading-relaxed text-[color:var(--color-muted)] max-w-prose">
                       {s.description}
                     </p>
-                    <div className="mt-auto pt-6 flex items-center justify-between text-xs tracking-[0.2em] uppercase text-[color:var(--color-muted)]">
-                      <span>{works.length} eser</span>
-                      <span className="text-[color:var(--color-foreground)] group-hover:translate-x-1 transition-transform">
+                    <dl className="mt-auto pt-6 grid grid-cols-3 gap-3 text-[10px] tracking-[0.18em] uppercase text-[color:var(--color-muted)] border-t border-dashed border-[color:var(--color-hairline)]">
+                      <div className="pt-4">
+                        <dt>Eser</dt>
+                        <dd className="mt-1 font-display italic text-xl normal-case tracking-tight text-[color:var(--color-foreground)]">
+                          {works.length}
+                        </dd>
+                      </div>
+                      <div className="pt-4">
+                        <dt>Toplam baskı</dt>
+                        <dd className="mt-1 font-display italic text-xl normal-case tracking-tight text-[color:var(--color-foreground)]">
+                          {totalPrints || "—"}
+                        </dd>
+                      </div>
+                      <div className="pt-4">
+                        <dt>Kâğıt türü</dt>
+                        <dd className="mt-1 font-display italic text-xl normal-case tracking-tight text-[color:var(--color-foreground)]">
+                          {papers.length || "—"}
+                        </dd>
+                      </div>
+                    </dl>
+                    <div className="mt-5 text-xs tracking-[0.2em] uppercase">
+                      <span className="text-[color:var(--color-foreground)] group-hover:translate-x-1 transition-transform inline-block">
                         Seriye gir →
                       </span>
                     </div>

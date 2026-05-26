@@ -83,7 +83,7 @@ export const CATEGORIES: Category[] = [
     name: "Çantalar",
     nameEn: "Bags",
     description:
-      "Sanatçı Duygu Sinan'ın elden tasarlayıp diktiği kanvas ve puffer kitap çantaları. Kumaş ve baskılar dışarıdan tedarik edilir; tasarım ve dikim sanatçıya aittir. Hediyelik olarak önerilir.",
+      "Duygu Sinan'ın elden tasarlayıp diktiği kanvas ve puffer kitap çantaları. Kumaş ve baskılar dışarıdan tedarik edilir; tasarım ve dikim sanatçıya aittir. Hediyelik olarak önerilir.",
   },
 ];
 

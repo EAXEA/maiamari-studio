@@ -12,7 +12,7 @@ import { WhatsappCTA } from "@/components/inquiry/whatsapp-cta";
 export const metadata = {
   title: "Galeri",
   description:
-    "Sanatçı Duygu Sinan'ın atölyede elle çoğaltılmış sayılı edisyon linol baskıları — Kapılar, Lord of …, Türk Hükümdarları, Odak, UNESCO, Basılmış Ankara, Dokuzlar ve Maia serileri.",
+    "Duygu Sinan'ın atölyede elle çoğaltılmış sayılı edisyon linol baskıları — Kapılar, Lord of …, Türk Hükümdarları, Odak, UNESCO, Basılmış Ankara, Dokuzlar ve Maia serileri.",
   alternates: { canonical: "/galeri" },
 };
 

@@ -29,12 +29,18 @@ export default function ShopPage() {
         </p>
         <div className="text-sm lg:text-base leading-relaxed max-w-prose">
           <p>
-            <strong className="font-normal italic">Galeri</strong>, sanatçı
-            Duygu Sinan&apos;ın özgün baskı eserlerini sunar.{" "}
-            <strong className="font-normal italic">Mağaza</strong> ise bu
-            eserlerin doğduğu atölyenin malzemelerini — linol boyaları,
-            merdaneler, plakalar, el yapımı kâğıtlar ve oyma aletlerini —
-            ve sanatçının elden diktiği hediyelik kitap çantalarını derler.
+            <strong className="font-normal italic">Galeri</strong>de Duygu
+            Sinan&apos;ın özgün baskı eserleri yer alır.{" "}
+            <strong className="font-normal italic">Mağaza</strong>daki
+            boyalar, merdaneler, linol plakalar, el yapımı kâğıtlar ve oyma
+            aletleri ise{" "}
+            <em className="not-italic underline decoration-dotted underline-offset-4">
+              sanatçının bu eserleri üretirken birebir kullandığı
+              malzemelerdir
+            </em>{" "}
+            — atölyenin günlük baskı pratiğinde sınanmış, çalıştığı
+            kanıtlanmış seçimler. Yanlarında, sanatçının elden diktiği
+            hediyelik kitap çantaları da bulunur.
           </p>
           <p className="mt-3">
             <Link href="/galeri" className="editorial-link">
