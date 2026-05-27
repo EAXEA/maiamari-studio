@@ -8,6 +8,13 @@ import {
 import { Reveal } from "@/components/motion/reveal";
 import { InstagramInquiryButton } from "@/components/inquiry/instagram-inquiry-button";
 import { WhatsappCTA } from "@/components/inquiry/whatsapp-cta";
+import {
+  galleryLandingSchema,
+  breadcrumbSchema,
+  jsonLdScript,
+} from "@/lib/structured-data";
+
+const BASE_URL = "https://www.maiamari.art";
 
 export const metadata = {
   title: "Galeri",
@@ -19,9 +26,21 @@ export const metadata = {
 export default function GaleriLandingPage() {
   const series = getSeries();
   const biz = getBusiness();
+  const breadcrumb = breadcrumbSchema([
+    { name: "Anasayfa", url: BASE_URL },
+    { name: "Galeri", url: `${BASE_URL}/galeri` },
+  ]);
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLdScript(galleryLandingSchema(series))}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLdScript(breadcrumb)}
+      />
       {/* 1. Hero — sanatçı + iki seri tanıtımı */}
       <section className="container-x pt-14 lg:pt-20 pb-12 lg:pb-16">
         <Reveal>

@@ -3,7 +3,7 @@
  * Google rich result desteği için layout + sayfalarda kullanılır.
  */
 import { getBusiness } from "./data";
-import type { Product } from "./types";
+import type { PortfolioWork, Product, Series } from "./types";
 
 const BASE_URL = "https://www.maiamari.art";
 
@@ -163,6 +163,131 @@ export function breadcrumbSchema(items: Array<{ name: string; url: string }>) {
       name: it.name,
       item: it.url,
     })),
+  };
+}
+
+/**
+ * VisualArtwork — galeri serisindeki tek bir eser.
+ * Google Images rich result + "Artworks by Duygu Sinan" Knowledge panel için.
+ */
+export function visualArtworkSchema(work: PortfolioWork, series: Series) {
+  const absoluteImage = work.image.startsWith("http")
+    ? work.image
+    : `${BASE_URL}${work.image}`;
+  const seriesUrl = `${BASE_URL}/galeri/${series.slug}`;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "VisualArtwork",
+    "@id": `${seriesUrl}#${work.slug}`,
+    name: work.title,
+    image: absoluteImage,
+    url: seriesUrl,
+    description: work.description || `${work.title} — ${series.title} serisinden linol baskı.`,
+    creator: {
+      "@type": "Person",
+      name: work.artist || "Duygu Sinan",
+      sameAs: "https://www.instagram.com/duygu.sinan.printmaker/",
+    },
+    artform: "Printmaking",
+    artMedium: work.technique || "Linol baskı (Linocut)",
+    ...(work.paper && { artworkSurface: work.paper }),
+    ...(work.editionSize && { artEdition: work.editionSize }),
+    ...(work.year && {
+      dateCreated: String(work.year),
+      copyrightYear: work.year,
+    }),
+    isPartOf: { "@id": `${seriesUrl}#collection` },
+  };
+}
+
+/**
+ * CollectionPage (seri sayfası) — ImageGallery + hasPart: VisualArtwork × N.
+ * /galeri/[series] sayfasında basılır.
+ */
+export function seriesCollectionPageSchema(series: Series, works: PortfolioWork[]) {
+  const seriesUrl = `${BASE_URL}/galeri/${series.slug}`;
+  const coverAbsolute = series.coverImage
+    ? (series.coverImage.startsWith("http") ? series.coverImage : `${BASE_URL}${series.coverImage}`)
+    : works[0]
+      ? `${BASE_URL}${works[0].image}`
+      : `${BASE_URL}/og-image.jpg`;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": `${seriesUrl}#collection`,
+    name: `${series.title} · Galeri · MAIAMARI`,
+    description: series.description,
+    url: seriesUrl,
+    isPartOf: { "@id": `${BASE_URL}/galeri#collection` },
+    about: {
+      "@type": "CreativeWorkSeries",
+      name: series.title,
+      ...(series.yearRange && { temporalCoverage: series.yearRange }),
+      ...(series.year && { datePublished: String(series.year) }),
+      creator: {
+        "@type": "Person",
+        name: "Duygu Sinan",
+        sameAs: "https://www.instagram.com/duygu.sinan.printmaker/",
+      },
+    },
+    mainEntity: {
+      "@type": "ImageGallery",
+      name: series.title,
+      image: coverAbsolute,
+      numberOfItems: works.length,
+      hasPart: works.map((w) => visualArtworkSchema(w, series)),
+    },
+  };
+}
+
+/**
+ * CollectionPage (galeri landing) — 8 serinin ItemList'i.
+ * /galeri sayfasında basılır.
+ */
+export function galleryLandingSchema(allSeries: Series[]) {
+  const galleryUrl = `${BASE_URL}/galeri`;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": `${galleryUrl}#collection`,
+    name: "Galeri · Duygu Sinan · MAIAMARI",
+    description:
+      "Duygu Sinan'ın atölyede elle çoğaltılmış sayılı edisyon linol baskıları — 8 seri.",
+    url: galleryUrl,
+    isPartOf: { "@id": `${BASE_URL}#website` },
+    about: {
+      "@type": "Person",
+      name: "Duygu Sinan",
+      sameAs: "https://www.instagram.com/duygu.sinan.printmaker/",
+    },
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: allSeries.length,
+      itemListElement: allSeries.map((s, idx) => ({
+        "@type": "ListItem",
+        position: idx + 1,
+        url: `${BASE_URL}/galeri/${s.slug}`,
+        item: {
+          "@type": "CreativeWorkSeries",
+          "@id": `${BASE_URL}/galeri/${s.slug}#collection`,
+          name: s.title,
+          description: s.description,
+          url: `${BASE_URL}/galeri/${s.slug}`,
+          ...(s.coverImage && {
+            image: s.coverImage.startsWith("http")
+              ? s.coverImage
+              : `${BASE_URL}${s.coverImage}`,
+          }),
+          creator: {
+            "@type": "Person",
+            name: "Duygu Sinan",
+          },
+        },
+      })),
+    },
   };
 }
 

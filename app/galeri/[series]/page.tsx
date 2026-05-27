@@ -12,6 +12,11 @@ import { Reveal } from "@/components/motion/reveal";
 import { InstagramInquiryButton } from "@/components/inquiry/instagram-inquiry-button";
 import { WhatsappCTA } from "@/components/inquiry/whatsapp-cta";
 import { WorksDetailList } from "@/components/portfolio/works-detail-list";
+import {
+  seriesCollectionPageSchema,
+  breadcrumbSchema,
+  jsonLdScript,
+} from "@/lib/structured-data";
 
 const BASE_URL = "https://www.maiamari.art";
 
@@ -54,9 +59,22 @@ export default async function SeriPage({
   const allSeries = getSeries();
   const currentIdx = allSeries.findIndex((s) => s.slug === series.slug);
   const nextSeries = currentIdx >= 0 ? allSeries[(currentIdx + 1) % allSeries.length] : null;
+  const breadcrumb = breadcrumbSchema([
+    { name: "Anasayfa", url: BASE_URL },
+    { name: "Galeri", url: `${BASE_URL}/galeri` },
+    { name: series.title, url: `${BASE_URL}/galeri/${series.slug}` },
+  ]);
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLdScript(seriesCollectionPageSchema(series, works))}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLdScript(breadcrumb)}
+      />
       {/* Breadcrumb */}
       <section className="container-x pt-10 lg:pt-14">
         <Reveal>
