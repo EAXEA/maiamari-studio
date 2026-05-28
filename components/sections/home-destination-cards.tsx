@@ -11,6 +11,8 @@ type Destination = {
   description: string;
   meta?: string;
   cta: string;
+  /** "cover" (default, atölye foto) crop yapar; "contain" galeri eseri için pasapartu — kırpma yok. */
+  fit?: "cover" | "contain";
 };
 
 type Props = {
@@ -47,6 +49,7 @@ function DestinationCard({
   description,
   meta,
   cta,
+  fit = "cover",
 }: Destination) {
   return (
     <Link
@@ -62,7 +65,7 @@ function DestinationCard({
             alt={imageAlt}
             fill
             sizes="(max-width: 1024px) 92vw, 50vw"
-            className="object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]"
+            className={`${fit === "contain" ? "object-contain p-3 lg:p-5" : "object-cover"} transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]`}
           />
         </div>
       </div>

@@ -8,7 +8,7 @@ import {
   getAllProducts,
 } from "@/lib/data";
 import { InterestHero } from "@/components/sections/interest-hero";
-import { FeaturedSeriesHero } from "@/components/sections/featured-series-hero";
+import { ProductionHero } from "@/components/sections/production-hero";
 import { HomeDestinationCards } from "@/components/sections/home-destination-cards";
 import { FeatureBanner } from "@/components/sections/feature-banner";
 import { Reveal } from "@/components/motion/reveal";
@@ -23,37 +23,51 @@ export default function HomePage() {
   const series = getSeries();
   const products = getAllProducts();
 
-  // Hero için en güncel seri (yıl desc); fallback "kapilar"
+  // Hero altındaki müze etiketi metrikleri — tüm portfolyo, benzersiz eserler
+  const portfolioWorks = series.flatMap((s) => getPortfolioBySeries(s.slug));
+  const totalWorks = new Set(portfolioWorks.map((w) => w.slug ?? w.title))
+    .size;
+
+  // Galeri kartı için Kapılar serisi kapağı
   const featuredSeries =
-    series.slice().sort((a, b) => (b.year ?? 0) - (a.year ?? 0))[0] ?? series[0];
+    series.find((s) => s.slug === "kapilar") ?? series[0];
   const featuredWorks = getPortfolioBySeries(featuredSeries.slug);
+  const galleryCover =
+    featuredSeries.coverImage ?? featuredWorks[0]?.image ?? "";
 
   return (
     <>
       {/* ============================================================
-          1. HERO — Single-card featured series (pasapartu vitrini)
-             Sol pasapartu galeri eseri + sağ italic başlık + müze etiketi + CTA.
-             Mobil: foto üst, metin alt (doğal akış).
+          1. HERO — Üretim izi (full-bleed, tek odaklı)
+             Arka plan: atölye masası yakın çekim (pres + merdaneler).
+             Sol-alt: eyebrow + italic manifesto + müze etiketi + CTA.
          ============================================================ */}
-      <FeaturedSeriesHero series={featuredSeries} works={featuredWorks} />
+      <ProductionHero
+        image="/images/atolye/tools-wall.jpg"
+        imageAlt="Atölye duvarında — tel ızgarada oyma keskileri ve kauçuk merdaneler"
+        metrics={[
+          { label: "Seri", value: series.length },
+          { label: "Eser", value: totalWorks },
+          { label: "Atölye", value: workshops.length },
+        ]}
+      />
 
       {/* ============================================================
-          1b. Destination cards — Atölyeler + Mağaza (hero altı)
-              Hero galeri-led olduğundan diğer 2 destinasyon yan yana
-              kart olarak hemen altına. Mobilde tek kolon stack.
+          1b. Destination cards — Atölyeler + Mağaza
          ============================================================ */}
       <HomeDestinationCards
         workshop={{
-          href: "/atolyeler",
-          image: "/images/atolye/linol-workshop.jpg",
-          imageAlt: "Linol baskı atölyesi · oyulmuş kalıp ve taze baskı",
-          eyebrow: "Atölyeler · Program",
-          title: "Suluboya, linol,",
-          titleItalic: "çanta ve kâğıt.",
+          href: "/galeri",
+          image: galleryCover,
+          imageAlt: `${featuredSeries.title} serisinden bir eser`,
+          eyebrow: "Galeri · Duygu Sinan",
+          title: "Sanatçının",
+          titleItalic: "öne çıkan serileri.",
           description:
-            "Aylık programlar + tek seferlik atölyeler. Duygu Sinan ve Tolga İNALÖZ eğitmenliğinde.",
-          meta: `${workshops.length} program`,
-          cta: "Atölyelere bak",
+            "Kapılar, Maskeler, Odak ve diğer seriler. Duygu Sinan'ın atölye galerisinde sergilenen linol baskı koleksiyonu.",
+          meta: `${series.length} seri · ${totalWorks} eser`,
+          cta: "Galeriye gir",
+          fit: "contain",
         }}
         shop={{
           href: "/shop",
@@ -64,130 +78,14 @@ export default function HomePage() {
           title: "Boyalar, kâğıtlar,",
           titleItalic: "aletler, çantalar.",
           description:
-            "Atölyenin kendi ürettiği el yapımı kâğıtlar + sanatçının elden diktiği çantalar + özenle seçilmiş baskı malzemeleri.",
+            "Atölyenin kendi ürettiği el yapımı kâğıtlar, sanatçının elden diktiği çantalar, özenle seçilmiş baskı malzemeleri.",
           meta: `${products.length} ürün`,
           cta: "Mağazaya gir",
         }}
       />
 
       {/* ============================================================
-          2. Galeride — sanatçının iki serisi (editoryal kartlar)
-         ============================================================ */}
-      <section className="container-x py-16 lg:py-24">
-        <Reveal>
-          <div className="flex items-end justify-between gap-6 mb-10 lg:mb-14">
-            <div>
-              <p className="eyebrow">Bugün · Galeride</p>
-              <h2 className="font-display mt-3 text-3xl md:text-5xl leading-[1.02] tracking-tight max-w-2xl">
-                Sanatçının iki{" "}
-                <span className="italic">öne çıkan serisi.</span>
-              </h2>
-            </div>
-            <Link
-              href="/galeri"
-              className="hidden md:inline text-sm editorial-link shrink-0"
-            >
-              Tüm galeri →
-            </Link>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-6 lg:gap-10">
-            {(["kapilar", "odak"] as const)
-              .map((slug) => series.find((s) => s.slug === slug))
-              .filter((s): s is NonNullable<typeof s> => !!s)
-              .map((s, i) => {
-              const works = getPortfolioBySeries(s.slug);
-              const papers = Array.from(new Set(works.map((w) => w.paper).filter(Boolean)));
-              const totalPrints = works.reduce((sum, w) => sum + (w.editionSize ?? 0), 0);
-              const tone =
-                i === 0
-                  ? { label: "I", year: s.year ?? 2018 }
-                  : { label: "II", year: s.year ?? 2022 };
-              return (
-                <Link
-                  key={s.slug}
-                  href={`/galeri/${s.slug}`}
-                  className="group flex flex-col h-full bg-[color:var(--color-surface)] ring-1 ring-[color:var(--color-hairline)]
-                             shadow-[0_1px_2px_rgba(60,40,28,0.05),0_18px_40px_-22px_rgba(60,40,28,0.20)]
-                             hover:shadow-[0_2px_3px_rgba(60,40,28,0.06),0_28px_56px_-22px_rgba(60,40,28,0.28)]
-                             hover:-translate-y-1 transition-all duration-500"
-                  aria-label={`${s.title} serisine git`}
-                >
-                  {/* Pasapartu foto bölümü — /galeri landing kartlarıyla aynı dil */}
-                  <div className="relative p-5 sm:p-7 lg:p-9">
-                    <div className="relative aspect-[5/3] w-full overflow-hidden bg-[color:var(--color-surface-2)] ring-[0.5px] ring-[color:var(--color-hairline)]">
-                      {s.coverImage && (
-                        <Image
-                          src={s.coverImage}
-                          alt={`${s.title} serisinden bir eser`}
-                          fill
-                          priority={i === 0}
-                          sizes="(max-width: 1024px) 100vw, 50vw"
-                          className="object-contain p-3 lg:p-4 transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
-                        />
-                      )}
-                    </div>
-                    <span
-                      className="absolute top-8 left-8 lg:top-12 lg:left-12 text-[10px] tracking-[0.32em] uppercase px-3 py-1.5 z-10"
-                      style={{
-                        background: "var(--color-walnut-dark)",
-                        color: "var(--color-background)",
-                      }}
-                    >
-                      Seri {tone.label}
-                    </span>
-                  </div>
-                  <div className="px-5 sm:px-7 lg:px-9 pb-7 lg:pb-9 flex-1 flex flex-col border-t border-dashed border-[color:var(--color-hairline)] pt-6">
-                    <p className="eyebrow">{s.subtitle}</p>
-                    <h3 className="font-display mt-3 text-2xl lg:text-4xl leading-[1.05] tracking-tight italic">
-                      {s.title}
-                    </h3>
-                    <p className="mt-4 text-sm lg:text-base leading-relaxed text-[color:var(--color-muted)] max-w-prose">
-                      {s.description}
-                    </p>
-                    <dl className="mt-auto pt-6 grid grid-cols-3 gap-3 text-[10px] tracking-[0.18em] uppercase text-[color:var(--color-muted)] border-t border-dashed border-[color:var(--color-hairline)]">
-                      <div className="pt-4">
-                        <dt>Eser</dt>
-                        <dd className="mt-1 font-display italic text-xl normal-case tracking-tight text-[color:var(--color-foreground)]">
-                          {works.length}
-                        </dd>
-                      </div>
-                      <div className="pt-4">
-                        <dt>Toplam baskı</dt>
-                        <dd className="mt-1 font-display italic text-xl normal-case tracking-tight text-[color:var(--color-foreground)]">
-                          {totalPrints || "—"}
-                        </dd>
-                      </div>
-                      <div className="pt-4">
-                        <dt>Kâğıt türü</dt>
-                        <dd className="mt-1 font-display italic text-xl normal-case tracking-tight text-[color:var(--color-foreground)]">
-                          {papers.length || "—"}
-                        </dd>
-                      </div>
-                    </dl>
-                    <div className="mt-5 text-xs tracking-[0.2em] uppercase">
-                      <span className="text-[color:var(--color-foreground)] group-hover:translate-x-1 transition-transform inline-block">
-                        Seriye gir →
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-
-          <Reveal delay={0.2}>
-            <div className="mt-10 md:hidden">
-              <Link href="/galeri" className="inline-block text-sm editorial-link">
-                Tüm galeri →
-              </Link>
-            </div>
-          </Reveal>
-        </Reveal>
-      </section>
-
-      {/* ============================================================
-          3. Featured story — Kâğıt fabrikası (/kagit'e yönleniyor)
+          2. Featured story — Kâğıt fabrikası (/kagit'e yönleniyor)
          ============================================================ */}
       <FeatureBanner
         kicker="Hikaye · Kâğıt"
