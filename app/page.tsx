@@ -5,9 +5,11 @@ import {
   getWorkshops,
   getSeries,
   getPortfolioBySeries,
+  getAllProducts,
 } from "@/lib/data";
 import { InterestHero } from "@/components/sections/interest-hero";
-import { MosaicHero } from "@/components/sections/mosaic-hero";
+import { FeaturedSeriesHero } from "@/components/sections/featured-series-hero";
+import { HomeDestinationCards } from "@/components/sections/home-destination-cards";
 import { FeatureBanner } from "@/components/sections/feature-banner";
 import { Reveal } from "@/components/motion/reveal";
 import { WORKSHOP_IMAGES } from "@/lib/workshop-images";
@@ -19,45 +21,52 @@ export default function HomePage() {
   const biz = getBusiness();
   const workshops = getWorkshops();
   const series = getSeries();
+  const products = getAllProducts();
+
+  // Hero için en güncel seri (yıl desc); fallback "kapilar"
+  const featuredSeries =
+    series.slice().sort((a, b) => (b.year ?? 0) - (a.year ?? 0))[0] ?? series[0];
+  const featuredWorks = getPortfolioBySeries(featuredSeries.slug);
 
   return (
     <>
       {/* ============================================================
-          1. HERO — Magazine mosaic, 3 hücre / 3 offer
-             Sol büyük: Mağaza (atölye envanteri) ·
-             Sağ üst: Atölye (Ankara vitrin) ·
-             Sağ alt: Atölyeler (workshop programı)
+          1. HERO — Single-card featured series (pasapartu vitrini)
+             Sol pasapartu galeri eseri + sağ italic başlık + müze etiketi + CTA.
+             Mobil: foto üst, metin alt (doğal akış).
          ============================================================ */}
-      <MosaicHero
-        primary={{
+      <FeaturedSeriesHero series={featuredSeries} works={featuredWorks} />
+
+      {/* ============================================================
+          1b. Destination cards — Atölyeler + Mağaza (hero altı)
+              Hero galeri-led olduğundan diğer 2 destinasyon yan yana
+              kart olarak hemen altına. Mobilde tek kolon stack.
+         ============================================================ */}
+      <HomeDestinationCards
+        workshop={{
+          href: "/atolyeler",
+          image: "/images/atolye/linol-workshop.jpg",
+          imageAlt: "Linol baskı atölyesi · oyulmuş kalıp ve taze baskı",
+          eyebrow: "Atölyeler · Program",
+          title: "Suluboya, linol,",
+          titleItalic: "çanta ve kâğıt.",
+          description:
+            "Aylık programlar + tek seferlik atölyeler. Duygu Sinan ve Tolga İNALÖZ eğitmenliğinde.",
+          meta: `${workshops.length} program`,
+          cta: "Atölyelere bak",
+        }}
+        shop={{
           href: "/shop",
-          // Pre-cropped (1152×1600, image daha dikey > cell aspect → cover'da alt
-          // clip olur). objectPos "center top" ile köpek illüstrasyon üstte yaslı,
-          // saplı aletler + bıçak uçları altta mümkün olduğunca görünür.
           image: "/images/atolye/tools-grid-hero.jpg",
-          imageAlt: "Atölye envanteri — merdaneler, oyma aletleri, kavanozlar",
-          eyebrow: "Mağaza · Atölyenin envanteri",
+          imageAlt:
+            "Mağaza envanteri · merdaneler, oyma aletleri, kâğıtlar ve boyalar",
+          eyebrow: "Mağaza · Envanter",
           title: "Boyalar, kâğıtlar,",
           titleItalic: "aletler, çantalar.",
-          objectPos: "center top",
-        }}
-        topRight={{
-          href: "/about",
-          image: "/images/atolye/storefront.jpg",
-          imageAlt: "Maiamari atölyesi · Bülbülderesi Cd. vitrin görünümü",
-          eyebrow: "Atölye · Ankara",
-          title: "Bir baskı atölyesi,",
-          titleItalic: "bir kâğıt fabrikası.",
-        }}
-        bottomRight={{
-          href: "/atolyeler",
-          image: "/images/portfolio/basilmis-ankara/basilmis-ankara-01.jpg",
-          imageAlt:
-            "Atölyelerde basılabilecek bir örnek — Duygu Sinan lögar kapağı linol baskı",
-          eyebrow: "Atölyeler · Program",
-          title: "Linol, suluboya,",
-          titleItalic: "çanta ve kâğıt.",
-          fit: "contain",
+          description:
+            "Atölyenin kendi ürettiği el yapımı kâğıtlar + sanatçının elden diktiği çantalar + özenle seçilmiş baskı malzemeleri.",
+          meta: `${products.length} ürün`,
+          cta: "Mağazaya gir",
         }}
       />
 
