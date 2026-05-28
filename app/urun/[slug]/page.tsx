@@ -37,7 +37,7 @@ export async function generateMetadata({
     openGraph: {
       title: p.title,
       description: p.description,
-      images: [p.coverImage],
+      // OG image: app/urun/[slug]/opengraph-image.tsx file convention.
     },
   };
 }

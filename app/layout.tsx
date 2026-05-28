@@ -43,21 +43,14 @@ export const metadata: Metadata = {
     siteName: "Maiamari Baskı Atölyesi",
     type: "website",
     locale: "tr_TR",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Maiamari Baskı Atölyesi — Küçükesat, Ankara",
-      },
-    ],
+    // OG image: app/opengraph-image.tsx (file convention) tarafından dinamik üretilir.
   },
   twitter: {
     card: "summary_large_image",
     title: "MAIAMARI · Baskı Atölyesi ve Galeri",
     description:
       "Ankara'da çağdaş bir baskı atölyesi ve galeri.",
-    images: ["/og-image.jpg"],
+    // Twitter image: app/opengraph-image.tsx file convention fallback olur.
   },
 };
 
