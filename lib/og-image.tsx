@@ -7,10 +7,37 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { getProductBySlug, getCategoryBySlug, getSeriesBySlug, getPortfolioBySeries } from "./data";
 
-// OG image'lerde Türk Lirası sembolü (₺ U+20BA) kullanılmaz — Satori default
-// font (DejaVu) içinde yok ve dinamik fetch 400 dönüyor. Onun yerine "TL" suffix.
 function formatPriceForOG(value: number): string {
-  return `${value.toLocaleString("tr-TR")} TL`;
+  return `${value.toLocaleString("tr-TR")} ₺`;
+}
+
+// Font cache — build-time'da tek defa okunur, tüm OG route'ları paylaşır.
+// Static font dosyaları assets/fonts/ altında, full Latin + Latin Extended
+// + Currency (₺ U+20BA dahil) coverage'la. Satori variable font'u tam
+// desteklemiyor (`Cannot read properties of undefined (reading '256')`).
+// @fontsource subset bazlı (latin / latin-ext ayrı) olduğundan Satori font
+// matching subset fallback yapmıyor; her dosyada full coverage olan rsms
+// Inter + CatharsisFonts Cormorant kullanılır.
+const fontCache: {
+  interRegular?: Buffer;
+  interSemiBold?: Buffer;
+  cormorantMediumItalic?: Buffer;
+} = {};
+
+async function loadFonts() {
+  const fontsBase = join(process.cwd(), "assets", "fonts");
+  if (!fontCache.interRegular) {
+    fontCache.interRegular = await readFile(join(fontsBase, "Inter-Regular.ttf"));
+    fontCache.interSemiBold = await readFile(join(fontsBase, "Inter-SemiBold.ttf"));
+    fontCache.cormorantMediumItalic = await readFile(
+      join(fontsBase, "CormorantGaramond-MediumItalic.ttf"),
+    );
+  }
+  return [
+    { name: "Inter", data: fontCache.interRegular!, style: "normal" as const, weight: 400 as const },
+    { name: "Inter", data: fontCache.interSemiBold!, style: "normal" as const, weight: 600 as const },
+    { name: "Cormorant", data: fontCache.cormorantMediumItalic!, style: "italic" as const, weight: 500 as const },
+  ];
 }
 
 export const OG_SIZE = { width: 1200, height: 630 } as const;
@@ -73,7 +100,7 @@ function Frame({ children }: { children: React.ReactNode }) {
         display: "flex",
         background: BRAND.background,
         padding: 64,
-        fontFamily: "sans-serif",
+        fontFamily: "Inter, sans-serif",
       }}
     >
       {children}
@@ -102,6 +129,7 @@ function BrandFooter() {
 }
 
 export async function defaultOGImage() {
+  const fonts = await loadFonts();
   return new ImageResponse(
     (
       <Frame>
@@ -128,7 +156,7 @@ export async function defaultOGImage() {
             <div
               style={{
                 fontSize: 180,
-                fontWeight: 700,
+                fontWeight: 600,
                 letterSpacing: -4,
                 color: BRAND.walnutDark,
                 lineHeight: 1,
@@ -180,11 +208,12 @@ export async function defaultOGImage() {
         </div>
       </Frame>
     ),
-    { ...OG_SIZE },
+    { ...OG_SIZE, fonts },
   );
 }
 
 export async function seriesOGImage(slug: string) {
+  const fonts = await loadFonts();
   const series = getSeriesBySlug(slug as Parameters<typeof getSeriesBySlug>[0]);
   if (!series) return defaultOGImage();
   const works = getPortfolioBySeries(series.slug);
@@ -255,8 +284,10 @@ export async function seriesOGImage(slug: string) {
               </div>
               <div
                 style={{
-                  fontSize: 84,
-                  fontWeight: 600,
+                  fontFamily: "Cormorant, serif",
+                  fontStyle: "italic",
+                  fontSize: 110,
+                  fontWeight: 500,
                   letterSpacing: -2,
                   color: BRAND.walnutDark,
                   lineHeight: 1.02,
@@ -304,11 +335,12 @@ export async function seriesOGImage(slug: string) {
         </div>
       </Frame>
     ),
-    { ...OG_SIZE },
+    { ...OG_SIZE, fonts },
   );
 }
 
 export async function productOGImage(slug: string) {
+  const fonts = await loadFonts();
   const product = getProductBySlug(slug);
   if (!product) return defaultOGImage();
   const cat = getCategoryBySlug(product.categorySlug);
@@ -422,6 +454,6 @@ export async function productOGImage(slug: string) {
         </div>
       </Frame>
     ),
-    { ...OG_SIZE },
+    { ...OG_SIZE, fonts },
   );
 }

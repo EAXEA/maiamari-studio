@@ -3,7 +3,7 @@
  * Google rich result desteği için layout + sayfalarda kullanılır.
  */
 import { getBusiness } from "./data";
-import type { PortfolioWork, Product, Series } from "./types";
+import type { Category, PortfolioWork, Product, Series } from "./types";
 
 const BASE_URL = "https://www.maiamari.art";
 
@@ -238,6 +238,64 @@ export function seriesCollectionPageSchema(series: Series, works: PortfolioWork[
       image: coverAbsolute,
       numberOfItems: works.length,
       hasPart: works.map((w) => visualArtworkSchema(w, series)),
+    },
+  };
+}
+
+/**
+ * CollectionPage (shop kategori) — kategorinin ürünlerini ItemList olarak.
+ * /shop/[category] sayfasında basılır. Google Merchant + kategori rich-result için.
+ */
+export function categoryCollectionPageSchema(category: Category, products: Product[]) {
+  const url = `${BASE_URL}/shop/${category.slug}`;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": `${url}#collection`,
+    name: `${category.name} · MAIAMARI`,
+    description: category.description,
+    url,
+    isPartOf: { "@id": `${BASE_URL}#website` },
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: products.length,
+      itemListElement: products.map((p, idx) => {
+        const productUrl = `${BASE_URL}/urun/${p.slug}`;
+        const images = p.gallery.length > 0
+          ? p.gallery.map((g) => (g.startsWith("http") ? g : `${BASE_URL}${g}`))
+          : [p.coverImage.startsWith("http") ? p.coverImage : `${BASE_URL}${p.coverImage}`];
+        const availability =
+          p.status === "out_of_stock"
+            ? "https://schema.org/OutOfStock"
+            : p.status === "low_stock"
+              ? "https://schema.org/LimitedAvailability"
+              : "https://schema.org/InStock";
+        return {
+          "@type": "ListItem",
+          position: idx + 1,
+          url: productUrl,
+          item: {
+            "@type": "Product",
+            name: p.title,
+            url: productUrl,
+            image: images,
+            sku: p.id,
+            brand: { "@type": "Brand", name: "Maiamari" },
+            offers: {
+              "@type": "Offer",
+              url: productUrl,
+              priceCurrency: "TRY",
+              price: p.priceTRY.toString(),
+              availability,
+              seller: {
+                "@type": "Organization",
+                name: "Maiamari Baskı Atölyesi",
+              },
+            },
+          },
+        };
+      }),
     },
   };
 }

@@ -10,7 +10,11 @@ import {
 } from "@/lib/data";
 import type { CategorySlug } from "@/lib/types";
 import { ProductCard } from "@/components/product/product-card";
-import { breadcrumbSchema, jsonLdScript } from "@/lib/structured-data";
+import {
+  breadcrumbSchema,
+  categoryCollectionPageSchema,
+  jsonLdScript,
+} from "@/lib/structured-data";
 import { WhatsappCTA } from "@/components/inquiry/whatsapp-cta";
 
 const BASE_URL = "https://www.maiamari.art";
@@ -68,6 +72,14 @@ export default async function CategoryPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={jsonLdScript(breadcrumb)}
       />
+      {products.length > 0 && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={jsonLdScript(
+            categoryCollectionPageSchema(cat, products),
+          )}
+        />
+      )}
       {banner && (
         <section className="relative w-full aspect-[21/9] max-h-[480px] overflow-hidden bg-[color:var(--color-surface-2)]">
           <Image
