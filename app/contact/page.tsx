@@ -11,28 +11,16 @@ export default function ContactPage() {
 
   return (
     <div>
-      {/* Storefront banner — atölyenin sokağa açılan yüzü, sakin filtre.
+      {/* Storefront banner — atölyenin sokağa açılan yüzü, doğal renk (filtresiz).
           Mobil 4/3 (storefront foto crop'u dürüst), tablet 16/9, desktop 21/9. */}
       <section className="relative w-full aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9] max-h-[520px] overflow-hidden bg-[color:var(--color-surface-2)]">
         <Image
-          src="/images/atolye/storefront.jpg"
-          alt="Maiamari atölyesi — sokağa açılan vitrin"
+          src="/images/atolye/storefront-day.jpg"
+          alt="Maiamari atölyesi — sokağa açılan vitrin ve tabela"
           fill
           priority
           sizes="100vw"
-          className="object-cover atolye-tint"
-          style={{
-            filter: "grayscale(0.55) contrast(0.94) brightness(0.92)",
-          }}
-        />
-        {/* sıcak tonda ince bir overlay — markanın walnut paletine yaslar */}
-        <div
-          aria-hidden
-          className="absolute inset-0 pointer-events-none mix-blend-multiply"
-          style={{
-            background:
-              "linear-gradient(180deg, rgba(60,40,28,0.18) 0%, rgba(60,40,28,0.35) 100%)",
-          }}
+          className="object-cover"
         />
         <div
           aria-hidden

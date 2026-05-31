@@ -43,8 +43,8 @@ export default function HomePage() {
              Sol-alt: eyebrow + italic manifesto + müze etiketi + CTA.
          ============================================================ */}
       <ProductionHero
-        image="/images/atolye/tools-wall.jpg"
-        imageAlt="Atölye duvarında — tel ızgarada oyma keskileri ve kauçuk merdaneler"
+        image="/images/atolye/atolye-uretim-hero.jpg"
+        imageAlt="Atölyenin içi — iki duvar dolusu çerçeveli linol baskı, dipte vitrin ışığı, ortadaki masada çalışan Duygu Sinan"
         metrics={[
           { label: "Seri", value: series.length },
           { label: "Eser", value: totalWorks },
@@ -71,9 +71,9 @@ export default function HomePage() {
         }}
         shop={{
           href: "/shop",
-          image: "/images/atolye/tools-grid-hero.jpg",
+          image: "/images/atolye/tools-grid.jpg",
           imageAlt:
-            "Mağaza envanteri · merdaneler, oyma aletleri, kâğıtlar ve boyalar",
+            "Mağaza envanteri · tel ızgarada kauçuk merdaneler ve oyma aletleri",
           eyebrow: "Mağaza · Envanter",
           title: "Boyalar, kâğıtlar,",
           titleItalic: "aletler, çantalar.",
@@ -223,69 +223,13 @@ export default function HomePage() {
         title="Bir baskı"
         italicTail="nasıl doğar?"
         description="Linol plakanın oyulmasından mürekkebin kâğıdı buluşmasına kadar her aşama atölyede tek elden geçer. Her tabakanın çıkardığı küçük farklar koleksiyonun parçasıdır."
-        image="/images/atolye/press-and-brayers.jpg"
-        imageAlt="Atölyenin baskı presi ve merdaneleri"
+        image="/images/atolye/press-proof.jpg"
+        imageAlt="Atölyenin kırmızı baskı presi — bir sonraki tabaka için hazır"
         href="/journal"
         ctaLabel="Hikayeyi oku"
-        align="right"
+        align="left"
         tone="dark"
       />
-
-      {/* ============================================================
-          6. Mağaza envanteri detay — hero CTA sonrası detaylı kart
-         ============================================================ */}
-      <section className="container-x py-16 lg:py-24">
-        <Reveal>
-          <div className="border border-[color:var(--color-border)] bg-[color:var(--color-surface)] grid lg:grid-cols-[1fr_1.2fr] gap-10 lg:gap-16 items-center p-10 lg:p-16">
-            <div className="relative aspect-square w-full max-w-[460px] mx-auto lg:mx-0 overflow-hidden bg-[color:var(--color-surface-2)]">
-              <Image
-                src="/images/atolye/tools-grid.jpg"
-                alt="Atölye envanteri — merdaneler ve oyma aletleri"
-                fill
-                sizes="(max-width: 1024px) 80vw, 40vw"
-                className="object-cover atolye-tint"
-              />
-              <span
-                className="absolute top-4 left-4 text-[10px] tracking-[0.35em] uppercase px-3 py-1.5"
-                style={{
-                  background: "var(--color-walnut-dark)",
-                  color: "var(--color-background)",
-                }}
-              >
-                Mağaza
-              </span>
-            </div>
-            <div>
-              <p className="eyebrow">Atölye envanteri</p>
-              <h2 className="font-display mt-4 leading-[0.98] text-[clamp(2.3rem,4.8vw,4.2rem)] tracking-tight">
-                <span className="block italic">Maiamari mağaza.</span>
-                <span className="block text-[0.55em] mt-3 tracking-tight">
-                  atölyenin envanteri raflarda.
-                </span>
-              </h2>
-              <p className="mt-7 max-w-md text-base lg:text-lg leading-relaxed text-[color:var(--color-muted)]">
-                Amber cam kavanozda baskı boyaları, kauçuk merdaneler, oyma
-                aletleri, linolyum plakalar ve doğal liflerden el yapımı
-                kâğıtlar. Bir kısmı atölyenin ve sanatçının kendi üretimi
-                (kâğıt, sanatçının elden diktiği çanta), bir kısmı atölyede
-                denenmiş, piyasadan özenle seçilen malzemelerdir.
-              </p>
-              <div className="mt-9 flex flex-wrap gap-3">
-                <Link
-                  href="/shop"
-                  className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase"
-                  style={{
-                    background: "var(--color-walnut-dark)",
-                    color: "var(--color-background)",
-                  }}
-                >
-                  Mağazaya göz at
-                </Link>
-              </div>
-            </div>
-          </div>
-        </Reveal>
-      </section>
 
       {/* ============================================================
           6b. Hediyelik — kompakt sunum kartı

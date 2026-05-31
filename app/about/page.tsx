@@ -355,8 +355,8 @@ export default function AboutPage() {
             <div className="mt-10 lg:mt-14 grid grid-cols-2 sm:grid-cols-3 gap-2 lg:gap-3 auto-rows-[180px] sm:auto-rows-[220px] lg:auto-rows-[260px]">
               <figure className="col-span-2 row-span-2 relative overflow-hidden bg-[color:var(--color-surface-2)]">
                 <Image
-                  src="/images/about/atolye-icerden.jpg"
-                  alt="Atölyenin içinden vitrine bakış — sergi duvarı ve spot ışıkları"
+                  src="/images/atolye/atolye-uretim-hero.jpg"
+                  alt="Atölyenin içi — iki duvar dolusu çerçeveli baskı, dipte vitrin ışığı ve çalışma masası"
                   fill
                   sizes="(max-width: 640px) 100vw, 66vw"
                   className="object-cover"
@@ -364,8 +364,8 @@ export default function AboutPage() {
               </figure>
               <figure className="relative overflow-hidden bg-[color:var(--color-surface-2)]">
                 <Image
-                  src="/images/about/vitrin-frontal.jpg"
-                  alt="Maiamari vitrini · sokaktan görünüş"
+                  src="/images/about/press-station.jpg"
+                  alt="Kırmızı baskı presi — yeşil çizgili tezgahta, ardında vitrin ışığı"
                   fill
                   sizes="(max-width: 640px) 50vw, 33vw"
                   className="object-cover"
@@ -373,8 +373,8 @@ export default function AboutPage() {
               </figure>
               <figure className="relative overflow-hidden bg-[color:var(--color-surface-2)]">
                 <Image
-                  src="/images/about/pres-vitrin.jpg"
-                  alt="Atölyeden vitrine bakış — baskı presi ön planda"
+                  src="/images/about/flat-files.jpg"
+                  alt="Ahşap baskı çekmeceleri — eserlerin saklandığı arşiv gözleri"
                   fill
                   sizes="(max-width: 640px) 50vw, 33vw"
                   className="object-cover"
@@ -382,8 +382,8 @@ export default function AboutPage() {
               </figure>
               <figure className="relative overflow-hidden bg-[color:var(--color-surface-2)]">
                 <Image
-                  src="/images/about/aletler-duvar.jpg"
-                  alt="Atölye duvarında merdaneler ve oyma aletleri"
+                  src="/images/atolye/magaza-envanter.jpg"
+                  alt="Atölye duvarında tel ızgarada merdaneler ve oyma aletleri"
                   fill
                   sizes="(max-width: 640px) 50vw, 33vw"
                   className="object-cover"
@@ -420,8 +420,8 @@ export default function AboutPage() {
               </Link>
               <figure className="col-span-2 relative overflow-hidden bg-[color:var(--color-surface-2)]">
                 <Image
-                  src="/images/about/merdane-vitrin.jpg"
-                  alt="Kavanozda merdaneler — arka planda pres ve sokak manzarası"
+                  src="/images/about/worktable-window.jpg"
+                  alt="Pencere ışığında çalışma masası — serili baskılar ve gün ışığı"
                   fill
                   sizes="(max-width: 640px) 100vw, 66vw"
                   className="object-cover"
