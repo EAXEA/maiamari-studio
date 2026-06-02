@@ -1,32 +1,31 @@
 @AGENTS.md
 
-# Architecture
+# CLAUDE.md
 
-Next.js 16 App Router + React 19 + Tailwind 4 + Framer Motion. Site: krema-beyaz editorial, Cormorant Garamond + Inter, walnut accent. Dil: TR.
+Maiamari Studio — a Next.js 16 printmaking studio site (live at www.maiamari.art). This file holds the rules an AI agent must follow when working in this repo. Long-form documentation lives in [`docs/`](./docs).
 
-## Data flow
-- `data/*.json` = source of truth (business, portfolio, series, journal, products_full/list). Sanat eseri/seri verisi için Masaüstü\duygu arşiv\ kanonik; site bunu sync eder ([[feedback_duygu_arsiv_source_of_truth]]).
-- `lib/data.ts` = **server-only** (fs okur). Client component'lerden import edilemez — client-safe sabitler için `lib/contact.ts`.
-- `lib/structured-data.ts` = JSON-LD schemas (Store, Product, VisualArtwork, CollectionPage, Breadcrumb).
-- `lib/og-image.tsx` = Satori per-page OG image. WOFF2/variable font ❌, JSX flex zorunlu ([[reference_satori_og_image]]).
+## Project rules (must follow)
 
-## Component selection
-- `components/sections/` = sayfa-level editorial blocks. Hero için tek odaklı statik **ProductionHero** (full-bleed dark, üretim izi merkezli).
-- `HomeDestinationCards` = anasayfa 2-kart grid (Galeri + Mağaza). Prop adları (`workshop/shop`) legacy; semantic değil, generic `Destination` tipiyle çalışır. `fit: "cover" | "contain"` ile pasapartu galeri eseri / cover atölye fotosu ayrımı.
-- `FeatureBanner` = hikaye banner (kâğıt fabrikası, atölyede baskı). `align` + `tone="dark"` props.
-- `WorksDetailList` (portfolio) = galeri seri sayfası eser kartı + lightbox.
-- `PhoneCTA` (5 variant: button/outline/inline/link/bare), `WhatsappCTA`, `InstagramInquiryButton` = iletişim CTA'ları.
+- **Push only with explicit approval.** Every push to `master` ships a `vX.Y` semver git tag to origin and a matching `package.json` version bump.
+- **Do not change application behavior** unless asked. This is a live production site.
+- **Art/series data is derived**, synced from an external art source archive into `data/*.json`. Don't hand-edit derived data; change it at the source and re-sync.
 
-## Brand & UX kuralları
-- **Em-dash (—) ve "+" yasak** metinlerde; nokta + ayrı cümle ([[feedback_maiamari_dash_style]]).
-- **"Sanatçı Duygu Sinan" prefix yok**; sadece "Duygu Sinan" ([[feedback_duygu_sinan_yazim]]).
-- **Galeri eseri her yerde pasapartu** + `object-contain` (kırpılmaz). Atölye fotoları `object-cover` atmosferik.
-- **Tailwind 4 arbitrary color bug**: `text-[color:var(--color-X)]` parse edilmiyor → `style={{ color: "var(--color-X)" }}` ([[feedback_tailwind4_arbitrary_color]]).
-- **Showroom/drone/dış cephe/poz veren insanlar yasak**; "üretim izi" merkezli görsel dil.
-- **Push açık onay ister** ([[feedback_no_push_without_consent]]). Her master push'u `vX.Y` semver tag'iyle origin'e ([[feedback_push_version_tags]]).
+## Conventions
 
-## Stack quirks
-- `data/` `web/data/` altında (Vercel uyumlu).
-- Brand kit kaynak: `OneDrive\Masaüstü\Maiamari brand kit\{source,web}\`.
-- Workshop fotoları `lib/workshop-images.ts` shared.
-- Watermark: `components/brand/watermark.tsx` + `--watermark-url` CSS var (tek HTTP/decode/GPU texture).
+- `lib/data.ts` is **server-only** (reads from `fs`); never import it into client components. Client-safe constants live in `lib/contact.ts`.
+- Tailwind 4 does not parse arbitrary color tokens (`text-[color:var(--color-x)]`); use inline `style={{ color: "var(--color-x)" }}`.
+- `data/` lives at the repo root (there is no `web/` subfolder).
+
+## Writing & brand rules
+
+- No em-dash (—) and no "+" in site copy; use a period and a separate sentence.
+- Refer to the artist as "Duygu Sinan", never with a "Sanatçı" prefix.
+- Gallery artworks are always shown uncropped in a passe-partout frame (`object-contain`); studio photos fill the frame (`object-cover`).
+- No showroom / drone / facade / posed-people imagery; keep a "production trace" visual language.
+
+## Documentation map
+
+- [docs/architecture.md](./docs/architecture.md) — system design, data flow, lib modules, components
+- [docs/content-model.md](./docs/content-model.md) — `data/*.json` shapes and the source-of-truth sync
+- [docs/brand-guidelines.md](./docs/brand-guidelines.md) — visual language, typography, writing and imagery rules
+- [docs/deployment.md](./docs/deployment.md) — build, hosting, CI, and the release/tag workflow
