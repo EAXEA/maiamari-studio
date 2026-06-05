@@ -134,6 +134,20 @@ export const series = pgTable("series", {
     .defaultNow(),
 });
 
+/**
+ * Admin giriş deneme sayacı — IP başına brute-force koruması (rate limit).
+ * 3 başarısız deneme → 3 dk kilit. Serverless instance'lar arası tutarlı
+ * olsun diye in-memory yerine burada (Postgres) tutulur.
+ */
+export const adminLoginAttempts = pgTable("admin_login_attempts", {
+  ip: text("ip").primaryKey(),
+  fails: integer("fails").notNull().default(0),
+  lockedUntil: timestamp("locked_until", { withTimezone: true }),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
 export type ProductRow = typeof products.$inferSelect;
 export type NewProductRow = typeof products.$inferInsert;
 export type CategoryRow = typeof categories.$inferSelect;
@@ -142,3 +156,4 @@ export type ArtistRow = typeof artists.$inferSelect;
 export type NewArtistRow = typeof artists.$inferInsert;
 export type SeriesRow = typeof series.$inferSelect;
 export type NewSeriesRow = typeof series.$inferInsert;
+export type AdminLoginAttemptRow = typeof adminLoginAttempts.$inferSelect;

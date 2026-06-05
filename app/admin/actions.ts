@@ -9,6 +9,7 @@
 import crypto from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import {
   requireAdmin,
   isAuthed,
@@ -44,6 +45,11 @@ import {
   dbGetSeriesBySlug,
 } from "@/lib/db/series";
 import { uploadProductImage, deleteStorageImages } from "@/lib/admin/storage";
+import {
+  checkLoginRate,
+  recordLoginFailure,
+  clearLoginAttempts,
+} from "@/lib/db/login-attempts";
 import type { NewProductRow } from "@/lib/db/schema";
 
 export type ActionState = { error?: string } | undefined;
@@ -135,14 +141,59 @@ function slugifyTr(s: string): string {
 // ---------------------------------------------------------------
 // Giriş / çıkış
 // ---------------------------------------------------------------
+/**
+ * İstemci IP'si — rate limit anahtarı.
+ *
+ * GÜVENLİK: x-forwarded-for'un SOLDAKİ değeri istemci tarafından uydurulabilir;
+ * onu kullanmak saldırganın her istekte sahte IP göndererek per-IP limiti
+ * sıfırlamasına (bypass) izin verir. Bu yüzden:
+ *   1) Vercel edge'in yazdığı `x-vercel-forwarded-for` (x-vercel-* reserved'dır,
+ *      istemci enjekte edemez) tercih edilir.
+ *   2) Ham XFF'e düşülürse gerçek hop EN SAĞDA olur (proxy zinciri sona ekler);
+ *      soldakiler spoof'lanabildiği için en sağdaki alınır.
+ */
+async function getClientIp(): Promise<string> {
+  const h = await headers();
+  const vercel = h.get("x-vercel-forwarded-for");
+  if (vercel) {
+    const first = vercel.split(",")[0].trim();
+    if (first) return first;
+  }
+  const xff = h.get("x-forwarded-for");
+  if (xff) {
+    const parts = xff.split(",").map((s) => s.trim()).filter(Boolean);
+    if (parts.length) return parts[parts.length - 1];
+  }
+  return h.get("x-real-ip") || "unknown";
+}
+
 export async function login(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
+  const ip = await getClientIp();
+
+  // Rate limit: IP başına 3 hatalı deneme → 3 dk kilit (brute-force koruması).
+  const gate = await checkLoginRate(ip);
+  if (gate.locked) {
+    const dk = Math.max(1, Math.ceil(gate.retryAfterSec / 60));
+    return {
+      error: `Çok fazla hatalı deneme. ${dk} dakika sonra tekrar deneyin.`,
+    };
+  }
+
   const password = String(formData.get("password") ?? "");
   if (!verifyPassword(password)) {
-    return { error: "Parola hatalı." };
+    const st = await recordLoginFailure(ip);
+    if (st.locked) {
+      return {
+        error: "Çok fazla hatalı deneme. 3 dakika boyunca giriş kapalı.",
+      };
+    }
+    return { error: `Parola hatalı. Kalan deneme: ${st.remaining}.` };
   }
+
+  await clearLoginAttempts(ip);
   await setSessionCookie();
   redirect("/admin");
 }
