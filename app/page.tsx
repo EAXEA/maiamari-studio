@@ -315,7 +315,7 @@ export default async function HomePage() {
             </dl>
             <p className="mt-6 text-sm leading-relaxed text-[color:var(--color-muted)] max-w-md">
               Atölyeye gelmeden önce telefonla kısa bir randevu almanızı
-              öneririz — böylece atölyede olduğumuzdan emin olur, ilgilendiğiniz
+              öneririz. Böylece atölyede olduğumuzdan emin olur, ilgilendiğiniz
               baskı ya da malzeme için size zaman ayırabiliriz.
             </p>
             <div className="mt-10 flex flex-wrap gap-3">
