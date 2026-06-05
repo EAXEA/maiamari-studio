@@ -65,11 +65,37 @@ function revalidateStore(): void {
   revalidatePath("/admin/artists");
 }
 
-/** "1.299,90" / "1299.9" gibi girdiyi numeric kolon string'ine çevirir. */
+/**
+ * Para girdisini numeric kolon string'ine çevirir. İki kaynağı da doğru anlar:
+ *  - Türkçe elle giriş: "1.299,90" (nokta binlik, virgül ondalık) → "1299.90"
+ *  - DB'den gelen / yeniden kaydedilen değer: "294.00", "299.90" (nokta ondalık) → "294.00"
+ *
+ * Kritik: eskiden tüm noktalar binlik sanılıp siliniyordu; bu yüzden "294.00"
+ * değeri her düzenleme kaydında "29400" olup fiyatı ×100 büyütüyordu. Artık
+ * tek nokta + en çok 2 hane ondalık kabul edilir, 3 haneli grup binlik sayılır.
+ */
 function parseMoney(raw: FormDataEntryValue | null): string | null {
-  const s = String(raw ?? "").trim();
+  const s = String(raw ?? "").replace(/[^\d.,]/g, "");
   if (!s) return null;
-  const normalized = s.replace(/\./g, "").replace(",", ".").replace(/[^\d.]/g, "");
+
+  const hasComma = s.includes(",");
+  const hasDot = s.includes(".");
+  let normalized: string;
+  if (hasComma && hasDot) {
+    // Türkçe tam format: nokta binlik, virgül ondalık
+    normalized = s.replace(/\./g, "").replace(",", ".");
+  } else if (hasComma) {
+    // yalnız virgül → ondalık ayıracı ("294,50")
+    normalized = s.replace(",", ".");
+  } else if (hasDot) {
+    const parts = s.split(".");
+    const last = parts[parts.length - 1];
+    // tek nokta + ≤2 hane → ondalık ("294.00"); aksi halde binlik ("1.250")
+    normalized = parts.length === 2 && last.length <= 2 ? s : s.replace(/\./g, "");
+  } else {
+    normalized = s;
+  }
+
   const n = Number(normalized);
   if (!Number.isFinite(n) || n < 0) return null;
   return n.toFixed(2);
