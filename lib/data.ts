@@ -1,11 +1,22 @@
 /**
- * MAIAMARI.STUDIO — Local data layer
+ * MAIAMARI.STUDIO — Veri katmanı
  * ---------------------------------
- * Şu an JSON dosyalarını okur (Faz 1).
- * İleride Supabase'e geçildiğinde sadece bu modül değişecek.
+ * Ürünler: DATABASE_URL tanımlıysa Supabase'ten (async), değilse JSON'dan.
+ * Galeri / seri / işletme / journal: hâlâ data/*.json (arşivden türetilir).
+ * Bu modül server-only'dir (fs okur); client component'lere import edilmez.
  */
 import fs from "node:fs";
 import path from "node:path";
+import {
+  dbGetAllProducts,
+  dbGetProductsByCategory,
+  dbGetProductBySlug,
+  dbGetProductById,
+  dbGetArtworksBySeries,
+} from "./db/products";
+import { dbGetCategories, dbGetCategoryBySlug } from "./db/categories";
+import { dbGetSeries, dbGetSeriesBySlug } from "./db/series";
+import { dbGetArtists, dbGetArtistBySlug } from "./db/artists";
 import type {
   Product,
   Category,
@@ -17,6 +28,7 @@ import type {
   JournalPost,
   Series,
   SeriesSlug,
+  Artist,
 } from "./types";
 
 // ----------------------------------------------------------------
@@ -182,27 +194,40 @@ function loadProducts(): Product[] {
 // ----------------------------------------------------------------
 // Public API
 // ----------------------------------------------------------------
-export function getAllProducts(): Product[] {
-  return loadProducts();
+export async function getAllProducts(): Promise<Product[]> {
+  const fromDb = await dbGetAllProducts();
+  return fromDb ?? loadProducts();
 }
 
-export function getProductsByCategory(slug: CategorySlug): Product[] {
-  return loadProducts().filter((p) => p.categorySlug === slug);
+export async function getProductsByCategory(
+  slug: CategorySlug,
+): Promise<Product[]> {
+  const fromDb = await dbGetProductsByCategory(slug);
+  return fromDb ?? loadProducts().filter((p) => p.categorySlug === slug);
 }
 
-export function getProductBySlug(slug: string): Product | null {
+export async function getProductBySlug(slug: string): Promise<Product | null> {
+  const fromDb = await dbGetProductBySlug(slug);
+  // undefined = DB yok → JSON fallback; null = DB'de bulunamadı
+  if (fromDb !== undefined) return fromDb;
   return loadProducts().find((p) => p.slug === slug) || null;
 }
 
-export function getProductById(id: string): Product | null {
+export async function getProductById(id: string): Promise<Product | null> {
+  const fromDb = await dbGetProductById(id);
+  if (fromDb !== undefined) return fromDb;
   return loadProducts().find((p) => p.id === id) || null;
 }
 
-export function getCategories(): Category[] {
-  return CATEGORIES;
+export async function getCategories(): Promise<Category[]> {
+  const fromDb = await dbGetCategories();
+  return fromDb ?? CATEGORIES;
 }
 
-export function getCategoryBySlug(slug: string): Category | null {
+export async function getCategoryBySlug(slug: string): Promise<Category | null> {
+  const fromDb = await dbGetCategoryBySlug(slug);
+  // undefined = DB yok → statik fallback; null = DB'de bulunamadı
+  if (fromDb !== undefined) return fromDb;
   return CATEGORIES.find((c) => c.slug === slug) || null;
 }
 
@@ -222,15 +247,55 @@ export function getPortfolio(): PortfolioWork[] {
   return readJson<PortfolioWork[]>("portfolio.json");
 }
 
-export function getSeries(): Series[] {
-  return readJson<Series[]>("series.json");
+export async function getSeries(): Promise<Series[]> {
+  const fromDb = await dbGetSeries();
+  return fromDb ?? readJson<Series[]>("series.json");
 }
 
-export function getSeriesBySlug(slug: SeriesSlug): Series | null {
-  return getSeries().find((s) => s.slug === slug) || null;
+export async function getSeriesBySlug(slug: string): Promise<Series | null> {
+  const fromDb = await dbGetSeriesBySlug(slug);
+  if (fromDb !== undefined) return fromDb;
+  return readJson<Series[]>("series.json").find((s) => s.slug === slug) || null;
 }
 
-export function getPortfolioBySeries(slug: SeriesSlug): PortfolioWork[] {
+// ----------------------------------------------------------------
+// Sanatçılar (çok sanatçılı galeri; DB + business.json fallback)
+// ----------------------------------------------------------------
+export async function getArtists(): Promise<Artist[]> {
+  const fromDb = await dbGetArtists();
+  if (fromDb) return fromDb;
+  const biz = readJson<Business>("business.json");
+  return biz.artist ? [{ ...biz.artist, slug: "duygu-sinan" }] : [];
+}
+
+export async function getArtistBySlug(slug: string): Promise<Artist | null> {
+  const fromDb = await dbGetArtistBySlug(slug);
+  if (fromDb !== undefined) return fromDb;
+  const all = await getArtists();
+  return all.find((a) => a.slug === slug) || null;
+}
+
+/** Bir sanatçının tüm eserleri (galeri sanatçı sayfası için). */
+export async function getPortfolioByArtist(
+  artistSlug: string,
+): Promise<PortfolioWork[]> {
+  const allSeries = await getSeries();
+  const mine = allSeries.filter(
+    (s) => (s.artistSlug ?? "duygu-sinan") === artistSlug,
+  );
+  const arrays = await Promise.all(
+    mine.map((s) => getPortfolioBySeries(s.slug as SeriesSlug)),
+  );
+  return arrays.flat();
+}
+
+export async function getPortfolioBySeries(
+  slug: SeriesSlug,
+): Promise<PortfolioWork[]> {
+  // Eserler DB'ye taşındı: DB bu seri için kayıt döndürüyorsa o esastır
+  // (çift gösterimi önler). DB yok/boşsa data/portfolio.json'a düşer.
+  const fromDb = await dbGetArtworksBySeries(slug);
+  if (fromDb && fromDb.length) return fromDb;
   return getPortfolio().filter((w) => (w.series ?? "kapilar") === slug);
 }
 

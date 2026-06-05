@@ -4,9 +4,11 @@ import { ProductCard } from "@/components/product/product-card";
 
 export const metadata = { title: "Mağaza" };
 
-export default function ShopPage() {
-  const products = getAllProducts().filter((p) => p.status !== "out_of_stock");
-  const cats = getCategories();
+export default async function ShopPage() {
+  const products = (await getAllProducts()).filter(
+    (p) => p.status !== "out_of_stock",
+  );
+  const cats = await getCategories();
   return (
     <div className="container-x py-12 lg:py-16">
       <header className="mb-10">
@@ -17,7 +19,7 @@ export default function ShopPage() {
           Tüm ürünler
         </h1>
         <p className="text-sm text-[color:var(--color-muted)] mt-4">
-          {products.length} eser ve malzeme
+          {products.length} malzeme
         </p>
       </header>
 
@@ -29,17 +31,16 @@ export default function ShopPage() {
         </p>
         <div className="text-sm lg:text-base leading-relaxed max-w-prose">
           <p>
-            <strong className="font-normal italic">Galeri</strong>de Duygu
-            Sinan&apos;ın özgün baskı eserleri yer alır.{" "}
+            <strong className="font-normal italic">Galeri</strong>de atölye
+            sanatçılarının özgün baskı eserleri yer alır.{" "}
             <strong className="font-normal italic">Mağaza</strong>daki
             boyalar, merdaneler, linol plakalar, el yapımı kâğıtlar ve oyma
             aletleri ise{" "}
             <em className="not-italic underline decoration-dotted underline-offset-4">
-              sanatçının bu eserleri üretirken birebir kullandığı
-              malzemelerdir
-            </em>{" "}
-            — atölyenin günlük baskı pratiğinde sınanmış, çalıştığı
-            kanıtlanmış seçimler. Yanlarında, sanatçının elden diktiği
+              bu eserleri üretirken birebir kullanılan malzemelerdir
+            </em>
+            . Atölyenin günlük baskı pratiğinde sınanmış, çalıştığı
+            kanıtlanmış seçimler. Yanlarında, atölyede elden dikilen
             hediyelik kitap çantaları da bulunur.
           </p>
           <p className="mt-3">

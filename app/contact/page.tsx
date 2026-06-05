@@ -15,7 +15,7 @@ export default function ContactPage() {
           Mobil 4/3 (storefront foto crop'u dürüst), tablet 16/9, desktop 21/9. */}
       <section className="relative w-full aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9] max-h-[520px] overflow-hidden bg-[color:var(--color-surface-2)]">
         <Image
-          src="/images/atolye/storefront-day.jpg"
+          src="/images/atolye/storefront-day-level.jpg"
           alt="Maiamari atölyesi — sokağa açılan vitrin ve tabela"
           fill
           priority

@@ -1,9 +1,9 @@
 import type { MetadataRoute } from "next";
-import { getAllProducts, getCategories, getSeries } from "@/lib/data";
+import { getAllProducts, getCategories, getSeries, getArtists } from "@/lib/data";
 
 const BASE_URL = "https://www.maiamari.art";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -16,26 +16,41 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/journal`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
   ];
 
-  const seriesRoutes: MetadataRoute.Sitemap = getSeries().map((s) => ({
+  const seriesRoutes: MetadataRoute.Sitemap = (await getSeries()).map((s) => ({
     url: `${BASE_URL}/galeri/${s.slug}`,
     lastModified: now,
     changeFrequency: "monthly",
     priority: 0.85,
   }));
 
-  const categoryRoutes: MetadataRoute.Sitemap = getCategories().map((c) => ({
+  const categoryRoutes: MetadataRoute.Sitemap = (await getCategories()).map((c) => ({
     url: `${BASE_URL}/shop/${c.slug}`,
     lastModified: now,
     changeFrequency: "weekly",
     priority: 0.8,
   }));
 
-  const productRoutes: MetadataRoute.Sitemap = getAllProducts().map((p) => ({
+  const artistRoutes: MetadataRoute.Sitemap = (await getArtists())
+    .filter((a) => a.slug)
+    .map((a) => ({
+      url: `${BASE_URL}/galeri/sanatci/${a.slug}`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.75,
+    }));
+
+  const productRoutes: MetadataRoute.Sitemap = (await getAllProducts()).map((p) => ({
     url: `${BASE_URL}/urun/${p.slug}`,
     lastModified: now,
     changeFrequency: "weekly",
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...seriesRoutes, ...categoryRoutes, ...productRoutes];
+  return [
+    ...staticRoutes,
+    ...seriesRoutes,
+    ...artistRoutes,
+    ...categoryRoutes,
+    ...productRoutes,
+  ];
 }

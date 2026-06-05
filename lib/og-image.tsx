@@ -214,9 +214,9 @@ export async function defaultOGImage() {
 
 export async function seriesOGImage(slug: string) {
   const fonts = await loadFonts();
-  const series = getSeriesBySlug(slug as Parameters<typeof getSeriesBySlug>[0]);
+  const series = await getSeriesBySlug(slug);
   if (!series) return defaultOGImage();
-  const works = getPortfolioBySeries(series.slug);
+  const works = await getPortfolioBySeries(series.slug);
   const coverPath = series.coverImage ?? works[0]?.image;
   const cover = coverPath ? await loadPublicAsBase64(coverPath) : null;
   const yearLabel = series.yearRange ?? (series.year ? String(series.year) : "");
@@ -341,9 +341,9 @@ export async function seriesOGImage(slug: string) {
 
 export async function productOGImage(slug: string) {
   const fonts = await loadFonts();
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
   if (!product) return defaultOGImage();
-  const cat = getCategoryBySlug(product.categorySlug);
+  const cat = await getCategoryBySlug(product.categorySlug);
   const imagePath = product.coverImage ?? product.gallery[0];
   const image = imagePath ? await loadPublicAsBase64(imagePath) : null;
 

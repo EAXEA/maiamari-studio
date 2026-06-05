@@ -20,8 +20,8 @@ export type SearchItem = {
 };
 
 export async function GET() {
-  const products = getAllProducts();
-  const cats = getCategories();
+  const products = await getAllProducts();
+  const cats = await getCategories();
   const biz = getBusiness();
   const workshops = getWorkshops();
   const catBySlug = Object.fromEntries(cats.map((c) => [c.slug, c]));
@@ -55,7 +55,7 @@ export async function GET() {
   }
 
   // Galeri serileri
-  for (const s of getSeries()) {
+  for (const s of await getSeries()) {
     items.push({
       kind: "series",
       title: s.title,

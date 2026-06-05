@@ -19,7 +19,7 @@ import {
 const BASE_URL = "https://www.maiamari.art";
 
 export async function generateStaticParams() {
-  return getAllProducts().map((p) => ({ slug: p.slug }));
+  return (await getAllProducts()).map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({
@@ -28,7 +28,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const p = getProductBySlug(slug);
+  const p = await getProductBySlug(slug);
   if (!p) return {};
   return {
     title: p.title,
@@ -48,12 +48,12 @@ export default async function ProductPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const product = await getProductBySlug(slug);
   if (!product) notFound();
 
-  const cat = getCategoryBySlug(product.categorySlug);
+  const cat = await getCategoryBySlug(product.categorySlug);
   const tutorials = getTutorialsForProduct(product.slug);
-  const related = getAllProducts()
+  const related = (await getAllProducts())
     .filter((p) => p.categorySlug === product.categorySlug && p.id !== product.id)
     .slice(0, 4);
 

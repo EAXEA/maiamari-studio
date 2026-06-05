@@ -6,7 +6,7 @@ export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 
 export async function generateStaticParams() {
-  return getSeries().map((s) => ({ series: s.slug }));
+  return (await getSeries()).map((s) => ({ series: s.slug }));
 }
 
 export default async function Image({

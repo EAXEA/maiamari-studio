@@ -20,7 +20,7 @@ import { WhatsappCTA } from "@/components/inquiry/whatsapp-cta";
 const BASE_URL = "https://www.maiamari.art";
 
 export async function generateStaticParams() {
-  return getCategories().map((c) => ({ category: c.slug }));
+  return (await getCategories()).map((c) => ({ category: c.slug }));
 }
 
 export async function generateMetadata({
@@ -29,7 +29,7 @@ export async function generateMetadata({
   params: Promise<{ category: string }>;
 }): Promise<Metadata> {
   const { category } = await params;
-  const cat = getCategoryBySlug(category);
+  const cat = await getCategoryBySlug(category);
   if (!cat) return {};
   return {
     title: cat.name,
@@ -50,10 +50,10 @@ export default async function CategoryPage({
   params: Promise<{ category: string }>;
 }) {
   const { category } = await params;
-  const cat = getCategoryBySlug(category);
+  const cat = await getCategoryBySlug(category);
   if (!cat) notFound();
-  const products = getProductsByCategory(category as CategorySlug);
-  const allCats = getCategories();
+  const products = await getProductsByCategory(category as CategorySlug);
+  const allCats = await getCategories();
   const biz = getBusiness();
 
   // Kategori-spesifik atölye banner görselleri (eklemek için slug:src ekle)

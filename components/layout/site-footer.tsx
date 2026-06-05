@@ -5,7 +5,7 @@ import { WhatsappCTA } from "@/components/inquiry/whatsapp-cta";
 import { PhoneCTA } from "@/components/inquiry/phone-cta";
 import { TransitInfo } from "@/components/transit/transit-info";
 
-export function SiteFooter() {
+export async function SiteFooter() {
   const biz = getBusiness();
 
   // Galeri alt rail — son üretilen 5 eser (yıl desc + ilk 5)
@@ -13,7 +13,9 @@ export function SiteFooter() {
     .filter((w) => w.image && w.year)
     .sort((a, b) => (b.year ?? 0) - (a.year ?? 0))
     .slice(0, 5);
-  const seriesByslug = Object.fromEntries(getSeries().map((s) => [s.slug, s.title]));
+  const seriesByslug = Object.fromEntries(
+    (await getSeries()).map((s) => [s.slug, s.title]),
+  );
 
   return (
     <footer className="mt-24 lg:mt-32 border-t border-[color:var(--color-hairline)]">

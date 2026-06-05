@@ -55,6 +55,7 @@ export interface Series {
   paperNote?: string;         // "Japon el yapımı kâğıt" vb.
   totalArtworks?: number;     // bu seride kaç eser var (görsel-li veya değil)
   artworkCount?: number;      // görselli eser sayısı (site'da gösterilen)
+  artistSlug?: string;        // serinin sanatçısı (artists tablosu slug'ı)
 }
 
 export interface PortfolioWork {
@@ -113,6 +114,9 @@ export interface Artist {
   instagramHandle?: string;
   instagramUrl?: string;
   note?: string;
+  slug?: string;             // artists tablosu slug'ı (çok sanatçılı galeri)
+  bio?: string;              // sanatçı sayfası tanıtım metni
+  coverImage?: string;       // sanatçı portresi / kapak
 }
 
 export interface Business {

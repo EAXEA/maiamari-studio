@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
-  getBusiness,
+  getArtistBySlug,
   getPortfolioBySeries,
   getSeries,
   getSeriesBySlug,
@@ -21,7 +21,7 @@ import {
 const BASE_URL = "https://www.maiamari.art";
 
 export async function generateStaticParams() {
-  return getSeries().map((s) => ({ series: s.slug }));
+  return (await getSeries()).map((s) => ({ series: s.slug }));
 }
 
 export async function generateMetadata({
@@ -30,7 +30,7 @@ export async function generateMetadata({
   params: Promise<{ series: string }>;
 }): Promise<Metadata> {
   const { series: seriesSlug } = await params;
-  const series = getSeriesBySlug(seriesSlug as SeriesSlug);
+  const series = await getSeriesBySlug(seriesSlug);
   if (!series) return {};
   return {
     title: `${series.title} · Galeri`,
@@ -51,14 +51,24 @@ export default async function SeriPage({
   params: Promise<{ series: string }>;
 }) {
   const { series: seriesSlug } = await params;
-  const series = getSeriesBySlug(seriesSlug as SeriesSlug);
+  const series = await getSeriesBySlug(seriesSlug);
   if (!series) notFound();
 
-  const works = getPortfolioBySeries(seriesSlug as SeriesSlug);
-  const biz = getBusiness();
-  const allSeries = getSeries();
-  const currentIdx = allSeries.findIndex((s) => s.slug === series.slug);
-  const nextSeries = currentIdx >= 0 ? allSeries[(currentIdx + 1) % allSeries.length] : null;
+  const works = await getPortfolioBySeries(seriesSlug as SeriesSlug);
+  // Serinin gerçek sanatçısı (çok sanatçılı galeri) — sabit "Duygu Sinan" değil.
+  const artistSlug = series.artistSlug ?? "duygu-sinan";
+  const artist = await getArtistBySlug(artistSlug);
+  const artistName = artist?.name ?? "Duygu Sinan";
+  // "Devamı" linki aynı sanatçının serileri arasında döner (sanatçı karıştırmaz).
+  const allSeries = await getSeries();
+  const sameArtistSeries = allSeries.filter(
+    (s) => (s.artistSlug ?? "duygu-sinan") === artistSlug,
+  );
+  const currentIdx = sameArtistSeries.findIndex((s) => s.slug === series.slug);
+  const nextSeries =
+    sameArtistSeries.length > 1 && currentIdx >= 0
+      ? sameArtistSeries[(currentIdx + 1) % sameArtistSeries.length]
+      : null;
   const breadcrumb = breadcrumbSchema([
     { name: "Anasayfa", url: BASE_URL },
     { name: "Galeri", url: `${BASE_URL}/galeri` },
@@ -107,19 +117,22 @@ export default async function SeriPage({
             <div className="max-w-prose">
               <p className="text-base lg:text-lg leading-relaxed text-[color:var(--color-muted)]">
                 Sanatçı{" "}
-                {biz.artist?.instagramUrl ? (
+                {artist?.instagramUrl ? (
                   <a
-                    href={biz.artist.instagramUrl}
+                    href={artist.instagramUrl}
                     target="_blank"
                     rel="noreferrer"
                     className="underline underline-offset-4 text-[color:var(--color-foreground)] hover:text-[color:var(--color-walnut)]"
                   >
-                    Duygu Sinan
+                    {artistName}
                   </a>
                 ) : (
-                  <strong className="font-normal text-[color:var(--color-foreground)]">
-                    Duygu Sinan
-                  </strong>
+                  <Link
+                    href={`/galeri/sanatci/${artistSlug}`}
+                    className="underline underline-offset-4 text-[color:var(--color-foreground)] hover:text-[color:var(--color-walnut)]"
+                  >
+                    {artistName}
+                  </Link>
                 )}
                 &apos;ın{" "}
                 <em className="text-[color:var(--color-foreground)] not-italic">

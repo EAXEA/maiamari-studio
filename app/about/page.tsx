@@ -15,10 +15,10 @@ const VALUES = [
   { name: "Deneyim", desc: "Malzemeyi rafta değil, atölyede anlamlandırmak." },
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
   const biz = getBusiness();
   const portfolio = getPortfolio();
-  const series = getSeries();
+  const series = await getSeries();
   const totalPrints = portfolio.reduce((s, w) => s + (w.editionSize ?? 0), 0);
   const years = portfolio.map((w) => w.year).filter((y): y is number => !!y);
   const yearMin = years.length ? Math.min(...years) : null;

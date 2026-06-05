@@ -17,23 +17,38 @@ import { WhatsappCTA } from "@/components/inquiry/whatsapp-cta";
 import { PhoneCTA } from "@/components/inquiry/phone-cta";
 import { TransitInfo } from "@/components/transit/transit-info";
 
-export default function HomePage() {
+export default async function HomePage() {
   const biz = getBusiness();
   const workshops = getWorkshops();
-  const series = getSeries();
-  const products = getAllProducts();
+  const series = await getSeries();
+  const products = await getAllProducts();
 
   // Hero altındaki müze etiketi metrikleri — tüm portfolyo, benzersiz eserler
-  const portfolioWorks = series.flatMap((s) => getPortfolioBySeries(s.slug));
+  const portfolioWorks = (
+    await Promise.all(series.map((s) => getPortfolioBySeries(s.slug)))
+  ).flat();
   const totalWorks = new Set(portfolioWorks.map((w) => w.slug ?? w.title))
     .size;
 
   // Galeri kartı için Kapılar serisi kapağı
   const featuredSeries =
     series.find((s) => s.slug === "kapilar") ?? series[0];
-  const featuredWorks = getPortfolioBySeries(featuredSeries.slug);
+  const featuredWorks = await getPortfolioBySeries(featuredSeries.slug);
   const galleryCover =
     featuredSeries.coverImage ?? featuredWorks[0]?.image ?? "";
+
+  // Galeri kartı metni — /galeri ile aynı uyarlanır mantık: tek sanatçıda
+  // kurucu-önde, çok sanatçıda atölye sanatçıları. Seri adları sabit değil,
+  // gerçek serilerden türetilir (eski "Maskeler" gibi yanlış ad kalmaz).
+  const multiArtist =
+    new Set(series.map((s) => s.artistSlug ?? "duygu-sinan")).size > 1;
+  const topSeriesNames = series.slice(0, 3).map((s) => s.title).join(", ");
+  const galleryEyebrow = multiArtist
+    ? "Galeri · Duygu Sinan ve atölye sanatçıları"
+    : "Galeri · Duygu Sinan";
+  const galleryDescription = multiArtist
+    ? `${topSeriesNames} ve diğer seriler. Duygu Sinan ve Maiamari atölyesi sanatçılarının elle çoğaltılmış linol baskı koleksiyonu.`
+    : `${topSeriesNames} ve diğer seriler. Duygu Sinan'ın atölye galerisinde sergilenen linol baskı koleksiyonu.`;
 
   return (
     <>
@@ -60,11 +75,10 @@ export default function HomePage() {
           href: "/galeri",
           image: galleryCover,
           imageAlt: `${featuredSeries.title} serisinden bir eser`,
-          eyebrow: "Galeri · Duygu Sinan",
-          title: "Sanatçının",
+          eyebrow: galleryEyebrow,
+          title: multiArtist ? "Atölyenin" : "Sanatçının",
           titleItalic: "öne çıkan serileri.",
-          description:
-            "Kapılar, Maskeler, Odak ve diğer seriler. Duygu Sinan'ın atölye galerisinde sergilenen linol baskı koleksiyonu.",
+          description: galleryDescription,
           meta: `${series.length} seri · ${totalWorks} eser`,
           cta: "Galeriye gir",
           fit: "contain",
@@ -253,10 +267,13 @@ export default function HomePage() {
                 </Link>
               </div>
             </div>
-            <div className="relative aspect-[4/3] md:aspect-auto md:min-h-[280px] bg-[color:var(--color-surface-2)]">
+            <div
+              className="relative aspect-[4/3] md:aspect-auto md:min-h-[280px]"
+              style={{ backgroundColor: "#faf7f2" }}
+            >
               <Image
-                src="/images/shopier/29182154/img_00.JPG"
-                alt="Antrasit kanvas çanta — sanatçı tasarımı, hediyelik"
+                src="/images/shop/uc-renk-kanvas-canta-v3.jpg"
+                alt="Üç renk kanvas çanta. Antrasit, Haki ve Hardal. Sanatçı tasarımı, hediyelik."
                 fill
                 sizes="(max-width: 768px) 100vw, 35vw"
                 className="object-contain p-4"
