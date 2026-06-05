@@ -173,6 +173,39 @@ export const journal = pgTable("journal", {
 });
 
 /**
+ * Atölyeler (workshops) — atölye programları & eğitmenler. Panelden yönetilir.
+ * Public /atolyeler + anasayfa buradan okur; DB yoksa data/business.json
+ * (+ lib/workshop-images.ts görselleri) fallback. Sıralama sortOrder artan.
+ */
+export const workshops = pgTable("workshops", {
+  slug: text("slug").primaryKey(),
+  title: text("title").notNull(),
+  instructor: text("instructor").notNull().default(""),
+  instructorInstagramHandle: text("instructor_instagram_handle")
+    .notNull()
+    .default(""),
+  instructorInstagramUrl: text("instructor_instagram_url").notNull().default(""),
+  /** Program / tarih bilgisi: "Aylık · Küçük grup", "Her Cumartesi" vb. */
+  schedule: text("schedule").notNull().default(""),
+  description: text("description").notNull().default(""),
+  /** Kapak görseli (public yol veya Storage URL'i). */
+  image: text("image").notNull().default(""),
+  imageAlt: text("image_alt").notNull().default(""),
+  /** Fiyat TL (opsiyonel; null = fiyat gösterme). */
+  priceTry: numeric("price_try", { precision: 10, scale: 2 }),
+  /** Yayında mı — taslak atölyeleri sayfadan gizlemek için. */
+  isPublished: boolean("is_published").notNull().default(true),
+  /** Vitrinde sıralama (küçük önce). */
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+/**
  * Admin giriş deneme sayacı — IP başına brute-force koruması (rate limit).
  * 3 başarısız deneme → 3 dk kilit. Serverless instance'lar arası tutarlı
  * olsun diye in-memory yerine burada (Postgres) tutulur.
@@ -196,4 +229,6 @@ export type SeriesRow = typeof series.$inferSelect;
 export type NewSeriesRow = typeof series.$inferInsert;
 export type JournalRow = typeof journal.$inferSelect;
 export type NewJournalRow = typeof journal.$inferInsert;
+export type WorkshopRow = typeof workshops.$inferSelect;
+export type NewWorkshopRow = typeof workshops.$inferInsert;
 export type AdminLoginAttemptRow = typeof adminLoginAttempts.$inferSelect;

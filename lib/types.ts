@@ -106,6 +106,7 @@ export interface Workshop {
   description?: string;
   priceTRY?: number | null;
   image?: string;
+  imageAlt?: string;
 }
 
 export interface Artist {

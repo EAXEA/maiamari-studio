@@ -6,7 +6,7 @@ All site content lives as JSON under `data/` and is read at build time through `
 
 The canonical source for **artwork and series data** is an external art source archive maintained outside this repository. The site does not author that data; it **syncs** from the archive into `data/portfolio.json` and `data/series.json`. When art data is wrong, fix it at the archive and re-sync rather than hand-editing the JSON, otherwise the next sync overwrites the change.
 
-Business details and the product catalog are authored or scraped into their respective JSON files. Journal entries are now managed in the database through the admin panel (`/admin/journal`); `data/journal.json` is kept as the build-time fallback (see the journal row below).
+Business details and the product catalog are authored or scraped into their respective JSON files. Journal entries are now managed in the database through the admin panel (`/admin/journal`); `data/journal.json` is kept as the build-time fallback (see the journal row below). Workshops are likewise managed in the `workshops` DB table via `/admin/workshops`; the `workshops[]` array in `data/business.json` (plus `lib/workshop-images.ts`) is the build-time fallback. Workshop slugs are derived from the title (Turkish-aware `slugify`), matching the seeded rows so cover-image fallbacks stay stable.
 
 ## Files
 

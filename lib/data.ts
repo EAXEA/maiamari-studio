@@ -18,6 +18,8 @@ import { dbGetCategories, dbGetCategoryBySlug } from "./db/categories";
 import { dbGetSeries, dbGetSeriesBySlug } from "./db/series";
 import { dbGetArtists, dbGetArtistBySlug } from "./db/artists";
 import { dbGetJournalPosts } from "./db/journal";
+import { dbGetWorkshops } from "./db/workshops";
+import { WORKSHOP_IMAGES } from "./workshop-images";
 import type {
   Product,
   Category,
@@ -236,12 +238,19 @@ export function getBusiness(): Business {
   return readJson<Business>("business.json");
 }
 
-export function getWorkshops(): Workshop[] {
+export async function getWorkshops(): Promise<Workshop[]> {
+  // DB varsa ondan (boş tablo = [] döner, fallback'e DÜŞMEZ); DB yoksa
+  // (build / DATABASE_URL tanımsız → null) business.json fallback. Fallback'te
+  // görsel kod-içi WORKSHOP_IMAGES haritasından enjekte edilir (DB'de görsel
+  // satırda tutulur; seed bu haritadan dolduruldu).
+  const fromDb = await dbGetWorkshops();
+  if (fromDb) return fromDb;
   const business = getBusiness();
-  return (business.workshops || []).map((w, idx) => ({
-    ...w,
-    slug: slugify(w.title) || `workshop-${idx}`,
-  }));
+  return (business.workshops || []).map((w, idx) => {
+    const slug = slugify(w.title) || `workshop-${idx}`;
+    const img = WORKSHOP_IMAGES[slug];
+    return { ...w, slug, image: w.image ?? img?.src, imageAlt: img?.alt };
+  });
 }
 
 export function getPortfolio(): PortfolioWork[] {

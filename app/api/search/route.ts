@@ -23,7 +23,7 @@ export async function GET() {
   const products = await getAllProducts();
   const cats = await getCategories();
   const biz = getBusiness();
-  const workshops = getWorkshops();
+  const workshops = await getWorkshops();
   const catBySlug = Object.fromEntries(cats.map((c) => [c.slug, c]));
 
   const items: SearchItem[] = [];

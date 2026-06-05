@@ -51,6 +51,13 @@ import {
   dbJournalExists,
   dbGetJournalRow,
 } from "@/lib/db/journal";
+import {
+  dbCreateWorkshop,
+  dbUpdateWorkshop,
+  dbDeleteWorkshop,
+  dbWorkshopExists,
+  dbGetWorkshopRow,
+} from "@/lib/db/workshops";
 import { uploadProductImage, deleteStorageImages } from "@/lib/admin/storage";
 import {
   checkLoginRate,
@@ -84,17 +91,19 @@ const VALID_STATUSES = new Set([
  * dokunulur. Admin sayfaları force-dynamic olduğundan ayrıca yenilenmez.
  */
 function revalidateStore(
-  ...sections: Array<"shop" | "gallery" | "journal">
+  ...sections: Array<"shop" | "gallery" | "journal" | "workshop">
 ): void {
-  revalidatePath("/"); // ana sayfa hem galeri hem mağaza özetini gösterir
+  revalidatePath("/"); // ana sayfa galeri/mağaza/atölye özetini gösterir
   for (const s of sections) {
     if (s === "shop") {
       revalidatePath("/shop", "layout"); // /shop + /shop/[kategori]
       revalidatePath("/urun", "layout"); // ürün/eser detay sayfaları
     } else if (s === "gallery") {
       revalidatePath("/galeri", "layout"); // /galeri + /galeri/[seri] + /galeri/sanatci/[slug]
-    } else {
+    } else if (s === "journal") {
       revalidatePath("/journal"); // günce kronoloji (tek sayfa)
+    } else {
+      revalidatePath("/atolyeler"); // atölye programı (tek sayfa)
     }
   }
   revalidatePath("/sitemap.xml"); // yeni/silinen kayıt sitemap'e yansısın
@@ -686,4 +695,91 @@ export async function deleteJournal(formData: FormData): Promise<void> {
     revalidateStore("journal");
   }
   redirect("/admin/journal");
+}
+
+// ---------------------------------------------------------------
+// Atölye (workshop) kaydet / sil
+// ---------------------------------------------------------------
+export async function saveWorkshop(
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  await requireAdmin();
+
+  const originalSlug = String(formData.get("originalSlug") ?? "").trim();
+  const title = String(formData.get("title") ?? "").trim();
+  if (!title) return { error: "Başlık zorunludur." };
+
+  const instructor = String(formData.get("instructor") ?? "").trim();
+  const instructorInstagramHandle = String(
+    formData.get("instructorInstagramHandle") ?? "",
+  )
+    .trim()
+    .replace(/^@/, "");
+  const instructorInstagramUrl = String(
+    formData.get("instructorInstagramUrl") ?? "",
+  ).trim();
+  const schedule = String(formData.get("schedule") ?? "").trim();
+  const description = String(formData.get("description") ?? "").trim();
+  const imageAlt = String(formData.get("imageAlt") ?? "").trim();
+  const priceTry = parseMoney(formData.get("priceTry")); // null = fiyat gösterme
+  const isPublished = formData.get("isPublished") === "on";
+  const sortOrder = Math.trunc(Number(formData.get("sortOrder")) || 0);
+
+  let image: string;
+  try {
+    image = await resolveCover(formData, "coverFile", "coverImagePath");
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Görsel yüklenemedi." };
+  }
+
+  const data = {
+    title,
+    instructor,
+    instructorInstagramHandle,
+    instructorInstagramUrl,
+    schedule,
+    description,
+    image,
+    imageAlt,
+    priceTry,
+    isPublished,
+    sortOrder,
+  };
+
+  try {
+    if (originalSlug) {
+      const prev = await dbGetWorkshopRow(originalSlug);
+      if (!prev) return { error: "Kayıt bulunamadı." };
+      await dbUpdateWorkshop(originalSlug, data);
+      // Kapak değiştirildiyse eski yüklenmiş görseli temizle.
+      if (prev.image && prev.image !== image)
+        await deleteStorageImages([prev.image]);
+    } else {
+      const base = slugifyTr(title, "atolye");
+      let slug = base;
+      let i = 2;
+      while (await dbWorkshopExists(slug)) slug = `${base}-${i++}`;
+      await dbCreateWorkshop({ slug, ...data });
+    }
+  } catch (err) {
+    return {
+      error: err instanceof Error ? err.message : "Atölye kaydedilemedi.",
+    };
+  }
+
+  revalidateStore("workshop");
+  redirect("/admin/workshops");
+}
+
+export async function deleteWorkshop(formData: FormData): Promise<void> {
+  if (!(await isAuthed())) redirect("/admin/login");
+  const slug = String(formData.get("slug") ?? "").trim();
+  if (slug) {
+    const row = await dbGetWorkshopRow(slug);
+    await dbDeleteWorkshop(slug);
+    if (row?.image) await deleteStorageImages([row.image]);
+    revalidateStore("workshop");
+  }
+  redirect("/admin/workshops");
 }

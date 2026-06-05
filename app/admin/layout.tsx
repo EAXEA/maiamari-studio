@@ -71,6 +71,10 @@ export default async function AdminLayout({
               <Link href="/admin/journal" className={navCls}>
                 Günce
               </Link>
+              <span className={sep}>›</span>
+              <Link href="/admin/workshops" className={navCls}>
+                Atölyeler
+              </Link>
             </div>
 
             <div className="ml-auto flex items-center gap-5">

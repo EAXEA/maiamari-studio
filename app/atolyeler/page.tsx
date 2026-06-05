@@ -37,8 +37,8 @@ function instructorAvatarPath(name: string): string | undefined {
 
 export const metadata = { title: "Atölyeler" };
 
-export default function AtolyelerPage() {
-  const workshops = getWorkshops();
+export default async function AtolyelerPage() {
+  const workshops = await getWorkshops();
 
   return (
     <div className="container-x py-16 lg:py-24">
@@ -81,7 +81,9 @@ export default function AtolyelerPage() {
         {workshops.map((w) => {
           const [firstWord, ...restWords] = w.title.split(" ");
           const rest = restWords.join(" ");
-          const img = WORKSHOP_IMAGES[w.slug];
+          const img = w.image
+            ? { src: w.image, alt: w.imageAlt ?? "" }
+            : WORKSHOP_IMAGES[w.slug];
           const isWorkshop = /workshop/i.test(w.title);
           return (
             <StaggerItem

@@ -1,6 +1,6 @@
 {
   "name": "maimari-studio",
-  "version": "1.26.0",
+  "version": "1.27.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -13,6 +13,7 @@
     "db:seed": "node scripts/seed-products.mjs",
     "db:seed:cats": "node scripts/seed-categories.mjs",
     "db:seed:journal": "node scripts/seed-journal.mjs",
+    "db:seed:workshops": "node scripts/seed-workshops.mjs",
     "db:migrate:artworks": "node scripts/migrate-artworks.mjs",
     "db:migrate:gallery": "node scripts/migrate-gallery.mjs"
   },

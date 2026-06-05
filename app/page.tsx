@@ -19,7 +19,7 @@ import { TransitInfo } from "@/components/transit/transit-info";
 
 export default async function HomePage() {
   const biz = getBusiness();
-  const workshops = getWorkshops();
+  const workshops = await getWorkshops();
   const series = await getSeries();
   const products = await getAllProducts();
 
@@ -163,7 +163,9 @@ export default async function HomePage() {
               <ol className="divide-y divide-[color:var(--color-hairline)]">
                 {workshops.map((w) => {
                   const isWorkshop = /workshop/i.test(w.title);
-                  const img = WORKSHOP_IMAGES[w.slug];
+                  const img = w.image
+                    ? { src: w.image, alt: w.imageAlt ?? "" }
+                    : WORKSHOP_IMAGES[w.slug];
                   return (
                     <li
                       key={w.slug}
