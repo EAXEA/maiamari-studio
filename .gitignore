@@ -52,3 +52,7 @@ next-env.d.ts
 /.playwright-mcp/
 /maimari-*.png
 /.previews/
+
+# Supabase CLI (local link/temp state)
+supabase/.temp/
+supabase/.branches/
