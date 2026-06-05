@@ -62,14 +62,31 @@ const VALID_STATUSES = new Set([
   "sale",
 ]);
 
-/** Vitrinin tüm görünen yüzeylerini tazele (mağaza + galeri + panel). */
-function revalidateStore(): void {
-  revalidatePath("/", "layout"); // ana sayfa, /shop, /shop/[kategori], /urun, /galeri, sitemap
-  revalidatePath("/admin");
-  revalidatePath("/admin/artworks");
-  revalidatePath("/admin/categories");
-  revalidatePath("/admin/series");
-  revalidatePath("/admin/artists");
+/**
+ * Mutasyon sonrası yalnız etkilenen vitrin bölümünü yeniler.
+ *
+ * Neden tag değil yol (revalidatePath): galeri/mağaza sayfaları build sırasında
+ * (getDb()=null) JSON fallback'ten üretilir; o yol unstable_cache'e dokunmaz,
+ * dolayısıyla cache etiketine bağlanmaz ve `revalidateTag/updateTag` bu statik
+ * sayfaları yakalayamaz. revalidatePath ise yol bazlıdır: statik sayfayı zorla
+ * yeniden ürettirir ve runtime'da DB-otoriter okutur.
+ *
+ * Neden tüm site değil: eski `revalidatePath("/", "layout")` 150+ sayfayı
+ * geçersiz kılıyordu; mutasyon sonrası gezilen her sayfa DB'den yeniden
+ * üretildiğinden yavaşlık ve geç yansıma oluyordu. Artık yalnız ilgili bölüm
+ * dokunulur. Admin sayfaları force-dynamic olduğundan ayrıca yenilenmez.
+ */
+function revalidateStore(...sections: Array<"shop" | "gallery">): void {
+  revalidatePath("/"); // ana sayfa hem galeri hem mağaza özetini gösterir
+  for (const s of sections) {
+    if (s === "shop") {
+      revalidatePath("/shop", "layout"); // /shop + /shop/[kategori]
+      revalidatePath("/urun", "layout"); // ürün/eser detay sayfaları
+    } else {
+      revalidatePath("/galeri", "layout"); // /galeri + /galeri/[seri] + /galeri/sanatci/[slug]
+    }
+  }
+  revalidatePath("/sitemap.xml"); // yeni/silinen kayıt sitemap'e yansısın
 }
 
 /**
@@ -331,7 +348,7 @@ export async function saveProduct(
     };
   }
 
-  revalidateStore();
+  revalidateStore(kind === "artwork" ? "gallery" : "shop");
   redirect(kind === "artwork" ? "/admin/artworks" : "/admin");
 }
 
@@ -366,7 +383,7 @@ export async function saveCategory(
     };
   }
 
-  revalidateStore();
+  revalidateStore("shop");
   redirect("/admin/categories");
 }
 
@@ -375,7 +392,7 @@ export async function deleteCategory(formData: FormData): Promise<void> {
   const slug = String(formData.get("slug") ?? "").trim();
   if (slug) {
     await dbDeleteCategory(slug);
-    revalidateStore();
+    revalidateStore("shop");
   }
   redirect("/admin/categories");
 }
@@ -393,7 +410,7 @@ export async function deleteProduct(formData: FormData): Promise<void> {
     await dbDeleteProduct(id);
     // Kayda ait yüklenmiş görselleri Storage'dan da kaldır (best-effort).
     if (row) await deleteStorageImages([row.coverImage, ...(row.gallery ?? [])]);
-    revalidateStore();
+    revalidateStore(row?.kind === "artwork" ? "gallery" : "shop");
   }
   redirect(backTo);
 }
@@ -464,7 +481,7 @@ export async function saveArtist(
     };
   }
 
-  revalidateStore();
+  revalidateStore("gallery");
   redirect("/admin/artists");
 }
 
@@ -475,7 +492,7 @@ export async function deleteArtist(formData: FormData): Promise<void> {
     const artist = await dbGetArtistBySlug(slug);
     await dbDeleteArtist(slug);
     if (artist?.coverImage) await deleteStorageImages([artist.coverImage]);
-    revalidateStore();
+    revalidateStore("gallery");
   }
   redirect("/admin/artists");
 }
@@ -540,7 +557,7 @@ export async function saveSeries(
     };
   }
 
-  revalidateStore();
+  revalidateStore("gallery");
   redirect("/admin/series");
 }
 
@@ -551,7 +568,7 @@ export async function deleteSeries(formData: FormData): Promise<void> {
     const series = await dbGetSeriesBySlug(slug);
     await dbDeleteSeries(slug);
     if (series?.coverImage) await deleteStorageImages([series.coverImage]);
-    revalidateStore();
+    revalidateStore("gallery");
   }
   redirect("/admin/series");
 }
