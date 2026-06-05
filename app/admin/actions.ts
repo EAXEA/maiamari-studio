@@ -41,8 +41,9 @@ import {
   dbUpdateSeries,
   dbDeleteSeries,
   dbSeriesExists,
+  dbGetSeriesBySlug,
 } from "@/lib/db/series";
-import { uploadProductImage } from "@/lib/admin/storage";
+import { uploadProductImage, deleteStorageImages } from "@/lib/admin/storage";
 import type { NewProductRow } from "@/lib/db/schema";
 
 export type ActionState = { error?: string } | undefined;
@@ -256,6 +257,14 @@ export async function saveProduct(
       const existing = await dbGetRowById(id);
       if (!existing) return { error: "Kayıt bulunamadı." };
       await dbUpdateProduct(id, { ...fields, ...common });
+      // Düzenlemede değiştirilen/çıkarılan eski yüklenmiş görselleri temizle:
+      // yeni sette artık bulunmayan eski URL'ler yetim kalmasın.
+      const keep = new Set([coverImage, ...gallery]);
+      await deleteStorageImages(
+        [existing.coverImage, ...(existing.gallery ?? [])].filter(
+          (u) => !keep.has(u),
+        ),
+      );
     } else {
       const slug = await dbGenerateUniqueSlug(title);
       await dbCreateProduct({
@@ -331,6 +340,8 @@ export async function deleteProduct(formData: FormData): Promise<void> {
     const row = await dbGetRowById(id);
     if (row?.kind === "artwork") backTo = "/admin/artworks";
     await dbDeleteProduct(id);
+    // Kayda ait yüklenmiş görselleri Storage'dan da kaldır (best-effort).
+    if (row) await deleteStorageImages([row.coverImage, ...(row.gallery ?? [])]);
     revalidateStore();
   }
   redirect(backTo);
@@ -385,7 +396,11 @@ export async function saveArtist(
       sortOrder,
     };
     if (originalSlug) {
+      const prev = await dbGetArtistBySlug(originalSlug);
       await dbUpdateArtist(originalSlug, data);
+      // Kapak değiştirildiyse eski yüklenmiş görseli temizle.
+      if (prev?.coverImage && prev.coverImage !== coverImage)
+        await deleteStorageImages([prev.coverImage]);
     } else {
       const slug = slugifyTr(name);
       if (await dbArtistExists(slug))
@@ -406,7 +421,9 @@ export async function deleteArtist(formData: FormData): Promise<void> {
   if (!(await isAuthed())) redirect("/admin/login");
   const slug = String(formData.get("slug") ?? "").trim();
   if (slug) {
+    const artist = await dbGetArtistBySlug(slug);
     await dbDeleteArtist(slug);
+    if (artist?.coverImage) await deleteStorageImages([artist.coverImage]);
     revalidateStore();
   }
   redirect("/admin/artists");
@@ -455,7 +472,11 @@ export async function saveSeries(
       sortOrder,
     };
     if (originalSlug) {
+      const prev = await dbGetSeriesBySlug(originalSlug);
       await dbUpdateSeries(originalSlug, data);
+      // Kapak değiştirildiyse eski yüklenmiş görseli temizle.
+      if (prev?.coverImage && prev.coverImage !== coverImage)
+        await deleteStorageImages([prev.coverImage]);
     } else {
       const slug = slugifyTr(title);
       if (await dbSeriesExists(slug))
@@ -476,7 +497,9 @@ export async function deleteSeries(formData: FormData): Promise<void> {
   if (!(await isAuthed())) redirect("/admin/login");
   const slug = String(formData.get("slug") ?? "").trim();
   if (slug) {
+    const series = await dbGetSeriesBySlug(slug);
     await dbDeleteSeries(slug);
+    if (series?.coverImage) await deleteStorageImages([series.coverImage]);
     revalidateStore();
   }
   redirect("/admin/series");

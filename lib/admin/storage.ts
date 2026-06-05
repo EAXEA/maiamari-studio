@@ -65,3 +65,32 @@ export async function uploadProductImage(file: File): Promise<string> {
   const { data } = client.storage.from(BUCKET).getPublicUrl(name);
   return data.publicUrl;
 }
+
+/**
+ * Verilen public URL'lerden YALNIZ bu bucket'a ait olanları siler (best-effort).
+ * Yerel `/images/...` yolları ve dış URL'ler atlanır. Kayıt silinince ona ait
+ * yüklenmiş görseller de Storage'dan otomatik kalksın diye kullanılır; silme
+ * başarısız olsa bile (loglanır) çağıran akış —DB silme— engellenmez.
+ */
+export async function deleteStorageImages(
+  urls: (string | null | undefined)[],
+): Promise<void> {
+  const client = getClient();
+  if (!client || !process.env.NEXT_PUBLIC_SUPABASE_URL) return;
+  const marker = `/storage/v1/object/public/${BUCKET}/`;
+  const paths = Array.from(
+    new Set(
+      urls
+        .map((u) => {
+          if (!u) return null;
+          const i = u.indexOf(marker);
+          if (i === -1) return null; // bizim bucket değil → dokunma
+          return decodeURIComponent(u.slice(i + marker.length).split("?")[0]);
+        })
+        .filter((p): p is string => !!p),
+    ),
+  );
+  if (paths.length === 0) return;
+  const { error } = await client.storage.from(BUCKET).remove(paths);
+  if (error) console.error("Storage görselleri silinemedi:", error.message);
+}
