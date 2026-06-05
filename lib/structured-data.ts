@@ -128,7 +128,7 @@ export function productSchema(product: Product) {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.title,
-    description: product.description || `${product.title} — Maiamari atölyesinden.`,
+    description: product.description || `${product.title}. Maiamari atölyesinden.`,
     image: images,
     url,
     sku: product.id,
@@ -183,7 +183,7 @@ export function visualArtworkSchema(work: PortfolioWork, series: Series) {
     name: work.title,
     image: absoluteImage,
     url: seriesUrl,
-    description: work.description || `${work.title} — ${series.title} serisinden linol baskı.`,
+    description: work.description || `${work.title}. ${series.title} serisinden linol baskı.`,
     creator: {
       "@type": "Person",
       name: work.artist || "Duygu Sinan",
@@ -313,7 +313,7 @@ export function galleryLandingSchema(allSeries: Series[]) {
     "@id": `${galleryUrl}#collection`,
     name: "Galeri · Duygu Sinan · MAIAMARI",
     description:
-      "Duygu Sinan'ın atölyede elle çoğaltılmış sayılı edisyon linol baskıları — 8 seri.",
+      "Duygu Sinan'ın atölyede elle çoğaltılmış sayılı edisyon linol baskıları. 8 seri.",
     url: galleryUrl,
     isPartOf: { "@id": `${BASE_URL}#website` },
     about: {

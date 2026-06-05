@@ -164,15 +164,15 @@ export function SiteSearch({ variant = "desktop", onNavigate }: Props = {}) {
             </div>
           ) : results.length === 0 ? (
             <div className="p-4 text-sm text-[color:var(--color-muted)]">
-              Sonuç bulunamadı. Yine de mağazadan göz atabilirsiniz —{" "}
+              Sonuç bulunamadı. Yine de{" "}
               <Link
                 href="/shop"
                 className="underline underline-offset-4"
                 onClick={() => { setOpen(false); onNavigate?.(); }}
               >
-                tüm ürünler
-              </Link>
-              .
+                tüm ürünlere
+              </Link>{" "}
+              göz atabilirsiniz.
             </div>
           ) : (
             <ul>

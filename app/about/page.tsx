@@ -212,7 +212,7 @@ export default async function AboutPage() {
               <p>
                 Düzenli atölye programlarımızla suluboya, çanta baskı, linol
                 baskı ve el yapımı kâğıt tekniklerini paylaşırız. Atölye
-                ziyaretlerine açığız — Kolej metrosundan yürüme
+                ziyaretlerine açığız. Kolej metrosundan yürüme
                 mesafesindeyiz.
               </p>
             </div>
@@ -323,7 +323,7 @@ export default async function AboutPage() {
               &apos;ın kişisel baskı arşivinden derive edilmiştir; tüm
               eserlerin bu atölyede üretildiği anlamına gelmez. Atölye{" "}
               <strong className="font-normal not-italic">Nisan 2025</strong>&apos;te
-              kurulmuştur — daha öncesinde sanatçı kendi atölyelerinde
+              kurulmuştur. Daha öncesinde sanatçı kendi atölyelerinde
               ve farklı mekânlarda üretmiştir. Her baskı için ayrı serial
               numarası ve özgünlük sertifikası vardır.{" "}
               <Link href="/galeri" className="not-italic editorial-link">

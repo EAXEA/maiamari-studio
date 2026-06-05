@@ -5,16 +5,16 @@ import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 export const metadata = {
   title: "El Yapımı Kâğıt · Hikaye",
   description:
-    "Atölyenin altındaki kâğıt fabrikası — Maiamari'de el yapımı kâğıdın 12 adımlık üretim süreci. Altındağ Belediyesi Kültür & Sanatevi için Duygu Sinan tarafından hazırlanan görsel kılavuz.",
+    "Atölyenin altındaki kâğıt fabrikası. Maiamari'de el yapımı kâğıdın 12 adımlık üretim süreci. Altındağ Belediyesi Kültür & Sanatevi için Duygu Sinan tarafından hazırlanan görsel kılavuz.",
 };
 
 const STEPS = [
-  { src: "/images/journal/kagit-kilavuzu/adim-01-02.jpg", label: "1 · 2 — Parçalama, suda bekletme" },
-  { src: "/images/journal/kagit-kilavuzu/adim-03-04.jpg", label: "3 · 4 — Blender, tekneye" },
-  { src: "/images/journal/kagit-kilavuzu/adim-05-06.jpg", label: "5 · 6 — Eleğe alma, suyu süzme" },
-  { src: "/images/journal/kagit-kilavuzu/adim-07-08.jpg", label: "7 · 8 — Beze indirme, su alma" },
-  { src: "/images/journal/kagit-kilavuzu/adim-09-10.jpg", label: "9 · 10 — Beze yapışma, asarak kurutma" },
-  { src: "/images/journal/kagit-kilavuzu/adim-11-12.jpg", label: "11 · 12 — Bezden ayırma, pres" },
+  { src: "/images/journal/kagit-kilavuzu/adim-01-02.jpg", label: "1 · 2: Parçalama, suda bekletme" },
+  { src: "/images/journal/kagit-kilavuzu/adim-03-04.jpg", label: "3 · 4: Blender, tekneye" },
+  { src: "/images/journal/kagit-kilavuzu/adim-05-06.jpg", label: "5 · 6: Eleğe alma, suyu süzme" },
+  { src: "/images/journal/kagit-kilavuzu/adim-07-08.jpg", label: "7 · 8: Beze indirme, su alma" },
+  { src: "/images/journal/kagit-kilavuzu/adim-09-10.jpg", label: "9 · 10: Beze yapışma, asarak kurutma" },
+  { src: "/images/journal/kagit-kilavuzu/adim-11-12.jpg", label: "11 · 12: Bezden ayırma, pres" },
 ];
 
 export default function KagitPage() {
@@ -37,7 +37,7 @@ export default function KagitPage() {
           <p className="mt-8 max-w-2xl text-base lg:text-lg leading-relaxed text-[color:var(--color-muted)]">
             Pamuk, keten ve dut liflerini suya çözüyoruz. Sonra elekten
             geçirip baskıya hazır kâğıdı tek tek döküyoruz. Atölyemizdeki
-            sürecin görsel kılavuzu — 12 adım.
+            sürecin görsel kılavuzu. 12 adım.
           </p>
         </Reveal>
       </section>
@@ -67,7 +67,7 @@ export default function KagitPage() {
                 mümkün olduğu kadar tek kullanımlık kâğıt ürünlerden
                 kaçınmalı, kullandığımız ürünleri geri dönüşüme
                 sokmalıyız. <em>Maiamari&apos;de el yapımı kâğıt üretimi de
-                bu anlayışla yapılır — atık kâğıtları yeniden işliyoruz.</em>
+                bu anlayışla yapılır. Atık kâğıtları yeniden işliyoruz.</em>
               </p>
             </div>
             <div className="relative aspect-[3/4] bg-[color:var(--color-surface-2)] overflow-hidden border border-[color:var(--color-hairline)]">
@@ -133,7 +133,7 @@ export default function KagitPage() {
 
           <Reveal delay={0.2}>
             <p className="mt-12 text-xs tracking-[0.25em] uppercase text-[color:var(--color-muted)] text-center">
-              Görseller ve kılavuz — Duygu Sinan
+              Görseller ve kılavuz · Duygu Sinan
             </p>
           </Reveal>
         </div>
@@ -154,7 +154,7 @@ export default function KagitPage() {
                 Şimdi atölyede.
               </h2>
               <p className="mt-6 text-base lg:text-[17px] leading-relaxed text-[color:var(--color-muted)] max-w-prose">
-                İllüstrasyondan gerçek hayata — atölyemizde el yapımı kâğıt
+                İllüstrasyondan gerçek hayata. Atölyemizde el yapımı kâğıt
                 üretiminden bir kesit. Atık kâğıdın suya çözünmesinden
                 kuruyan tabakaya kadar 12 adımın canlı hali.
               </p>

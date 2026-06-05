@@ -138,7 +138,7 @@ export default async function SeriPage({
                 <em className="text-[color:var(--color-foreground)] not-italic">
                   &quot;{series.title}&quot;
                 </em>{" "}
-                serisi — {series.description}
+                serisi. {series.description}
               </p>
               {series.paperNote && (
                 <p

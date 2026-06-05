@@ -259,7 +259,7 @@ export default async function HomePage() {
               </h3>
               <p className="mt-5 text-sm lg:text-base leading-relaxed text-[color:var(--color-muted)] max-w-prose">
                 Sanatçının elden tasarlayıp diktiği kanvas ve puffer kitap
-                çantaları — sevdiklerinize atölyeden bir selam.
+                çantaları. Sevdiklerinize atölyeden bir selam.
               </p>
               <div className="mt-7 text-sm">
                 <Link href="/shop/cantalar" className="editorial-link">

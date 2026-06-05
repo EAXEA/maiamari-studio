@@ -46,7 +46,7 @@ export default function JournalPage() {
           </h1>
           <p className="mt-8 max-w-2xl text-base lg:text-lg leading-relaxed text-[color:var(--color-muted)]">
             Atölyenin gündemi, katıldığımız etkinlikler ve dönüşüm
-            hikayemizden kısa kayıtlar — en yeniden eskiye doğru.
+            hikayemizden kısa kayıtlar. En yeniden eskiye doğru.
             <span className="hidden md:inline">
               {" "}Karta gelin, açılır.
             </span>
