@@ -63,6 +63,16 @@ export default async function AdminLayout({
               </Link>
             </div>
 
+            <span className="opacity-25">|</span>
+
+            {/* İçerik grubu */}
+            <div className="flex items-center gap-3">
+              <span className={groupLabel}>İçerik</span>
+              <Link href="/admin/journal" className={navCls}>
+                Günce
+              </Link>
+            </div>
+
             <div className="ml-auto flex items-center gap-5">
               <Link href="/" target="_blank" className={navCls}>
                 Siteyi gör ↗

@@ -6,7 +6,7 @@ All site content lives as JSON under `data/` and is read at build time through `
 
 The canonical source for **artwork and series data** is an external art source archive maintained outside this repository. The site does not author that data; it **syncs** from the archive into `data/portfolio.json` and `data/series.json`. When art data is wrong, fix it at the archive and re-sync rather than hand-editing the JSON, otherwise the next sync overwrites the change.
 
-Business details, journal entries, and the product catalog are authored or scraped into their respective JSON files.
+Business details and the product catalog are authored or scraped into their respective JSON files. Journal entries are now managed in the database through the admin panel (`/admin/journal`); `data/journal.json` is kept as the build-time fallback (see the journal row below).
 
 ## Files
 
@@ -17,7 +17,7 @@ Business details, journal entries, and the product catalog are authored or scrap
 | `data/portfolio.json` | array (56) | Individual artworks: `id`, `slug`, `title`, `description`, `image`, `year`, `series`, `width`, `height`, `technique`, `paper`, `dimensions`, `editionSize`, `printCount`, `firstSerial`, `artist` |
 | `data/products_list.json` | array (56) | Lightweight product listing: `id`, `url`, `title`, `statuses`, `priceText`, `priceTRY`, `compareAtTRY`, `imageThumb` |
 | `data/products_full.json` | array (57) | Full product records: listing fields plus `title_full`, `description`, `gallery`, `coverImage`, `localImages` |
-| `data/journal.json` | array (3) | Journal posts: `slug`, `title`, `excerpt`, `body`, `date`, `dateLabel`, `category`, `location`, `locationUrl`, `image`, `imageAlt`, `gallery` |
+| `data/journal.json` | array (3) | Journal posts (build-time fallback; runtime source of truth is the `journal` DB table edited via `/admin/journal`): `slug`, `title`, `excerpt`, `body`, `date`, `dateLabel`, `category`, `location`, `locationUrl`, `image`, `imageAlt`, `gallery` |
 | `data/instagram.json` | object | Instagram metadata |
 
 ## Relationships

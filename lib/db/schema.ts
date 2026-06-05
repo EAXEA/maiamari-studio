@@ -135,6 +135,44 @@ export const series = pgTable("series", {
 });
 
 /**
+ * Günce (journal) kayıtları — atölye notları & etkinlikler. Panelden yönetilir.
+ * Public /journal sayfası buradan okur; DB yoksa data/journal.json fallback.
+ * `date` metin (YYYY-MM-DD) tutulur: arşiv/JSON ile birebir, sayfadaki
+ * `new Date(date + "T00:00:00")` mantığı korunur. Sıralama tarih azalan.
+ */
+export const journal = pgTable("journal", {
+  slug: text("slug").primaryKey(),
+  title: text("title").notNull(),
+  excerpt: text("excerpt").notNull().default(""),
+  /** Uzun gövde metni (hover-expand'de gösterilir). */
+  body: text("body").notNull().default(""),
+  /** ISO YYYY-MM-DD (gün belirsizse YYYY-MM-01). */
+  date: text("date").notNull(),
+  /** İnsan-okur tarih: "Nisan 2025", "Ocak 2026". */
+  dateLabel: text("date_label").notNull().default(""),
+  /** Eyebrow etiketi: "Etkinlik", "Kuruluş" vb. */
+  category: text("category").notNull().default(""),
+  location: text("location").notNull().default(""),
+  locationUrl: text("location_url").notNull().default(""),
+  /** Kapak görseli (public yol veya Storage URL'i). */
+  image: text("image").notNull().default(""),
+  imageAlt: text("image_alt").notNull().default(""),
+  /** Ek görseller (hover-expand grid'i). */
+  gallery: jsonb("gallery").$type<string[]>().notNull().default([]),
+  instagramUrl: text("instagram_url").notNull().default(""),
+  /** Yayında mı — taslak günceleri sayfadan gizlemek için. */
+  isPublished: boolean("is_published").notNull().default(true),
+  /** Aynı tarihli kayıtlar için ikincil sıralama (küçük önce). */
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+/**
  * Admin giriş deneme sayacı — IP başına brute-force koruması (rate limit).
  * 3 başarısız deneme → 3 dk kilit. Serverless instance'lar arası tutarlı
  * olsun diye in-memory yerine burada (Postgres) tutulur.
@@ -156,4 +194,6 @@ export type ArtistRow = typeof artists.$inferSelect;
 export type NewArtistRow = typeof artists.$inferInsert;
 export type SeriesRow = typeof series.$inferSelect;
 export type NewSeriesRow = typeof series.$inferInsert;
+export type JournalRow = typeof journal.$inferSelect;
+export type NewJournalRow = typeof journal.$inferInsert;
 export type AdminLoginAttemptRow = typeof adminLoginAttempts.$inferSelect;

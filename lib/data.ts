@@ -17,6 +17,7 @@ import {
 import { dbGetCategories, dbGetCategoryBySlug } from "./db/categories";
 import { dbGetSeries, dbGetSeriesBySlug } from "./db/series";
 import { dbGetArtists, dbGetArtistBySlug } from "./db/artists";
+import { dbGetJournalPosts } from "./db/journal";
 import type {
   Product,
   Category,
@@ -299,13 +300,22 @@ export async function getPortfolioBySeries(
   return getPortfolio().filter((w) => (w.series ?? "kapilar") === slug);
 }
 
-export function getJournalPosts(): JournalPost[] {
-  return readJson<JournalPost[]>("journal.json").sort((a, b) =>
-    b.date.localeCompare(a.date),
+export async function getJournalPosts(): Promise<JournalPost[]> {
+  // DB varsa ondan (boş tablo = [] döner, fallback'e DÜŞMEZ); DB yoksa
+  // (build / DATABASE_URL tanımsız → null) JSON fallback. `??` ile null ve
+  // boş-dizi ayrımı net: null = DB yok, [] = DB var ama kayıt yok.
+  return (
+    (await dbGetJournalPosts()) ??
+    readJson<JournalPost[]>("journal.json").sort((a, b) =>
+      b.date.localeCompare(a.date),
+    )
   );
 }
 
-export function getJournalPostBySlug(slug: string): JournalPost | null {
-  return getJournalPosts().find((p) => p.slug === slug) || null;
+export async function getJournalPostBySlug(
+  slug: string,
+): Promise<JournalPost | null> {
+  const all = await getJournalPosts();
+  return all.find((p) => p.slug === slug) || null;
 }
 

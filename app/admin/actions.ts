@@ -44,6 +44,13 @@ import {
   dbSeriesExists,
   dbGetSeriesBySlug,
 } from "@/lib/db/series";
+import {
+  dbCreateJournal,
+  dbUpdateJournal,
+  dbDeleteJournal,
+  dbJournalExists,
+  dbGetJournalRow,
+} from "@/lib/db/journal";
 import { uploadProductImage, deleteStorageImages } from "@/lib/admin/storage";
 import {
   checkLoginRate,
@@ -76,14 +83,18 @@ const VALID_STATUSES = new Set([
  * üretildiğinden yavaşlık ve geç yansıma oluyordu. Artık yalnız ilgili bölüm
  * dokunulur. Admin sayfaları force-dynamic olduğundan ayrıca yenilenmez.
  */
-function revalidateStore(...sections: Array<"shop" | "gallery">): void {
+function revalidateStore(
+  ...sections: Array<"shop" | "gallery" | "journal">
+): void {
   revalidatePath("/"); // ana sayfa hem galeri hem mağaza özetini gösterir
   for (const s of sections) {
     if (s === "shop") {
       revalidatePath("/shop", "layout"); // /shop + /shop/[kategori]
       revalidatePath("/urun", "layout"); // ürün/eser detay sayfaları
-    } else {
+    } else if (s === "gallery") {
       revalidatePath("/galeri", "layout"); // /galeri + /galeri/[seri] + /galeri/sanatci/[slug]
+    } else {
+      revalidatePath("/journal"); // günce kronoloji (tek sayfa)
     }
   }
   revalidatePath("/sitemap.xml"); // yeni/silinen kayıt sitemap'e yansısın
@@ -139,8 +150,8 @@ function intOrNull(raw: FormDataEntryValue | null): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
-/** Ad'dan URL-güvenli slug üretir (kategori için). */
-function slugifyTr(s: string): string {
+/** Ad'dan URL-güvenli slug üretir. Boş kalırsa türüne uygun fallback kullanılır. */
+function slugifyTr(s: string, fallback = "kategori"): string {
   return (
     s
       .toLocaleLowerCase("tr-TR")
@@ -151,7 +162,7 @@ function slugifyTr(s: string): string {
       .replace(/ü/g, "u")
       .replace(/ğ/g, "g")
       .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "") || "kategori"
+      .replace(/^-+|-+$/g, "") || fallback
   );
 }
 
@@ -571,4 +582,108 @@ export async function deleteSeries(formData: FormData): Promise<void> {
     revalidateStore("gallery");
   }
   redirect("/admin/series");
+}
+
+// ---------------------------------------------------------------
+// Günce (journal) kaydet / sil
+// ---------------------------------------------------------------
+export async function saveJournal(
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  await requireAdmin();
+
+  const originalSlug = String(formData.get("originalSlug") ?? "").trim();
+  const title = String(formData.get("title") ?? "").trim();
+  if (!title) return { error: "Başlık zorunludur." };
+  const date = String(formData.get("date") ?? "").trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date))
+    return { error: "Geçerli bir tarih girin (YYYY-AA-GG)." };
+
+  const excerpt = String(formData.get("excerpt") ?? "").trim();
+  const body = String(formData.get("body") ?? "").trim();
+  const dateLabel = String(formData.get("dateLabel") ?? "").trim();
+  const category = String(formData.get("category") ?? "").trim();
+  const location = String(formData.get("location") ?? "").trim();
+  const locationUrl = String(formData.get("locationUrl") ?? "").trim();
+  const imageAlt = String(formData.get("imageAlt") ?? "").trim();
+  const instagramUrl = String(formData.get("instagramUrl") ?? "").trim();
+  const isPublished = formData.get("isPublished") === "on";
+  const sortOrder = Math.trunc(Number(formData.get("sortOrder")) || 0);
+
+  // --- Görseller: kapak (yüklenen öncelik) + galeri (yollar + yüklenenler) ---
+  let image = String(formData.get("coverImagePath") ?? "").trim();
+  const gallery: string[] = String(formData.get("galleryText") ?? "")
+    .split(/[\n,]+/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+  try {
+    const coverFile = formData.get("coverFile");
+    if (coverFile instanceof File && coverFile.size > 0) {
+      image = await uploadProductImage(coverFile);
+    }
+    for (const f of formData.getAll("galleryFiles")) {
+      if (f instanceof File && f.size > 0) {
+        gallery.push(await uploadProductImage(f));
+      }
+    }
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Görsel yüklenemedi." };
+  }
+  if (!image && gallery.length > 0) image = gallery[0];
+
+  const data = {
+    title,
+    excerpt,
+    body,
+    date,
+    dateLabel,
+    category,
+    location,
+    locationUrl,
+    image,
+    imageAlt,
+    gallery,
+    instagramUrl,
+    isPublished,
+    sortOrder,
+  };
+
+  try {
+    if (originalSlug) {
+      const prev = await dbGetJournalRow(originalSlug);
+      if (!prev) return { error: "Kayıt bulunamadı." };
+      await dbUpdateJournal(originalSlug, data);
+      // Çıkarılan/değiştirilen eski yüklenmiş görselleri Storage'dan temizle.
+      const keep = new Set([image, ...gallery]);
+      await deleteStorageImages(
+        [prev.image, ...(prev.gallery ?? [])].filter((u) => !keep.has(u)),
+      );
+    } else {
+      const base = slugifyTr(title, "gunce");
+      let slug = base;
+      let i = 2;
+      while (await dbJournalExists(slug)) slug = `${base}-${i++}`;
+      await dbCreateJournal({ slug, ...data });
+    }
+  } catch (err) {
+    return {
+      error: err instanceof Error ? err.message : "Günce kaydedilemedi.",
+    };
+  }
+
+  revalidateStore("journal");
+  redirect("/admin/journal");
+}
+
+export async function deleteJournal(formData: FormData): Promise<void> {
+  if (!(await isAuthed())) redirect("/admin/login");
+  const slug = String(formData.get("slug") ?? "").trim();
+  if (slug) {
+    const row = await dbGetJournalRow(slug);
+    await dbDeleteJournal(slug);
+    if (row) await deleteStorageImages([row.image, ...(row.gallery ?? [])]);
+    revalidateStore("journal");
+  }
+  redirect("/admin/journal");
 }

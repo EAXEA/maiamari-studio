@@ -12,8 +12,8 @@ function yearMonth(iso: string): { year: string; month: string } {
   };
 }
 
-export default function JournalPage() {
-  const posts = getJournalPosts(); // newest first
+export default async function JournalPage() {
+  const posts = await getJournalPosts(); // newest first
 
   if (posts.length === 0) {
     return (
@@ -202,7 +202,7 @@ export default function JournalPage() {
                                   >
                                     <Image
                                       src={src}
-                                      alt={`${post.title} — görsel ${idx + 2}`}
+                                      alt={`${post.title}, görsel ${idx + 2}`}
                                       fill
                                       sizes="(max-width: 768px) 22vw, 160px"
                                       quality={82}
