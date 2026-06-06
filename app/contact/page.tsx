@@ -95,6 +95,21 @@ export default function ContactPage() {
                   @maiamari.studio
                 </a>
               </dd>
+              {biz.contact.email && (
+                <>
+                  <dt className="text-[color:var(--color-muted)] uppercase tracking-wider">
+                    E-posta
+                  </dt>
+                  <dd>
+                    <a
+                      href={`mailto:${biz.contact.email}`}
+                      className="underline underline-offset-4"
+                    >
+                      {biz.contact.email}
+                    </a>
+                  </dd>
+                </>
+              )}
             </dl>
           </section>
 

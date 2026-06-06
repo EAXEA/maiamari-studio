@@ -29,6 +29,7 @@ export function localBusinessSchema() {
       `${BASE_URL}/images/atolye/gallery-wall.jpg`,
     ],
     telephone: biz.contact.phonePrimary,
+    email: biz.contact.email,
     address: {
       "@type": "PostalAddress",
       streetAddress: biz.address.street,

@@ -5,6 +5,8 @@
  */
 export const PHONE_PRIMARY = "+90 506 588 92 77";
 export const PHONE_PRIMARY_TEL = PHONE_PRIMARY.replace(/\s/g, "");
+export const EMAIL = "maiamariart@gmail.com";
+export const EMAIL_MAILTO = `mailto:${EMAIL}`;
 export const INSTAGRAM_URL = "https://www.instagram.com/maiamari.studio/";
 export const INSTAGRAM_HANDLE = "maiamari.studio";
 // WhatsApp: aynı numara, wa.me formatı (uluslararası prefix + boşluksuz, "+" olmadan)

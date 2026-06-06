@@ -106,6 +106,11 @@ export async function SiteFooter() {
                 Instagram
               </a>
             </li>
+            {biz.contact.email && (
+              <li>
+                <a href={`mailto:${biz.contact.email}`}>E-posta</a>
+              </li>
+            )}
             <li>
               <WhatsappCTA variant="list" context="Maiamari atölyesi" path="/" />
             </li>

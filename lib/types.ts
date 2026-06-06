@@ -147,6 +147,8 @@ export interface Business {
     /** wa.me deep-link (uluslararası numara, "+" yok, boşluk yok). */
     whatsapp?: string;
     shopier: string;
+    /** Resmi e-posta (mailto). */
+    email?: string;
   };
   hours: { closingTime: string; note: string };
   googleMapsEmbed: string;
