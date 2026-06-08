@@ -20,6 +20,14 @@ import {
 
 const BASE_URL = "https://www.maiamari.art";
 
+/**
+ * ISR: build'de JSON fallback'ten üretilir (getDb()=null), fiyat gibi yalnız
+ * DB'de olan alanlar görünmez. 60 sn'de bir runtime'da DB-otoriter yeniden
+ * üretilir → eklenen eser fiyatları manuel revalidate beklemeden kendiliğinden
+ * gelir. Admin kaydı ayrıca revalidatePath ile anında tazeler (ikisi birlikte).
+ */
+export const revalidate = 60;
+
 export async function generateStaticParams() {
   return (await getSeries()).map((s) => ({ series: s.slug }));
 }

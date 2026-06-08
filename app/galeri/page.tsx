@@ -18,6 +18,10 @@ import {
 
 const BASE_URL = "https://www.maiamari.art";
 
+// ISR: galeri landing'i de 60 sn'de bir tazele (seri/eser değişiklikleri
+// manuel revalidate beklemeden yansısın; bkz. [series] sayfası).
+export const revalidate = 60;
+
 export const metadata = {
   title: "Galeri",
   description:

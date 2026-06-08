@@ -11,6 +11,10 @@ import {
 import type { SeriesSlug } from "@/lib/types";
 import { Reveal } from "@/components/motion/reveal";
 
+// ISR: sanatçı sayfasındaki eserlerin DB fiyatları 60 sn'de bir kendiliğinden
+// tazelensin (build JSON fallback'ten üretildiği için; bkz. [series] sayfası).
+export const revalidate = 60;
+
 export async function generateStaticParams() {
   const artists = await getArtists();
   return artists.filter((a) => a.slug).map((a) => ({ slug: a.slug as string }));
