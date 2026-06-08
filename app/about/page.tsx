@@ -358,6 +358,7 @@ export default async function AboutPage() {
                   src="/images/atolye/atolye-uretim-hero.jpg"
                   alt="Atölyenin içi — iki duvar dolusu çerçeveli baskı, dipte vitrin ışığı ve çalışma masası"
                   fill
+                  quality={85}
                   sizes="(max-width: 640px) 100vw, 66vw"
                   className="object-cover"
                 />
@@ -367,6 +368,7 @@ export default async function AboutPage() {
                   src="/images/about/press-station.jpg"
                   alt="Kırmızı baskı presi — yeşil çizgili tezgahta, ardında vitrin ışığı"
                   fill
+                  quality={85}
                   sizes="(max-width: 640px) 50vw, 33vw"
                   className="object-cover"
                 />
@@ -376,6 +378,7 @@ export default async function AboutPage() {
                   src="/images/about/flat-files.jpg"
                   alt="Ahşap baskı çekmeceleri — eserlerin saklandığı arşiv gözleri"
                   fill
+                  quality={85}
                   sizes="(max-width: 640px) 50vw, 33vw"
                   className="object-cover"
                 />
@@ -385,6 +388,7 @@ export default async function AboutPage() {
                   src="/images/atolye/magaza-envanter.jpg"
                   alt="Atölye duvarında tel ızgarada merdaneler ve oyma aletleri"
                   fill
+                  quality={85}
                   sizes="(max-width: 640px) 50vw, 33vw"
                   className="object-cover"
                 />
@@ -423,6 +427,7 @@ export default async function AboutPage() {
                   src="/images/about/worktable-window.jpg"
                   alt="Pencere ışığında çalışma masası — serili baskılar ve gün ışığı"
                   fill
+                  quality={85}
                   sizes="(max-width: 640px) 100vw, 66vw"
                   className="object-cover"
                 />

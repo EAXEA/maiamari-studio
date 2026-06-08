@@ -41,7 +41,7 @@ export function SiteHeader() {
         {/* Nav — md+, esnek ortalı */}
         <nav
           aria-label="Ana"
-          className="hidden md:flex items-center gap-5 lg:gap-6 mx-auto"
+          className="hidden xl:flex items-center gap-5 lg:gap-6 mx-auto"
         >
           {NAV.map((item) => (
             <Link
@@ -60,7 +60,7 @@ export function SiteHeader() {
         </nav>
 
         {/* Search — md+ inline kompakt; mobilde hamburger içinde */}
-        <div className="hidden md:block w-[170px] lg:w-[200px] shrink-0">
+        <div className="hidden xl:block w-[170px] lg:w-[200px] shrink-0">
           <SiteSearch />
         </div>
 

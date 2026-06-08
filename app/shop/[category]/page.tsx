@@ -103,7 +103,7 @@ export default async function CategoryPage({
         </p>
       </header>
 
-      <nav className="mb-12 flex flex-wrap gap-x-6 gap-y-3 text-sm border-b border-[color:var(--color-border)] pb-4">
+      <nav className="mb-12 flex flex-wrap gap-x-6 gap-y-3 text-sm border-b border-[color:var(--color-border)] pb-4 [&_a]:py-1.5">
         <Link href="/shop" className="text-[color:var(--color-muted)] hover:text-[color:var(--color-foreground)]">
           Tümü
         </Link>

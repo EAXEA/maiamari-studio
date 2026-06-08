@@ -51,7 +51,7 @@ export default async function ShopPage() {
         </div>
       </section>
 
-      <nav className="mb-12 flex flex-wrap gap-x-6 gap-y-3 text-sm border-b border-[color:var(--color-border)] pb-4">
+      <nav className="mb-12 flex flex-wrap gap-x-6 gap-y-3 text-sm border-b border-[color:var(--color-border)] pb-4 [&_a]:py-1.5">
         <Link href="/shop" className="font-medium underline underline-offset-4">
           Tümü
         </Link>

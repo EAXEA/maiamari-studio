@@ -23,6 +23,10 @@ const nextConfig: NextConfig = {
 
   images: {
     formats: ["image/avif", "image/webp"],
+    // Kodda kullanilan tum quality degerleri burada acikca izinli olmali
+    // (Next 16 izinli-liste disindaki q'yu 75'e dusurur). 85 = atolye/mekan
+    // fotolari icin yeni hedef; 82/88/90 mevcut kullanim.
+    qualities: [75, 82, 85, 88, 90],
     remotePatterns: [
       {
         protocol: "https",

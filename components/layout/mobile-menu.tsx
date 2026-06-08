@@ -51,7 +51,7 @@ export function MobileMenu({ nav, instagramUrl }: Props) {
         onClick={() => setOpen(true)}
         aria-label="Menüyü aç"
         aria-expanded={open}
-        className="md:hidden inline-flex items-center justify-center w-10 h-10 -mr-2 text-[color:var(--color-foreground)]"
+        className="xl:hidden inline-flex items-center justify-center w-10 h-10 -mr-2 text-[color:var(--color-foreground)]"
       >
         <svg
           width="22"
@@ -100,7 +100,7 @@ function DrawerContents({
       <div
         aria-hidden
         onClick={close}
-        className={`md:hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-[2px] transition-opacity duration-300 ${
+        className={`xl:hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-[2px] transition-opacity duration-300 ${
           open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
       />
@@ -110,7 +110,7 @@ function DrawerContents({
         role="dialog"
         aria-modal="true"
         aria-label="Site menüsü"
-        className={`md:hidden fixed top-0 right-0 bottom-0 z-50 w-[88vw] max-w-[420px] bg-[color:var(--color-background)] border-l border-[color:var(--color-hairline)] flex flex-col transition-transform duration-300 ease-out ${
+        className={`xl:hidden fixed top-0 right-0 bottom-0 z-50 w-[88vw] max-w-[420px] bg-[color:var(--color-background)] border-l border-[color:var(--color-hairline)] flex flex-col transition-transform duration-300 ease-out ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >

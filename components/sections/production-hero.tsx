@@ -28,6 +28,7 @@ export function ProductionHero({ image, imageAlt, metrics }: Props) {
           fill
           priority
           sizes="100vw"
+          quality={85}
           className="object-cover"
         />
         {/* Sol-alt heavy gradient → sağ-üst transparent. */}

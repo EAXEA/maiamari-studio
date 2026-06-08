@@ -109,12 +109,15 @@ export default async function ProductPage({
               {cat.name}
             </p>
           )}
-          <h1 className="font-display text-3xl lg:text-4xl mt-2 leading-tight">
+          <h1
+            className="font-display text-3xl lg:text-4xl mt-2 leading-tight"
+            style={{ fontWeight: 500 }}
+          >
             {product.title}
           </h1>
 
           <div className="mt-6 flex items-baseline gap-3">
-            <span className="font-display text-2xl">
+            <span className="font-display text-2xl font-medium tabular-nums">
               {formatTRY(product.priceTRY)}
             </span>
             {product.compareAtTRY &&

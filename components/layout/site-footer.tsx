@@ -77,7 +77,7 @@ export async function SiteFooter() {
 
         <div className="text-sm">
           <h3 className="eyebrow mb-5">Keşfet</h3>
-          <ul className="space-y-3">
+          <ul className="space-y-1 [&_a]:block [&_a]:py-1.5">
             <li><Link href="/galeri">Galeri</Link></li>
             <li><Link href="/atolyeler">Atölyeler</Link></li>
             <li><Link href="/journal">Günce</Link></li>
@@ -87,7 +87,7 @@ export async function SiteFooter() {
 
         <div className="text-sm">
           <h3 className="eyebrow mb-5">Mağaza</h3>
-          <ul className="space-y-3">
+          <ul className="space-y-1 [&_a]:block [&_a]:py-1.5">
             <li><Link href="/shop/el-yapimi-kagitlar">Kâğıtlar</Link></li>
             <li><Link href="/shop/linol-boyalari">Boyalar</Link></li>
             <li><Link href="/shop/aletler">Aletler</Link></li>
@@ -97,7 +97,7 @@ export async function SiteFooter() {
 
         <div className="text-sm">
           <h3 className="eyebrow mb-5">İletişim</h3>
-          <ul className="space-y-3">
+          <ul className="space-y-1 [&_a]:block [&_a]:py-1.5">
             <li>
               <PhoneCTA variant="link" label="Telefon" />
             </li>
@@ -128,7 +128,7 @@ export async function SiteFooter() {
           <span>
             © {new Date().getFullYear()} Maiamari Baskı Atölyesi · Küçükesat, Ankara
           </span>
-          <div className="flex gap-6">
+          <div className="flex gap-6 [&_a]:inline-block [&_a]:py-2">
             <Link href="/legal/kvkk">KVKK</Link>
             <Link href="/legal/mesafeli-satis">Mesafeli Satış</Link>
             <Link href="/legal/iade">İade ve Değişim</Link>

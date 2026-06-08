@@ -65,6 +65,7 @@ function DestinationCard({
             alt={imageAlt}
             fill
             sizes="(max-width: 1024px) 92vw, 50vw"
+            quality={85}
             className={`${fit === "contain" ? "object-contain p-3 lg:p-5" : "object-cover"} transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]`}
           />
         </div>

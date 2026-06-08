@@ -47,7 +47,7 @@ export default async function JournalPage() {
           <p className="mt-8 max-w-2xl text-base lg:text-lg leading-relaxed text-[color:var(--color-muted)]">
             Atölyenin gündemi, katıldığımız etkinlikler ve dönüşüm
             hikayemizden kısa kayıtlar. En yeniden eskiye doğru.
-            <span className="hidden md:inline">
+            <span className="hidden lg:inline">
               {" "}Karta gelin, açılır.
             </span>
           </p>
@@ -59,12 +59,12 @@ export default async function JournalPage() {
         <div className="relative">
           {/* Vertical axis */}
           <div
-            className="absolute top-2 bottom-2 w-px hidden md:block left-1/2 -translate-x-1/2"
+            className="absolute top-2 bottom-2 w-px hidden lg:block left-1/2 -translate-x-1/2"
             style={{ background: "var(--color-hairline)" }}
             aria-hidden
           />
           <div
-            className="absolute top-2 bottom-2 w-px md:hidden left-3"
+            className="absolute top-2 bottom-2 w-px lg:hidden left-3"
             style={{ background: "var(--color-hairline)" }}
             aria-hidden
           />
@@ -80,9 +80,9 @@ export default async function JournalPage() {
 
               return (
                 <Reveal key={post.slug} delay={i * 0.05}>
-                  <li className="relative md:grid md:grid-cols-2 md:gap-12 lg:gap-16 items-start pl-10 md:pl-0">
+                  <li className="relative lg:grid lg:grid-cols-2 lg:gap-12 lg:gap-16 items-start pl-10 lg:pl-0">
                     {/* Mobile node */}
-                    <div className="absolute md:hidden left-0 top-1 flex flex-col items-center gap-2">
+                    <div className="absolute lg:hidden left-0 top-1 flex flex-col items-center gap-2">
                       <span
                         className="block w-3 h-3 rounded-full"
                         style={{ background: "var(--color-walnut-dark)" }}
@@ -91,8 +91,8 @@ export default async function JournalPage() {
 
                     {/* Date column (desktop alternating) */}
                     <div
-                      className={`hidden md:flex flex-col ${
-                        isRight ? "md:order-1 md:items-end md:text-right md:pr-12" : "md:order-2 md:items-start md:pl-12"
+                      className={`hidden lg:flex flex-col ${
+                        isRight ? "lg:order-1 lg:items-end lg:text-right lg:pr-12" : "lg:order-2 lg:items-start lg:pl-12"
                       }`}
                     >
                       <div className="sticky top-24">
@@ -115,7 +115,7 @@ export default async function JournalPage() {
 
                     {/* Center node (desktop) */}
                     <div
-                      className="hidden md:block absolute left-1/2 -translate-x-1/2 top-3 w-3 h-3 rounded-full z-10"
+                      className="hidden lg:block absolute left-1/2 -translate-x-1/2 top-3 w-3 h-3 rounded-full z-10"
                       style={{ background: "var(--color-walnut-dark)" }}
                       aria-hidden
                     />
@@ -125,21 +125,21 @@ export default async function JournalPage() {
                         idi; foto hücresi 38%×stretch yapısı dar+uzun olup object-cover
                         ile aşırı zoom-in yapıyordu (mobile audit v1.19). */}
                     <article
-                      className={`group bg-[color:var(--color-surface)] border border-[color:var(--color-border)] overflow-hidden transition-all duration-500 ease-out md:hover:shadow-lg md:hover:-translate-y-1 flex flex-col ${
+                      className={`group bg-[color:var(--color-surface)] border border-[color:var(--color-border)] overflow-hidden transition-all duration-500 ease-out lg:hover:shadow-lg lg:hover:-translate-y-1 flex flex-col ${
                         isRight
-                          ? "md:order-2 md:ml-10 md:flex-row"
-                          : "md:order-1 md:mr-10 md:flex-row-reverse"
+                          ? "lg:order-2 lg:ml-10 lg:flex-row"
+                          : "lg:order-1 lg:mr-10 lg:flex-row-reverse"
                       }`}
                     >
                       {/* Cover — mobil: tam-en, aspect-[16/9] landscape banner.
                           Desktop: timeline tarafında sticky thumbnail (max-h sabit). */}
                       {post.image && (
-                        <div className="relative w-full md:w-[42%] aspect-[16/9] md:aspect-auto md:self-start md:min-h-[300px] md:max-h-[420px] md:sticky md:top-24 bg-[color:var(--color-surface-2)] overflow-hidden shrink-0">
+                        <div className="relative w-full lg:w-[42%] aspect-[16/9] lg:aspect-auto lg:self-start lg:min-h-[300px] lg:max-h-[420px] lg:sticky lg:top-24 bg-[color:var(--color-surface-2)] overflow-hidden shrink-0">
                           <Image
                             src={post.image}
                             alt={post.imageAlt || post.title}
                             fill
-                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 28vw, 22vw"
+                            sizes="(max-width: 1024px) 100vw, 22vw"
                             quality={90}
                             className="object-cover atolye-tint transition-transform duration-[900ms] ease-out group-hover:scale-[1.03]"
                           />
@@ -151,7 +151,7 @@ export default async function JournalPage() {
                         <p className="text-[10px] tracking-[0.35em] uppercase text-[color:var(--color-walnut)]">
                           {post.category ?? "Atölyeden"}
                           {post.dateLabel && (
-                            <span className="md:hidden">
+                            <span className="lg:hidden">
                               {" · "}{post.dateLabel}
                             </span>
                           )}
@@ -167,8 +167,8 @@ export default async function JournalPage() {
                         </p>
 
                         {/* EXPAND-ON-HOVER block (desktop) — mobile always open */}
-                        <div className="max-md:mt-5 md:max-h-0 md:opacity-0 md:overflow-hidden md:group-hover:max-h-[1200px] md:group-hover:opacity-100 md:transition-all md:duration-500 md:ease-out">
-                          <div className="md:pt-5">
+                        <div className="max-lg:mt-5 lg:max-h-0 lg:opacity-0 lg:overflow-hidden lg:group-hover:max-h-[1200px] lg:group-hover:opacity-100 lg:transition-all lg:duration-500 lg:ease-out">
+                          <div className="lg:pt-5">
                             {post.location && (
                               <p className="text-sm text-[color:var(--color-muted)] mb-4">
                                 {post.locationUrl ? (

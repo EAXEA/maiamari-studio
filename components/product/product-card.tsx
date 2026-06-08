@@ -104,7 +104,10 @@ export function ProductCard({ product }: { product: Product }) {
 
         <div className="mt-4 flex items-start justify-between gap-4">
           <div>
-            <h3 className="font-display text-lg leading-snug group-hover:italic transition-all duration-500">
+            <h3
+              className="font-display text-lg leading-snug group-hover:italic transition-all duration-500"
+              style={{ fontWeight: 500 }}
+            >
               {product.title}
             </h3>
           </div>
@@ -117,7 +120,7 @@ export function ProductCard({ product }: { product: Product }) {
                 {formatTRY(product.compareAtTRY)}
               </span>
             )}
-            <span className="text-sm">{formatTRY(product.priceTRY)}</span>
+            <span className="text-base font-medium tabular-nums">{formatTRY(product.priceTRY)}</span>
           </div>
         </div>
       </Link>

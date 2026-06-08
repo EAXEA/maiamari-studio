@@ -46,6 +46,7 @@ export function FeatureBanner({
           alt={imageAlt}
           fill
           sizes="100vw"
+          quality={85}
           className="object-cover"
         />
         <div
