@@ -51,9 +51,13 @@ export default async function ProductPage({
   const product = await getProductBySlug(slug);
   if (!product) notFound();
 
-  const cat = await getCategoryBySlug(product.categorySlug);
+  // cat ve tüm ürünler birbirinden bağımsız → paralel.
+  const [cat, allProducts] = await Promise.all([
+    getCategoryBySlug(product.categorySlug),
+    getAllProducts(),
+  ]);
   const tutorials = getTutorialsForProduct(product.slug);
-  const related = (await getAllProducts())
+  const related = allProducts
     .filter((p) => p.categorySlug === product.categorySlug && p.id !== product.id)
     .slice(0, 4);
 

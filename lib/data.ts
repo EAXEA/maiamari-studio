@@ -7,6 +7,8 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import { cache } from "react";
+import { slugify } from "./slug";
 import {
   dbGetAllProducts,
   dbGetProductsByCategory,
@@ -44,19 +46,6 @@ function readJson<T>(file: string): T {
   return JSON.parse(fs.readFileSync(full, "utf-8")) as T;
 }
 
-function slugify(s: string): string {
-  return s
-    .toLocaleLowerCase("tr-TR")
-    .replace(/â|ä/g, "a")
-    .replace(/ı/g, "i")
-    .replace(/ş/g, "s")
-    .replace(/ç/g, "c")
-    .replace(/ö/g, "o")
-    .replace(/ü/g, "u")
-    .replace(/ğ/g, "g")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
 
 // ----------------------------------------------------------------
 // Kategoriler (statik tanım)
@@ -197,48 +186,58 @@ function loadProducts(): Product[] {
 // ----------------------------------------------------------------
 // Public API
 // ----------------------------------------------------------------
-export async function getAllProducts(): Promise<Product[]> {
+// NOT: Getter'lar React `cache()` ile sarılı — tek render/istek geçişinde aynı
+// sorgu/fs-okuması tekilleşir (örn. urun sayfasında getAllProducts 3-4 kez
+// çağrılıyordu). cache yalnız o render boyunca geçerlidir; ISR/SSG semantiğini
+// değiştirmez, fallback davranışı aynen korunur.
+export const getAllProducts = cache(async (): Promise<Product[]> => {
   const fromDb = await dbGetAllProducts();
   return fromDb ?? loadProducts();
-}
+});
 
-export async function getProductsByCategory(
-  slug: CategorySlug,
-): Promise<Product[]> {
-  const fromDb = await dbGetProductsByCategory(slug);
-  return fromDb ?? loadProducts().filter((p) => p.categorySlug === slug);
-}
+export const getProductsByCategory = cache(
+  async (slug: CategorySlug): Promise<Product[]> => {
+    const fromDb = await dbGetProductsByCategory(slug);
+    return fromDb ?? loadProducts().filter((p) => p.categorySlug === slug);
+  },
+);
 
-export async function getProductBySlug(slug: string): Promise<Product | null> {
-  const fromDb = await dbGetProductBySlug(slug);
-  // undefined = DB yok → JSON fallback; null = DB'de bulunamadı
-  if (fromDb !== undefined) return fromDb;
-  return loadProducts().find((p) => p.slug === slug) || null;
-}
+export const getProductBySlug = cache(
+  async (slug: string): Promise<Product | null> => {
+    const fromDb = await dbGetProductBySlug(slug);
+    // undefined = DB yok → JSON fallback; null = DB'de bulunamadı
+    if (fromDb !== undefined) return fromDb;
+    return loadProducts().find((p) => p.slug === slug) || null;
+  },
+);
 
-export async function getProductById(id: string): Promise<Product | null> {
-  const fromDb = await dbGetProductById(id);
-  if (fromDb !== undefined) return fromDb;
-  return loadProducts().find((p) => p.id === id) || null;
-}
+export const getProductById = cache(
+  async (id: string): Promise<Product | null> => {
+    const fromDb = await dbGetProductById(id);
+    if (fromDb !== undefined) return fromDb;
+    return loadProducts().find((p) => p.id === id) || null;
+  },
+);
 
-export async function getCategories(): Promise<Category[]> {
+export const getCategories = cache(async (): Promise<Category[]> => {
   const fromDb = await dbGetCategories();
   return fromDb ?? CATEGORIES;
-}
+});
 
-export async function getCategoryBySlug(slug: string): Promise<Category | null> {
-  const fromDb = await dbGetCategoryBySlug(slug);
-  // undefined = DB yok → statik fallback; null = DB'de bulunamadı
-  if (fromDb !== undefined) return fromDb;
-  return CATEGORIES.find((c) => c.slug === slug) || null;
-}
+export const getCategoryBySlug = cache(
+  async (slug: string): Promise<Category | null> => {
+    const fromDb = await dbGetCategoryBySlug(slug);
+    // undefined = DB yok → statik fallback; null = DB'de bulunamadı
+    if (fromDb !== undefined) return fromDb;
+    return CATEGORIES.find((c) => c.slug === slug) || null;
+  },
+);
 
-export function getBusiness(): Business {
+export const getBusiness = cache((): Business => {
   return readJson<Business>("business.json");
-}
+});
 
-export async function getWorkshops(): Promise<Workshop[]> {
+export const getWorkshops = cache(async (): Promise<Workshop[]> => {
   // DB varsa ondan (boş tablo = [] döner, fallback'e DÜŞMEZ); DB yoksa
   // (build / DATABASE_URL tanımsız → null) business.json fallback. Fallback'te
   // görsel kod-içi WORKSHOP_IMAGES haritasından enjekte edilir (DB'de görsel
@@ -251,65 +250,69 @@ export async function getWorkshops(): Promise<Workshop[]> {
     const img = WORKSHOP_IMAGES[slug];
     return { ...w, slug, image: w.image ?? img?.src, imageAlt: img?.alt };
   });
-}
+});
 
-export function getPortfolio(): PortfolioWork[] {
+export const getPortfolio = cache((): PortfolioWork[] => {
   return readJson<PortfolioWork[]>("portfolio.json");
-}
+});
 
-export async function getSeries(): Promise<Series[]> {
+export const getSeries = cache(async (): Promise<Series[]> => {
   const fromDb = await dbGetSeries();
   return fromDb ?? readJson<Series[]>("series.json");
-}
+});
 
-export async function getSeriesBySlug(slug: string): Promise<Series | null> {
-  const fromDb = await dbGetSeriesBySlug(slug);
-  if (fromDb !== undefined) return fromDb;
-  return readJson<Series[]>("series.json").find((s) => s.slug === slug) || null;
-}
+export const getSeriesBySlug = cache(
+  async (slug: string): Promise<Series | null> => {
+    const fromDb = await dbGetSeriesBySlug(slug);
+    if (fromDb !== undefined) return fromDb;
+    return readJson<Series[]>("series.json").find((s) => s.slug === slug) || null;
+  },
+);
 
 // ----------------------------------------------------------------
 // Sanatçılar (çok sanatçılı galeri; DB + business.json fallback)
 // ----------------------------------------------------------------
-export async function getArtists(): Promise<Artist[]> {
+export const getArtists = cache(async (): Promise<Artist[]> => {
   const fromDb = await dbGetArtists();
   if (fromDb) return fromDb;
   const biz = readJson<Business>("business.json");
   return biz.artist ? [{ ...biz.artist, slug: "duygu-sinan" }] : [];
-}
+});
 
-export async function getArtistBySlug(slug: string): Promise<Artist | null> {
-  const fromDb = await dbGetArtistBySlug(slug);
-  if (fromDb !== undefined) return fromDb;
-  const all = await getArtists();
-  return all.find((a) => a.slug === slug) || null;
-}
+export const getArtistBySlug = cache(
+  async (slug: string): Promise<Artist | null> => {
+    const fromDb = await dbGetArtistBySlug(slug);
+    if (fromDb !== undefined) return fromDb;
+    const all = await getArtists();
+    return all.find((a) => a.slug === slug) || null;
+  },
+);
 
 /** Bir sanatçının tüm eserleri (galeri sanatçı sayfası için). */
-export async function getPortfolioByArtist(
-  artistSlug: string,
-): Promise<PortfolioWork[]> {
-  const allSeries = await getSeries();
-  const mine = allSeries.filter(
-    (s) => (s.artistSlug ?? "duygu-sinan") === artistSlug,
-  );
-  const arrays = await Promise.all(
-    mine.map((s) => getPortfolioBySeries(s.slug as SeriesSlug)),
-  );
-  return arrays.flat();
-}
+export const getPortfolioByArtist = cache(
+  async (artistSlug: string): Promise<PortfolioWork[]> => {
+    const allSeries = await getSeries();
+    const mine = allSeries.filter(
+      (s) => (s.artistSlug ?? "duygu-sinan") === artistSlug,
+    );
+    const arrays = await Promise.all(
+      mine.map((s) => getPortfolioBySeries(s.slug as SeriesSlug)),
+    );
+    return arrays.flat();
+  },
+);
 
-export async function getPortfolioBySeries(
-  slug: SeriesSlug,
-): Promise<PortfolioWork[]> {
-  // Eserler DB'ye taşındı: DB bu seri için kayıt döndürüyorsa o esastır
-  // (çift gösterimi önler). DB yok/boşsa data/portfolio.json'a düşer.
-  const fromDb = await dbGetArtworksBySeries(slug);
-  if (fromDb && fromDb.length) return fromDb;
-  return getPortfolio().filter((w) => (w.series ?? "kapilar") === slug);
-}
+export const getPortfolioBySeries = cache(
+  async (slug: SeriesSlug): Promise<PortfolioWork[]> => {
+    // Eserler DB'ye taşındı: DB bu seri için kayıt döndürüyorsa o esastır
+    // (çift gösterimi önler). DB yok/boşsa data/portfolio.json'a düşer.
+    const fromDb = await dbGetArtworksBySeries(slug);
+    if (fromDb && fromDb.length) return fromDb;
+    return getPortfolio().filter((w) => (w.series ?? "kapilar") === slug);
+  },
+);
 
-export async function getJournalPosts(): Promise<JournalPost[]> {
+export const getJournalPosts = cache(async (): Promise<JournalPost[]> => {
   // DB varsa ondan (boş tablo = [] döner, fallback'e DÜŞMEZ); DB yoksa
   // (build / DATABASE_URL tanımsız → null) JSON fallback. `??` ile null ve
   // boş-dizi ayrımı net: null = DB yok, [] = DB var ama kayıt yok.
@@ -319,12 +322,12 @@ export async function getJournalPosts(): Promise<JournalPost[]> {
       b.date.localeCompare(a.date),
     )
   );
-}
+});
 
-export async function getJournalPostBySlug(
-  slug: string,
-): Promise<JournalPost | null> {
-  const all = await getJournalPosts();
-  return all.find((p) => p.slug === slug) || null;
-}
+export const getJournalPostBySlug = cache(
+  async (slug: string): Promise<JournalPost | null> => {
+    const all = await getJournalPosts();
+    return all.find((p) => p.slug === slug) || null;
+  },
+);
 

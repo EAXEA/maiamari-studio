@@ -19,9 +19,12 @@ import { TransitInfo } from "@/components/transit/transit-info";
 
 export default async function HomePage() {
   const biz = getBusiness();
-  const workshops = await getWorkshops();
-  const series = await getSeries();
-  const products = await getAllProducts();
+  // Bağımsız fetch'ler paralel (ardışık waterfall yerine tek tur).
+  const [workshops, series, products] = await Promise.all([
+    getWorkshops(),
+    getSeries(),
+    getAllProducts(),
+  ]);
 
   // Hero altındaki müze etiketi metrikleri — tüm portfolyo, benzersiz eserler
   const portfolioWorks = (

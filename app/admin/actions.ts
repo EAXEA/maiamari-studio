@@ -64,6 +64,7 @@ import {
   recordLoginFailure,
   clearLoginAttempts,
 } from "@/lib/db/login-attempts";
+import { slugify } from "@/lib/slug";
 import type { NewProductRow } from "@/lib/db/schema";
 
 export type ActionState = { error?: string } | undefined;
@@ -159,20 +160,32 @@ function intOrNull(raw: FormDataEntryValue | null): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
-/** Ad'dan URL-güvenli slug üretir. Boş kalırsa türüne uygun fallback kullanılır. */
-function slugifyTr(s: string, fallback = "kategori"): string {
-  return (
-    s
-      .toLocaleLowerCase("tr-TR")
-      .replace(/ı/g, "i")
-      .replace(/ş/g, "s")
-      .replace(/ç/g, "c")
-      .replace(/ö/g, "o")
-      .replace(/ü/g, "u")
-      .replace(/ğ/g, "g")
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "") || fallback
-  );
+/**
+ * Form'dan kapak + galeri görsellerini çözer: yüklenen dosyalar önceliklidir,
+ * yoksa manuel yol/URL alanları; kapak boşsa ilk galeri görseline düşülür.
+ * Yükleme hatasında uploadProductImage fırlatır (çağıran try/catch yakalar).
+ * Önceden saveProduct ile saveJournal'da birebir kopyalanmış bloğun tek kaynağı.
+ */
+async function resolveImages(
+  formData: FormData,
+): Promise<{ cover: string; gallery: string[] }> {
+  let cover = String(formData.get("coverImagePath") ?? "").trim();
+  const gallery = String(formData.get("galleryText") ?? "")
+    .split(/[\n,]+/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  const coverFile = formData.get("coverFile");
+  if (coverFile instanceof File && coverFile.size > 0) {
+    cover = await uploadProductImage(coverFile);
+  }
+  for (const f of formData.getAll("galleryFiles")) {
+    if (f instanceof File && f.size > 0) {
+      gallery.push(await uploadProductImage(f));
+    }
+  }
+  if (!cover && gallery.length > 0) cover = gallery[0];
+  return { cover, gallery };
 }
 
 // ---------------------------------------------------------------
@@ -259,26 +272,13 @@ export async function saveProduct(
   const description = String(formData.get("description") ?? "").trim();
 
   // --- Görseller: önce yüklenen dosyalar, sonra manuel yollar ---
-  let coverImage = String(formData.get("coverImagePath") ?? "").trim();
-  const gallery: string[] = String(formData.get("galleryText") ?? "")
-    .split(/[\n,]+/)
-    .map((s) => s.trim())
-    .filter(Boolean);
-
+  let coverImage: string;
+  let gallery: string[];
   try {
-    const coverFile = formData.get("coverFile");
-    if (coverFile instanceof File && coverFile.size > 0) {
-      coverImage = await uploadProductImage(coverFile);
-    }
-    for (const f of formData.getAll("galleryFiles")) {
-      if (f instanceof File && f.size > 0) {
-        gallery.push(await uploadProductImage(f));
-      }
-    }
+    ({ cover: coverImage, gallery } = await resolveImages(formData));
   } catch (err) {
     return { error: err instanceof Error ? err.message : "Görsel yüklenemedi." };
   }
-  if (!coverImage && gallery.length > 0) coverImage = gallery[0];
 
   // --- Türe göre alanlar ---
   let fields: Partial<NewProductRow>;
@@ -363,9 +363,9 @@ export async function saveProduct(
       } as NewProductRow);
     }
   } catch (err) {
-    return {
-      error: err instanceof Error ? err.message : "Kayıt kaydedilemedi.",
-    };
+    // Ham DB/driver hatasını yalnız sunucuya logla; client'a generic mesaj dön.
+    console.error("admin action failed:", err);
+    return { error: "Kayıt kaydedilemedi." };
   }
 
   revalidateStore(kind === "artwork" ? "gallery" : "shop");
@@ -392,15 +392,15 @@ export async function saveCategory(
     if (originalSlug) {
       await dbUpdateCategory(originalSlug, { name, nameEn, description, sortOrder });
     } else {
-      const slug = slugifyTr(name);
+      const slug = slugify(name, "kategori");
       if (await dbCategoryExists(slug))
         return { error: "Bu isimde bir kategori zaten var." };
       await dbCreateCategory({ slug, name, nameEn, description, sortOrder });
     }
   } catch (err) {
-    return {
-      error: err instanceof Error ? err.message : "Kategori kaydedilemedi.",
-    };
+    // Ham DB/driver hatasını yalnız sunucuya logla; client'a generic mesaj dön.
+    console.error("admin action failed:", err);
+    return { error: "Kategori kaydedilemedi." };
   }
 
   revalidateStore("shop");
@@ -490,15 +490,15 @@ export async function saveArtist(
       if (prev?.coverImage && prev.coverImage !== coverImage)
         await deleteStorageImages([prev.coverImage]);
     } else {
-      const slug = slugifyTr(name);
+      const slug = slugify(name, "kategori");
       if (await dbArtistExists(slug))
         return { error: "Bu isimde bir sanatçı zaten var." };
       await dbCreateArtist({ slug, ...data });
     }
   } catch (err) {
-    return {
-      error: err instanceof Error ? err.message : "Sanatçı kaydedilemedi.",
-    };
+    // Ham DB/driver hatasını yalnız sunucuya logla; client'a generic mesaj dön.
+    console.error("admin action failed:", err);
+    return { error: "Sanatçı kaydedilemedi." };
   }
 
   revalidateStore("gallery");
@@ -566,15 +566,15 @@ export async function saveSeries(
       if (prev?.coverImage && prev.coverImage !== coverImage)
         await deleteStorageImages([prev.coverImage]);
     } else {
-      const slug = slugifyTr(title);
+      const slug = slugify(title, "kategori");
       if (await dbSeriesExists(slug))
         return { error: "Bu isimde bir seri zaten var." };
       await dbCreateSeries({ slug, ...data });
     }
   } catch (err) {
-    return {
-      error: err instanceof Error ? err.message : "Seri kaydedilemedi.",
-    };
+    // Ham DB/driver hatasını yalnız sunucuya logla; client'a generic mesaj dön.
+    console.error("admin action failed:", err);
+    return { error: "Seri kaydedilemedi." };
   }
 
   revalidateStore("gallery");
@@ -621,25 +621,13 @@ export async function saveJournal(
   const sortOrder = Math.trunc(Number(formData.get("sortOrder")) || 0);
 
   // --- Görseller: kapak (yüklenen öncelik) + galeri (yollar + yüklenenler) ---
-  let image = String(formData.get("coverImagePath") ?? "").trim();
-  const gallery: string[] = String(formData.get("galleryText") ?? "")
-    .split(/[\n,]+/)
-    .map((s) => s.trim())
-    .filter(Boolean);
+  let image: string;
+  let gallery: string[];
   try {
-    const coverFile = formData.get("coverFile");
-    if (coverFile instanceof File && coverFile.size > 0) {
-      image = await uploadProductImage(coverFile);
-    }
-    for (const f of formData.getAll("galleryFiles")) {
-      if (f instanceof File && f.size > 0) {
-        gallery.push(await uploadProductImage(f));
-      }
-    }
+    ({ cover: image, gallery } = await resolveImages(formData));
   } catch (err) {
     return { error: err instanceof Error ? err.message : "Görsel yüklenemedi." };
   }
-  if (!image && gallery.length > 0) image = gallery[0];
 
   const data = {
     title,
@@ -669,16 +657,16 @@ export async function saveJournal(
         [prev.image, ...(prev.gallery ?? [])].filter((u) => !keep.has(u)),
       );
     } else {
-      const base = slugifyTr(title, "gunce");
+      const base = slugify(title, "gunce");
       let slug = base;
       let i = 2;
       while (await dbJournalExists(slug)) slug = `${base}-${i++}`;
       await dbCreateJournal({ slug, ...data });
     }
   } catch (err) {
-    return {
-      error: err instanceof Error ? err.message : "Günce kaydedilemedi.",
-    };
+    // Ham DB/driver hatasını yalnız sunucuya logla; client'a generic mesaj dön.
+    console.error("admin action failed:", err);
+    return { error: "Günce kaydedilemedi." };
   }
 
   revalidateStore("journal");
@@ -756,16 +744,16 @@ export async function saveWorkshop(
       if (prev.image && prev.image !== image)
         await deleteStorageImages([prev.image]);
     } else {
-      const base = slugifyTr(title, "atolye");
+      const base = slugify(title, "atolye");
       let slug = base;
       let i = 2;
       while (await dbWorkshopExists(slug)) slug = `${base}-${i++}`;
       await dbCreateWorkshop({ slug, ...data });
     }
   } catch (err) {
-    return {
-      error: err instanceof Error ? err.message : "Atölye kaydedilemedi.",
-    };
+    // Ham DB/driver hatasını yalnız sunucuya logla; client'a generic mesaj dön.
+    console.error("admin action failed:", err);
+    return { error: "Atölye kaydedilemedi." };
   }
 
   revalidateStore("workshop");

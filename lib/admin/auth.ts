@@ -29,9 +29,30 @@ function getAdminPassword(): string | null {
   return p;
 }
 
-/** Panel girişi yapılandırılmış mı (parola + secret var mı). */
+/** İmza secret'ı geçerli mi: tanımlı, şablon değil ve yeterince uzun (≥16). */
+function hasValidSecret(): boolean {
+  const s = process.env.ADMIN_SESSION_SECRET;
+  return !!s && !s.startsWith("<") && s.length >= 16;
+}
+
+/** Panel girişi yapılandırılmış mı (parola + geçerli secret var mı). */
 export function isAdminConfigured(): boolean {
-  return getAdminPassword() !== null && !!process.env.ADMIN_SESSION_SECRET;
+  return getAdminPassword() !== null && hasValidSecret();
+}
+
+/** Önerilen minimum admin parola uzunluğu. */
+const MIN_PASSWORD_LENGTH = 12;
+
+/**
+ * Yapılandırma zayıfsa uyarı döner (yoksa null). Yalnız admin'in gördüğü login
+ * sayfasında gösterilir; girişi engellemez (mevcut kurulumları kilitlememek için).
+ */
+export function getAdminConfigWarning(): string | null {
+  const pw = getAdminPassword();
+  if (pw && pw.length < MIN_PASSWORD_LENGTH) {
+    return `ADMIN_PASSWORD çok kısa (en az ${MIN_PASSWORD_LENGTH} karakter önerilir). Brute-force'a karşı daha güçlü bir parola belirleyin.`;
+  }
+  return null;
 }
 
 function sign(data: string): string {

@@ -355,7 +355,16 @@ export function galleryLandingSchema(allSeries: Series[]) {
  * dangerouslySetInnerHTML payload'u üretir.
  */
 export function jsonLdScript(data: unknown) {
+  // GÜVENLİK: JSON.stringify `<`, `>`, `&`, U+2028/2029 karakterlerini kaçırmaz.
+  // DB'den gelen başlık/açıklama gibi alanlar `</script>` içerirse script
+  // bloğundan kaçıp stored XSS'e yol açabilir. Bu karakterleri unicode escape
+  // ederek tag breakout'unu engelliyoruz (üretilen JSON yine geçerli kalır).
   return {
-    __html: JSON.stringify(data),
+    __html: JSON.stringify(data)
+      .replace(/</g, "\\u003c")
+      .replace(/>/g, "\\u003e")
+      .replace(/&/g, "\\u0026")
+      .replace(/\u2028/g, "\\u2028")
+      .replace(/\u2029/g, "\\u2029"),
   };
 }

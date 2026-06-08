@@ -2,11 +2,18 @@
  * Admin giriş sayfası. Zaten yetkiliyse panele yönlendirir.
  */
 import { redirect } from "next/navigation";
-import { isAuthed, isAdminConfigured } from "@/lib/admin/auth";
+import {
+  isAuthed,
+  isAdminConfigured,
+  getAdminConfigWarning,
+} from "@/lib/admin/auth";
 import { LoginForm } from "@/components/admin/login-form";
 
 export default async function AdminLoginPage() {
   if (await isAuthed()) redirect("/admin");
+
+  const configured = isAdminConfigured();
+  const warning = configured ? getAdminConfigWarning() : null;
 
   return (
     <div className="max-w-sm mx-auto pt-8">
@@ -14,7 +21,12 @@ export default async function AdminLoginPage() {
       <p className="text-sm text-[color:var(--color-muted)] mb-8">
         Mağaza yönetim paneline erişmek için parolanızı girin.
       </p>
-      {isAdminConfigured() ? (
+      {warning && (
+        <p className="text-sm text-amber-700 border border-amber-300 bg-amber-50 rounded-md px-3 py-2 mb-5">
+          {warning}
+        </p>
+      )}
+      {configured ? (
         <LoginForm />
       ) : (
         <p className="text-sm text-red-600 border border-red-300 bg-red-50 rounded-md px-3 py-2">

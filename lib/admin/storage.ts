@@ -40,9 +40,42 @@ const EXT: Record<string, string> = {
   "image/gif": "gif",
 };
 
+/** İzin verilen en büyük görsel boyutu (8 MB). Storage/DoS suistimaline karşı. */
+const MAX_UPLOAD_BYTES = 8 * 1024 * 1024;
+
+type ImageMime = keyof typeof EXT;
+
+/** Dosyanın ilk byte'larından gerçek tipini doğrula (client `file.type`'a güvenme). */
+function sniffImageType(buf: Buffer): ImageMime | null {
+  if (buf.length < 12) return null;
+  // JPEG: FF D8 FF
+  if (buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff) return "image/jpeg";
+  // PNG: 89 50 4E 47 0D 0A 1A 0A
+  if (
+    buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4e && buf[3] === 0x47 &&
+    buf[4] === 0x0d && buf[5] === 0x0a && buf[6] === 0x1a && buf[7] === 0x0a
+  )
+    return "image/png";
+  // GIF: "GIF8"
+  if (buf[0] === 0x47 && buf[1] === 0x49 && buf[2] === 0x46 && buf[3] === 0x38)
+    return "image/gif";
+  // RIFF....WEBP
+  if (
+    buf.toString("ascii", 0, 4) === "RIFF" &&
+    buf.toString("ascii", 8, 12) === "WEBP"
+  )
+    return "image/webp";
+  // AVIF: ....ftyp + "avif"/"avis" brand
+  if (buf.toString("ascii", 4, 8) === "ftyp") {
+    const brand = buf.toString("ascii", 8, 12);
+    if (brand === "avif" || brand === "avis") return "image/avif";
+  }
+  return null;
+}
+
 /**
  * Tek bir görseli yükler, public URL döner.
- * @throws yapılandırma yoksa veya yükleme başarısızsa.
+ * @throws yapılandırma yoksa, dosya geçersiz/çok büyükse veya yükleme başarısızsa.
  */
 export async function uploadProductImage(file: File): Promise<string> {
   const client = getClient();
@@ -52,12 +85,26 @@ export async function uploadProductImage(file: File): Promise<string> {
         "Şimdilik görsel alanına bir yol veya URL girebilirsiniz.",
     );
   }
-  const ext = EXT[file.type] || "jpg";
-  const name = `${crypto.randomUUID()}.${ext}`;
+
+  // 1) Boyut sınırı (buffer'a almadan önce; büyük dosyayı belleğe çekme).
+  if (file.size > MAX_UPLOAD_BYTES) {
+    throw new Error("Görsel en fazla 8 MB olabilir.");
+  }
+
   const buffer = Buffer.from(await file.arrayBuffer());
 
+  // 2) Gerçek içerik tipini magic-byte ile doğrula; client'ın gönderdiği
+  //    `file.type`'a güvenme (SVG/HTML gibi içerik görsel gibi etiketlenebilir).
+  const sniffed = sniffImageType(buffer);
+  if (!sniffed) {
+    throw new Error("Sadece JPEG, PNG, WebP, AVIF veya GIF yükleyebilirsiniz.");
+  }
+
+  const ext = EXT[sniffed];
+  const name = `${crypto.randomUUID()}.${ext}`;
+
   const { error } = await client.storage.from(BUCKET).upload(name, buffer, {
-    contentType: file.type || "image/jpeg",
+    contentType: sniffed, // doğrulanmış tip; client değerini kullanma
     upsert: false,
   });
   if (error) throw new Error(`Görsel yüklenemedi: ${error.message}`);

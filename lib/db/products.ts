@@ -6,6 +6,7 @@
  */
 import { eq, asc, and, ne } from "drizzle-orm";
 import { getDb } from "./client";
+import { slugify } from "@/lib/slug";
 import { products as T, type ProductRow, type NewProductRow } from "./schema";
 import type {
   Product,
@@ -181,17 +182,7 @@ export async function dbGenerateUniqueSlug(
   excludeId?: string,
 ): Promise<string> {
   const db = getDb();
-  const clean =
-    base
-      .toLocaleLowerCase("tr-TR")
-      .replace(/ı/g, "i")
-      .replace(/ş/g, "s")
-      .replace(/ç/g, "c")
-      .replace(/ö/g, "o")
-      .replace(/ü/g, "u")
-      .replace(/ğ/g, "g")
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "") || "urun";
+  const clean = slugify(base, "urun");
   if (!db) return clean;
 
   let slug = clean;

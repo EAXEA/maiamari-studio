@@ -30,6 +30,22 @@ export type RateState = {
 
 const OPEN: RateState = { locked: false, retryAfterSec: 0, remaining: MAX_FAILS };
 
+/**
+ * DB yapılandırılmış ama geçici hata verdiğinde uygulanan FAIL-CLOSED durumu.
+ * Sömürü senaryosu: saldırgan DB'yi yorup (veya outage anına denk getirip)
+ * catch'i tetikleyerek per-IP limiti tamamen bypass edip sınırsız brute-force
+ * yapabilir. Bu yüzden DB-hata durumunda girişi kısa süreliğine kilitleriz:
+ * gerçek admin en fazla ~1 deneme/dk ile sınırlanır (kabul edilebilir), saldırgan
+ * ise hız kazanamaz. (DB'nin HİÇ yapılandırılmadığı `!db` durumu farklıdır:
+ * orası kasıtlı JSON-fallback deployment'tır ve açık bırakılır.)
+ */
+const FAIL_CLOSED_SEC = 60;
+const CLOSED: RateState = {
+  locked: true,
+  retryAfterSec: FAIL_CLOSED_SEC,
+  remaining: 0,
+};
+
 /** Girişi denemeden ÖNCE: IP kilitli mi? (mutasyon yok) */
 export async function checkLoginRate(ip: string): Promise<RateState> {
   const db = getDb();
@@ -50,7 +66,7 @@ export async function checkLoginRate(ip: string): Promise<RateState> {
     const fails = fresh ? rec.fails : 0;
     return { locked: false, retryAfterSec: 0, remaining: Math.max(0, MAX_FAILS - fails) };
   } catch {
-    return OPEN; // fail-open
+    return CLOSED; // fail-closed: DB hatasında brute-force yüzeyini kapat
   }
 }
 
@@ -86,7 +102,7 @@ export async function recordLoginFailure(ip: string): Promise<RateState> {
       });
     return { locked: false, retryAfterSec: 0, remaining: MAX_FAILS - fails };
   } catch {
-    return OPEN; // fail-open
+    return CLOSED; // fail-closed: hata yutulup sınırsız denemeye dönmesin
   }
 }
 
