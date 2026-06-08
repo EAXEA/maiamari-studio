@@ -77,6 +77,14 @@ export interface PortfolioWork {
   printCount?: number;        // arşivde kayıtlı baskı sayısı (genelde editionSize ile aynı)
   firstSerial?: string;       // "#BASKI-2013-0577"
   artist?: string;            // "Duygu SİNAN"
+  /**
+   * Satış alanları (yalnız eserlerde). iyzico öncesi galeride fiyat gösterimi
+   * için: forSale && priceTRY>0 ise künyede fiyat + WhatsApp sipariş butonu.
+   * Fiyatsız/satış-dışı eserlerde gösterilmez (mevcut "fiyat DM'den" korunur).
+   */
+  forSale?: boolean;
+  priceTRY?: number;
+  compareAtTRY?: number | null;
 }
 
 export interface JournalPost {

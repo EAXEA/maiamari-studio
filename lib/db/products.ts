@@ -66,6 +66,10 @@ function toPortfolioWork(row: ProductRow): PortfolioWork {
     printCount: row.printCount ?? row.editionSize ?? undefined,
     firstSerial: row.firstSerial ?? undefined,
     artist: row.artist ?? undefined,
+    // Satış alanları — galeride iyzico öncesi fiyat gösterimi için (numeric→number).
+    forSale: row.forSale,
+    priceTRY: row.priceTry != null ? Number(row.priceTry) : undefined,
+    compareAtTRY: row.compareAtTry != null ? Number(row.compareAtTry) : null,
   };
 }
 

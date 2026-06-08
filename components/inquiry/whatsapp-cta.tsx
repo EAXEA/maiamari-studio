@@ -16,6 +16,11 @@ type Props = {
   path?: string;
   /** Buton metni (sadece variant=button için anlamlı). */
   label?: string;
+  /**
+   * Tam mesaj override. Verilirse title/context'ten üretilen varsayılan
+   * "bilgi almak istiyorum" metni yerine bu kullanılır (ör. sipariş niyeti).
+   */
+  message?: string;
   className?: string;
   style?: CSSProperties;
 };
@@ -37,6 +42,7 @@ export function WhatsappCTA({
   context = "galerideki bir eser",
   path = "/",
   label = "WhatsApp'tan bilgi al",
+  message: messageOverride,
   className,
   style,
 }: Props) {
@@ -44,7 +50,7 @@ export function WhatsappCTA({
     ? `Merhaba, ${context} "${title}" hakkında bilgi almak istiyorum.`
     : `Merhaba, ${context} hakkında bilgi almak istiyorum.`;
   const reference = `${SITE_URL}${path}`;
-  const message = `${intro}\n${reference}`;
+  const message = messageOverride ?? `${intro}\n${reference}`;
   const href = `${WHATSAPP_URL}?text=${encodeURIComponent(message)}`;
 
   const commonProps = {

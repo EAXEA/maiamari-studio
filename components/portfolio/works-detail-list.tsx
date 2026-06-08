@@ -2,8 +2,30 @@
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import type { PortfolioWork } from "@/lib/types";
+import { formatTRY } from "@/lib/format";
 import { Reveal } from "@/components/motion/reveal";
 import { InstagramInquiryButton } from "@/components/inquiry/instagram-inquiry-button";
+import { WhatsappCTA } from "@/components/inquiry/whatsapp-cta";
+
+/** Eser galeride fiyatlı satışa açık mı (iyzico öncesi fiyat gösterimi). */
+function isPriced(w: PortfolioWork): boolean {
+  return !!w.forSale && typeof w.priceTRY === "number" && w.priceTRY > 0;
+}
+
+/**
+ * Arşiv sync'inden gelen şablon CTA cümlesini gösterimde temizler.
+ * "...Edisyon, boyut ve fiyat bilgisi için iletişime geçin." — edisyon, boyut
+ * (ve fiyatlı eserlerde fiyat) zaten künyede gösterildiğinden bu cümle artık
+ * gereksiz/çelişik. Kaynak veriye/DB'ye DOKUNULMAZ; yalnız render'da düşülür.
+ */
+function cleanDescription(desc: string): string {
+  return desc
+    .replace(
+      /\s*Edisyon,\s*boyut\s*ve\s*fiyat\s*bilgisi\s*için\s*iletişime\s*geçin\.?\s*/giu,
+      " ",
+    )
+    .trim();
+}
 // NOTE: Galeri görselleri arşivde baked-in watermark ile geliyor
 // (Masaüstü\duygu arşiv\images_watermarked\). CSS overlay watermark
 // kaldırıldı — çift watermark gerekmez.
@@ -132,9 +154,29 @@ export function WorksDetailList({
                     <dt className="text-[color:var(--color-muted)]">Edisyon</dt>
                     <dd>
                       {work.editionSize
-                        ? `${work.editionSize} adetlik sayılı edisyon · fiyat DM'den`
-                        : "Sayılı · DM üzerinden bilgi"}
+                        ? `${work.editionSize} adetlik sayılı edisyon${
+                            isPriced(work) ? "" : " · fiyat DM'den"
+                          }`
+                        : isPriced(work)
+                          ? "Sayılı edisyon"
+                          : "Sayılı · DM üzerinden bilgi"}
                     </dd>
+                    {isPriced(work) && (
+                      <>
+                        <dt className="text-[color:var(--color-muted)]">Fiyat</dt>
+                        <dd className="tabular-nums">
+                          <span className="text-base">
+                            {formatTRY(work.priceTRY!)}
+                          </span>
+                          {work.compareAtTRY != null &&
+                            work.compareAtTRY > work.priceTRY! && (
+                              <span className="ml-2 line-through text-[color:var(--color-muted)] text-sm">
+                                {formatTRY(work.compareAtTRY)}
+                              </span>
+                            )}
+                        </dd>
+                      </>
+                    )}
                     {work.firstSerial && (
                       <>
                         <dt className="text-[color:var(--color-muted)]">Serial</dt>
@@ -149,9 +191,9 @@ export function WorksDetailList({
                       Teslim edilen fiziksel baskı filigransızdır.
                     </dd>
                   </dl>
-                  {work.description && (
+                  {work.description && cleanDescription(work.description) && (
                     <p className="mt-8 text-base leading-relaxed text-[color:var(--color-muted)] max-w-prose">
-                      {work.description}
+                      {cleanDescription(work.description)}
                     </p>
                   )}
                   {/* Sade single-link: foto tıklanır + zoom — CTA çoğullamadan */}
@@ -163,6 +205,17 @@ export function WorksDetailList({
                     <ZoomIcon />
                     Eseri görüntüle
                   </button>
+                  {isPriced(work) && (
+                    <div className="mt-6">
+                      <WhatsappCTA
+                        variant="button"
+                        label="Sipariş ver · WhatsApp"
+                        message={`Merhaba, galerideki "${work.title}" eserini (${formatTRY(
+                          work.priceTRY!,
+                        )}) sipariş vermek istiyorum.\nhttps://www.maiamari.art${inquiryPath}`}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             </article>
@@ -265,6 +318,20 @@ export function WorksDetailList({
                     {active.dimensions}
                   </p>
                 )}
+                {isPriced(active) && (
+                  <p className="mt-3 font-display tabular-nums text-base lg:text-lg">
+                    {formatTRY(active.priceTRY!)}
+                    {active.compareAtTRY != null &&
+                      active.compareAtTRY > active.priceTRY! && (
+                        <span
+                          className="ml-2 line-through text-sm"
+                          style={{ color: "rgba(255,255,255,0.5)" }}
+                        >
+                          {formatTRY(active.compareAtTRY)}
+                        </span>
+                      )}
+                  </p>
+                )}
                 <p
                   className="mt-2 text-[10px] tracking-[0.18em] uppercase"
                   style={{ color: "rgba(255,255,255,0.45)" }}
@@ -281,13 +348,19 @@ export function WorksDetailList({
                 />
                 <a
                   href={`https://wa.me/905065889277?text=${encodeURIComponent(
-                    `Merhaba, "${active.title}" eseri hakkında bilgi almak istiyorum.\nhttps://www.maiamari.art${inquiryPath}`
+                    isPriced(active)
+                      ? `Merhaba, galerideki "${active.title}" eserini (${formatTRY(
+                          active.priceTRY!,
+                        )}) sipariş vermek istiyorum.\nhttps://www.maiamari.art${inquiryPath}`
+                      : `Merhaba, "${active.title}" eseri hakkında bilgi almak istiyorum.\nhttps://www.maiamari.art${inquiryPath}`
                   )}`}
                   target="_blank"
                   rel="noreferrer"
                   className="text-white/90 hover:text-white underline underline-offset-4"
                 >
-                  WhatsApp&apos;tan yaz →
+                  {isPriced(active)
+                    ? "Sipariş ver · WhatsApp →"
+                    : "WhatsApp'tan yaz →"}
                 </a>
               </div>
             </div>
