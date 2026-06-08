@@ -6,6 +6,7 @@
  */
 import { asc, eq } from "drizzle-orm";
 import { getDb } from "./client";
+import { createSlugRepository } from "./repository";
 import { categories as C, type NewCategoryRow, type CategoryRow } from "./schema";
 import type { Category } from "@/lib/types";
 
@@ -40,48 +41,13 @@ export async function dbGetCategoryBySlug(
   return rows[0] ? toCategory(rows[0]) : null;
 }
 
-/** Düzenleme için ham satır (sortOrder dahil). */
-export async function dbGetCategoryRow(
-  slug: string,
-): Promise<CategoryRow | null> {
-  const db = getDb();
-  if (!db) return null;
-  const rows = await db.select().from(C).where(eq(C.slug, slug)).limit(1);
-  return rows[0] ?? null;
-}
+// --- Ortak slug CRUD (createSlugRepository) ---
+const repo = createSlugRepository<CategoryRow, NewCategoryRow>(C);
 
-export async function dbCreateCategory(data: NewCategoryRow): Promise<void> {
-  const db = getDb();
-  if (!db) throw new Error("DATABASE_URL tanımlı değil");
-  await db.insert(C).values(data);
-}
-
-export async function dbUpdateCategory(
-  slug: string,
-  data: Partial<NewCategoryRow>,
-): Promise<void> {
-  const db = getDb();
-  if (!db) throw new Error("DATABASE_URL tanımlı değil");
-  await db
-    .update(C)
-    .set({ ...data, updatedAt: new Date() })
-    .where(eq(C.slug, slug));
-}
-
-export async function dbDeleteCategory(slug: string): Promise<void> {
-  const db = getDb();
-  if (!db) throw new Error("DATABASE_URL tanımlı değil");
-  await db.delete(C).where(eq(C.slug, slug));
-}
-
+/** Düzenleme için ham satır. DB yok/bulunamadı → null. */
+export const dbGetCategoryRow = repo.getRow;
+export const dbCreateCategory = repo.create;
+export const dbUpdateCategory = repo.update;
+export const dbDeleteCategory = repo.remove;
 /** Kategori slug'ı DB'de var mı (validasyon için). */
-export async function dbCategoryExists(slug: string): Promise<boolean> {
-  const db = getDb();
-  if (!db) return false;
-  const rows = await db
-    .select({ slug: C.slug })
-    .from(C)
-    .where(eq(C.slug, slug))
-    .limit(1);
-  return !!rows[0];
-}
+export const dbCategoryExists = repo.exists;

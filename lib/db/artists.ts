@@ -6,6 +6,7 @@
  */
 import { asc, eq } from "drizzle-orm";
 import { getDb } from "./client";
+import { createSlugRepository } from "./repository";
 import { artists as A, type ArtistRow, type NewArtistRow } from "./schema";
 import type { Artist } from "@/lib/types";
 
@@ -42,45 +43,12 @@ export async function dbGetArtistBySlug(
   return rows[0] ? toArtist(rows[0]) : null;
 }
 
-/** Düzenleme için ham satır (sortOrder dahil). */
-export async function dbGetArtistRow(slug: string): Promise<ArtistRow | null> {
-  const db = getDb();
-  if (!db) return null;
-  const rows = await db.select().from(A).where(eq(A.slug, slug)).limit(1);
-  return rows[0] ?? null;
-}
+// --- Ortak slug CRUD (createSlugRepository) ---
+const repo = createSlugRepository<ArtistRow, NewArtistRow>(A);
 
-export async function dbCreateArtist(data: NewArtistRow): Promise<void> {
-  const db = getDb();
-  if (!db) throw new Error("DATABASE_URL tanımlı değil");
-  await db.insert(A).values(data);
-}
-
-export async function dbUpdateArtist(
-  slug: string,
-  data: Partial<NewArtistRow>,
-): Promise<void> {
-  const db = getDb();
-  if (!db) throw new Error("DATABASE_URL tanımlı değil");
-  await db
-    .update(A)
-    .set({ ...data, updatedAt: new Date() })
-    .where(eq(A.slug, slug));
-}
-
-export async function dbDeleteArtist(slug: string): Promise<void> {
-  const db = getDb();
-  if (!db) throw new Error("DATABASE_URL tanımlı değil");
-  await db.delete(A).where(eq(A.slug, slug));
-}
-
-export async function dbArtistExists(slug: string): Promise<boolean> {
-  const db = getDb();
-  if (!db) return false;
-  const rows = await db
-    .select({ slug: A.slug })
-    .from(A)
-    .where(eq(A.slug, slug))
-    .limit(1);
-  return !!rows[0];
-}
+/** Düzenleme için ham satır. DB yok/bulunamadı → null. */
+export const dbGetArtistRow = repo.getRow;
+export const dbCreateArtist = repo.create;
+export const dbUpdateArtist = repo.update;
+export const dbDeleteArtist = repo.remove;
+export const dbArtistExists = repo.exists;

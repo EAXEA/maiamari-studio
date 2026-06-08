@@ -7,6 +7,7 @@
  */
 import { asc, desc, eq } from "drizzle-orm";
 import { getDb } from "./client";
+import { createSlugRepository } from "./repository";
 import { journal as J, type JournalRow, type NewJournalRow } from "./schema";
 import type { JournalPost } from "@/lib/types";
 
@@ -52,46 +53,13 @@ export async function dbGetJournalRowsAdmin(): Promise<JournalRow[] | null> {
   return db.select().from(J).orderBy(desc(J.date), asc(J.sortOrder));
 }
 
-/** Düzenleme için ham satır. */
-export async function dbGetJournalRow(slug: string): Promise<JournalRow | null> {
-  const db = getDb();
-  if (!db) return null;
-  const rows = await db.select().from(J).where(eq(J.slug, slug)).limit(1);
-  return rows[0] ?? null;
-}
+// --- Ortak slug CRUD (createSlugRepository) ---
+const repo = createSlugRepository<JournalRow, NewJournalRow>(J);
 
-export async function dbCreateJournal(data: NewJournalRow): Promise<void> {
-  const db = getDb();
-  if (!db) throw new Error("DATABASE_URL tanımlı değil");
-  await db.insert(J).values(data);
-}
-
-export async function dbUpdateJournal(
-  slug: string,
-  data: Partial<NewJournalRow>,
-): Promise<void> {
-  const db = getDb();
-  if (!db) throw new Error("DATABASE_URL tanımlı değil");
-  await db
-    .update(J)
-    .set({ ...data, updatedAt: new Date() })
-    .where(eq(J.slug, slug));
-}
-
-export async function dbDeleteJournal(slug: string): Promise<void> {
-  const db = getDb();
-  if (!db) throw new Error("DATABASE_URL tanımlı değil");
-  await db.delete(J).where(eq(J.slug, slug));
-}
-
+/** Düzenleme için ham satır. DB yok/bulunamadı → null. */
+export const dbGetJournalRow = repo.getRow;
+export const dbCreateJournal = repo.create;
+export const dbUpdateJournal = repo.update;
+export const dbDeleteJournal = repo.remove;
 /** Slug DB'de var mı (benzersiz slug üretimi için). */
-export async function dbJournalExists(slug: string): Promise<boolean> {
-  const db = getDb();
-  if (!db) return false;
-  const rows = await db
-    .select({ slug: J.slug })
-    .from(J)
-    .where(eq(J.slug, slug))
-    .limit(1);
-  return !!rows[0];
-}
+export const dbJournalExists = repo.exists;

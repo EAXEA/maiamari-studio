@@ -5,6 +5,7 @@
  */
 import { asc, eq } from "drizzle-orm";
 import { getDb } from "./client";
+import { createSlugRepository } from "./repository";
 import { series as S, type SeriesRow, type NewSeriesRow } from "./schema";
 // SeriesRow düzenleme sayfasında ham satır (sortOrder dahil) için kullanılır.
 import type { Series, SeriesSlug } from "@/lib/types";
@@ -44,45 +45,12 @@ export async function dbGetSeriesBySlug(
   return rows[0] ? toSeries(rows[0]) : null;
 }
 
-/** Düzenleme için ham satır (sortOrder dahil). */
-export async function dbGetSeriesRow(slug: string): Promise<SeriesRow | null> {
-  const db = getDb();
-  if (!db) return null;
-  const rows = await db.select().from(S).where(eq(S.slug, slug)).limit(1);
-  return rows[0] ?? null;
-}
+// --- Ortak slug CRUD (createSlugRepository) ---
+const repo = createSlugRepository<SeriesRow, NewSeriesRow>(S);
 
-export async function dbCreateSeries(data: NewSeriesRow): Promise<void> {
-  const db = getDb();
-  if (!db) throw new Error("DATABASE_URL tanımlı değil");
-  await db.insert(S).values(data);
-}
-
-export async function dbUpdateSeries(
-  slug: string,
-  data: Partial<NewSeriesRow>,
-): Promise<void> {
-  const db = getDb();
-  if (!db) throw new Error("DATABASE_URL tanımlı değil");
-  await db
-    .update(S)
-    .set({ ...data, updatedAt: new Date() })
-    .where(eq(S.slug, slug));
-}
-
-export async function dbDeleteSeries(slug: string): Promise<void> {
-  const db = getDb();
-  if (!db) throw new Error("DATABASE_URL tanımlı değil");
-  await db.delete(S).where(eq(S.slug, slug));
-}
-
-export async function dbSeriesExists(slug: string): Promise<boolean> {
-  const db = getDb();
-  if (!db) return false;
-  const rows = await db
-    .select({ slug: S.slug })
-    .from(S)
-    .where(eq(S.slug, slug))
-    .limit(1);
-  return !!rows[0];
-}
+/** Düzenleme için ham satır. DB yok/bulunamadı → null. */
+export const dbGetSeriesRow = repo.getRow;
+export const dbCreateSeries = repo.create;
+export const dbUpdateSeries = repo.update;
+export const dbDeleteSeries = repo.remove;
+export const dbSeriesExists = repo.exists;
