@@ -17,6 +17,15 @@ import { WhatsappCTA } from "@/components/inquiry/whatsapp-cta";
 import { PhoneCTA } from "@/components/inquiry/phone-cta";
 import { TransitInfo } from "@/components/transit/transit-info";
 
+/**
+ * Ana sayfa atölye programını ve DB'den türeyen sayıları (atölye/seri/eser metrikleri)
+ * gösterir. Build'de getDb()=null olduğundan statik prerender yalnız seed fallback'ini
+ * içerir → panelden eklenen atölyeler/eserler her deploy sonrası kaybolurdu. ISR=60 ile
+ * sayfa 60 sn'de bir runtime'da DB'den yeniden üretilir (galeri ile aynı desen). Admin
+ * kaydı ayrıca revalidatePath("/") ile anında tazeler; ISR deploy-sonrası güvenlik ağı.
+ */
+export const revalidate = 60;
+
 export default async function HomePage() {
   const biz = getBusiness();
   // Bağımsız fetch'ler paralel (ardışık waterfall yerine tek tur).

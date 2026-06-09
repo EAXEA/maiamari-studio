@@ -2,6 +2,11 @@ import Link from "next/link";
 import { getAllProducts, getCategories } from "@/lib/data";
 import { ProductCard } from "@/components/product/product-card";
 
+// ISR: panelden eklenen ürün/kategori canlıda ~60sn'de yansısın. Build'de
+// getDb()=null → JSON seed fallback üretilir, deploy sonrası taze değil; ISR
+// runtime'da DB'den yeniden üretir (atolyeler/journal/galeri ile aynı mimari).
+export const revalidate = 60;
+
 export const metadata = { title: "Mağaza" };
 
 export default async function ShopPage() {

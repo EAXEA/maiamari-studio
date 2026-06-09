@@ -35,6 +35,17 @@ function instructorAvatarPath(name: string): string | undefined {
     : undefined;
 }
 
+/**
+ * Atölyeler DB-otoriter: panelden eklenen atölyeler canlıda anında görünsün.
+ * Build'de getDb()=null olduğundan statik prerender yalnız business.json seed'ini
+ * (5 atölye, fallback görseller) içerir; saf SSG'de yeni atölyeler ancak bir admin
+ * kaydı revalidatePath("/atolyeler") tetikleyene kadar görünmez ve her deploy sayfayı
+ * tekrar fallback'e döndürür. force-dynamic ile sayfa her istekte runtime'da DB'den
+ * üretilir → canlı her zaman localhost ile birebir. (Galeri ISR=60 ile kendini
+ * iyileştirir; tek-sorgulu bu sayfa için her-istek render maliyeti önemsiz.)
+ */
+export const dynamic = "force-dynamic";
+
 export const metadata = { title: "Atölyeler" };
 
 export default async function AtolyelerPage() {

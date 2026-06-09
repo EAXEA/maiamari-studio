@@ -5,6 +5,11 @@ import { Reveal } from "@/components/motion/reveal";
 import { PhoneCTA } from "@/components/inquiry/phone-cta";
 import { TransitInfo } from "@/components/transit/transit-info";
 
+// ISR: DB'den türeyen seri sayısı taze kalsın. NOT: ömür boyu portfolyo
+// metrikleri (eser/baskı/yıl/kâğıt) bilinçli olarak arşiv portfolio.json'ından
+// gelir (CLAUDE.md veri kaynağı kuralı), DB-staleness kapsamı dışında.
+export const revalidate = 60;
+
 export const metadata = { title: "Hakkımızda" };
 
 const VALUES = [

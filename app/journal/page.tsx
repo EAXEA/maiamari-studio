@@ -2,6 +2,16 @@ import Image from "next/image";
 import { getJournalPosts } from "@/lib/data";
 import { Reveal } from "@/components/motion/reveal";
 
+/**
+ * Günce DB-otoriter: panelden eklenen günceler canlıda anında görünsün.
+ * Build'de getDb()=null olduğundan statik prerender yalnız journal.json seed'ini
+ * içerir; saf SSG'de yeni günceler ancak bir admin kaydı revalidatePath("/journal")
+ * tetikleyene kadar görünmez ve her deploy sayfayı tekrar fallback'e döndürür.
+ * force-dynamic ile sayfa her istekte runtime'da DB'den üretilir → canlı her zaman
+ * localhost ile birebir. (/atolyeler ile aynı desen; tek-sorgulu sayfa, maliyet önemsiz.)
+ */
+export const dynamic = "force-dynamic";
+
 export const metadata = { title: "Günce" };
 
 function yearMonth(iso: string): { year: string; month: string } {

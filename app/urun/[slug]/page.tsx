@@ -18,6 +18,10 @@ import {
 
 const BASE_URL = "https://www.maiamari.art";
 
+// ISR: ürün fiyatı/içerik değişiklikleri canlıda ~60sn'de yansısın (build JSON
+// fallback'i taze değil; runtime'da DB-otoriter yeniden üretilir).
+export const revalidate = 60;
+
 export async function generateStaticParams() {
   return (await getAllProducts()).map((p) => ({ slug: p.slug }));
 }

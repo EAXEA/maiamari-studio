@@ -19,6 +19,10 @@ import { WhatsappCTA } from "@/components/inquiry/whatsapp-cta";
 
 const BASE_URL = "https://www.maiamari.art";
 
+// ISR: ürün/kategori değişiklikleri canlıda ~60sn'de yansısın (build JSON
+// fallback'i taze değil; runtime'da DB-otoriter yeniden üretilir).
+export const revalidate = 60;
+
 export async function generateStaticParams() {
   return (await getCategories()).map((c) => ({ category: c.slug }));
 }
