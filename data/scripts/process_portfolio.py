@@ -8,13 +8,13 @@ import shutil
 import json
 from PIL import Image
 
-RAW = r"C:\Users\wc_am\Documents\GitHub\maimari-studio\data\portfolio_raw"
-DEST_DATA = r"C:\Users\wc_am\Documents\GitHub\maimari-studio\data\images\portfolio"
-DEST_WEB = r"C:\Users\wc_am\Documents\GitHub\maimari-studio\web\public\images\portfolio"
-LOGO_SRC = r"C:\Users\wc_am\OneDrive\Masaüstü\maimari website\maiamari_logo_cropped.png"
-LOGO_DATA = r"C:\Users\wc_am\Documents\GitHub\maimari-studio\data\brand\maimari-logo.png"
-LOGO_WEB = r"C:\Users\wc_am\Documents\GitHub\maimari-studio\web\public\brand\maimari-logo.png"
-PORTFOLIO_JSON = r"C:\Users\wc_am\Documents\GitHub\maimari-studio\data\portfolio.json"
+RAW = r"C:\Users\wc_am\Documents\GitHub\maiamari-studio\data\portfolio_raw"
+DEST_DATA = r"C:\Users\wc_am\Documents\GitHub\maiamari-studio\data\images\portfolio"
+DEST_WEB = r"C:\Users\wc_am\Documents\GitHub\maiamari-studio\web\public\images\portfolio"
+LOGO_SRC = r"C:\Users\wc_am\OneDrive\Masaüstü\maiamari website\maiamari_logo_cropped.png"
+LOGO_DATA = r"C:\Users\wc_am\Documents\GitHub\maiamari-studio\data\brand\maiamari-logo.png"
+LOGO_WEB = r"C:\Users\wc_am\Documents\GitHub\maiamari-studio\web\public\brand\maiamari-logo.png"
+PORTFOLIO_JSON = r"C:\Users\wc_am\Documents\GitHub\maiamari-studio\data\portfolio.json"
 
 os.makedirs(DEST_DATA, exist_ok=True)
 os.makedirs(DEST_WEB, exist_ok=True)

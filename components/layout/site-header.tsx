@@ -28,7 +28,7 @@ export function SiteHeader() {
           aria-label="Maiamari ana sayfa"
         >
           <Image
-            src="/brand/maimari-logo.png"
+            src="/brand/maiamari-logo.png"
             alt=""
             width={28}
             height={28}

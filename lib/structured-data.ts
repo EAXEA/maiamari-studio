@@ -22,7 +22,7 @@ export function localBusinessSchema() {
     description:
       "Ankara Çankaya Küçükesat'ta linol baskı, el yapımı kâğıt, baskı malzemeleri ve sanat atölyeleri sunan baskı stüdyosu ve galerisi.",
     url: BASE_URL,
-    logo: `${BASE_URL}/brand/maimari-logo.png`,
+    logo: `${BASE_URL}/brand/maiamari-logo.png`,
     image: [
       `${BASE_URL}/images/atolye/studio-interior-wide.jpg`,
       `${BASE_URL}/images/atolye/storefront.jpg`,
@@ -79,7 +79,7 @@ export function organizationSchema() {
     "@id": `${BASE_URL}#organization`,
     name: "Maiamari Baskı Atölyesi",
     url: BASE_URL,
-    logo: `${BASE_URL}/brand/maimari-logo.png`,
+    logo: `${BASE_URL}/brand/maiamari-logo.png`,
     founder: {
       "@type": "Person",
       name: "Duygu Sinan",

@@ -134,7 +134,7 @@ export default async function CategoryPage({
             className="relative aspect-square w-full max-w-[460px] mx-auto lg:mx-0 overflow-hidden bg-[color:var(--color-surface-2)]"
           >
             <Image
-              src="/brand/maimari-logo.png"
+              src="/brand/maiamari-logo.png"
               alt=""
               fill
               sizes="(max-width: 1024px) 80vw, 40vw"

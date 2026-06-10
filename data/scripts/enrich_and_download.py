@@ -17,7 +17,7 @@ import urllib.request
 from urllib.parse import urlparse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-BASE = r"C:\Users\wc_am\Documents\GitHub\maimari-studio"
+BASE = r"C:\Users\wc_am\Documents\GitHub\maiamari-studio"
 PRODUCTS_JSON = os.path.join(BASE, "data", "products_list.json")
 OUT_JSON = os.path.join(BASE, "data", "products_full.json")
 IMG_DIR = os.path.join(BASE, "data", "images", "shopier")

@@ -61,7 +61,7 @@ export async function SiteFooter() {
       <div className="container-wide py-16 lg:py-20 grid grid-cols-1 lg:grid-cols-[1.5fr_1fr_1fr_1fr] gap-12 lg:gap-16">
         <div>
           <div className="flex items-center gap-3">
-            <Image src="/brand/maimari-logo.png" alt="" width={36} height={36} />
+            <Image src="/brand/maiamari-logo.png" alt="" width={36} height={36} />
             <div className="font-display text-2xl tracking-tight">MAIAMARI</div>
           </div>
           <p className="mt-6 text-sm text-[color:var(--color-muted)] max-w-sm leading-relaxed">

@@ -52,7 +52,7 @@ next-env.d.ts
 /test-results/
 /playwright-report/
 /.playwright-mcp/
-/maimari-*.png
+/maiamari-*.png
 /.previews/
 
 # Supabase CLI (local link/temp state)

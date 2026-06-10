@@ -5,9 +5,9 @@ crop + dairesel mask + transparent PNG olarak çıkartır.
 from PIL import Image, ImageDraw
 import os
 
-SRC = r"C:\Users\wc_am\Documents\GitHub\maimari-studio\data\images\shopier\38261472\img_00.jpeg"
-OUT_BRAND_DIR = r"C:\Users\wc_am\Documents\GitHub\maimari-studio\data\brand"
-WEB_BRAND_DIR = r"C:\Users\wc_am\Documents\GitHub\maimari-studio\web\public\brand"
+SRC = r"C:\Users\wc_am\Documents\GitHub\maiamari-studio\data\images\shopier\38261472\img_00.jpeg"
+OUT_BRAND_DIR = r"C:\Users\wc_am\Documents\GitHub\maiamari-studio\data\brand"
+WEB_BRAND_DIR = r"C:\Users\wc_am\Documents\GitHub\maiamari-studio\web\public\brand"
 
 os.makedirs(OUT_BRAND_DIR, exist_ok=True)
 os.makedirs(WEB_BRAND_DIR, exist_ok=True)
@@ -62,7 +62,7 @@ rgba.putalpha(mask_img)
 
 # Kaydet (data + public)
 for d in [OUT_BRAND_DIR, WEB_BRAND_DIR]:
-    out = os.path.join(d, "maimari-mark.png")
+    out = os.path.join(d, "maiamari-mark.png")
     rgba.save(out, "PNG", optimize=True)
     print(f"saved {out} ({os.path.getsize(out)} bytes)")
 

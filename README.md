@@ -41,7 +41,7 @@ The design follows an editorial, gallery-like language: a cream-white ground, wa
 ## Folder Structure
 
 ```
-maimari-studio/
+maiamari-studio/
 ├── app/                 # App Router: routes, layouts, dynamic OG images
 │   ├── about/           # Studio story
 │   ├── api/             # Search endpoint
