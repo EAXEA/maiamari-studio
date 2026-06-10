@@ -55,6 +55,8 @@ export function nextFulfillmentStatus(
  * Sipariş arşivlik mi (tamamlanmış/sonlanmış): teslim edildi, iptal veya
  * başarısız. Aktif siparişler (ödeme bekliyor / ödendi / kargolandı) işlem ister.
  */
+export const ARCHIVED_STATUSES = ["delivered", "cancelled", "failed"] as const;
+
 export function isArchivedStatus(status: string): boolean {
-  return status === "delivered" || status === "cancelled" || status === "failed";
+  return (ARCHIVED_STATUSES as readonly string[]).includes(status);
 }

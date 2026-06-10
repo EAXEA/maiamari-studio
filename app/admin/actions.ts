@@ -108,6 +108,7 @@ function revalidateStore(
     }
   }
   revalidatePath("/sitemap.xml"); // yeni/silinen kayıt sitemap'e yansısın
+  revalidatePath("/api/search"); // arama indeksi (ISR 1 saat) anında tazelensin
 }
 
 /**

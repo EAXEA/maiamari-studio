@@ -4,6 +4,7 @@ import {
   getProductBySlug,
   getAllProducts,
   getCategoryBySlug,
+  getRelatedProducts,
 } from "@/lib/data";
 import { formatTRY } from "@/lib/format";
 import { ProductCard } from "@/components/product/product-card";
@@ -56,15 +57,12 @@ export default async function ProductPage({
   const product = await getProductBySlug(slug);
   if (!product) notFound();
 
-  // cat ve tüm ürünler birbirinden bağımsız → paralel.
-  const [cat, allProducts] = await Promise.all([
+  // cat ve ilgili ürünler birbirinden bağımsız → paralel.
+  const [cat, related] = await Promise.all([
     getCategoryBySlug(product.categorySlug),
-    getAllProducts(),
+    getRelatedProducts(product.categorySlug, product.id),
   ]);
   const tutorials = getTutorialsForProduct(product.slug);
-  const related = allProducts
-    .filter((p) => p.categorySlug === product.categorySlug && p.id !== product.id)
-    .slice(0, 4);
 
   const breadcrumb = breadcrumbSchema(
     [

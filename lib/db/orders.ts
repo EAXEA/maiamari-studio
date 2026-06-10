@@ -4,7 +4,8 @@
  */
 import { getDb } from "./client";
 import { orders, orderItems, type OrderRow, type OrderItemRow } from "./schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, inArray, notInArray, count } from "drizzle-orm";
+import { ARCHIVED_STATUSES } from "@/lib/order-status";
 
 export type NewOrderInput = {
   buyerName: string;
@@ -110,6 +111,23 @@ export async function dbMarkOrderPaid(
     .where(eq(orders.id, id));
 }
 
+/**
+ * Initialize'da üretilen CF token'ını siparişe iliştirir (takip/teşhis).
+ * Aynı sipariş için yeniden initialize edilirse son token yazılır; ödeme
+ * doğrulaması token eşitliğine değil retrieve imzası + basketId'ye dayanır.
+ */
+export async function dbSetOrderPaymentToken(
+  id: string,
+  token: string,
+): Promise<void> {
+  const db = getDb();
+  if (!db) return;
+  await db
+    .update(orders)
+    .set({ paymentToken: token, updatedAt: new Date() })
+    .where(eq(orders.id, id));
+}
+
 /** Ödeme başarısız / iptal. */
 export async function dbMarkOrderFailed(
   id: string,
@@ -123,11 +141,39 @@ export async function dbMarkOrderFailed(
     .where(eq(orders.id, id));
 }
 
-/** Admin: tüm siparişler (en yeni önce). */
-export async function dbGetAllOrders(): Promise<OrderRow[]> {
+/** Admin: aktif siparişler (arşiv durumları hariç; işlem bekleyen küçük küme). */
+export async function dbGetActiveOrders(): Promise<OrderRow[]> {
   const db = getDb();
   if (!db) return [];
-  return db.select().from(orders).orderBy(desc(orders.createdAt));
+  return db
+    .select()
+    .from(orders)
+    .where(notInArray(orders.status, [...ARCHIVED_STATUSES]))
+    .orderBy(desc(orders.createdAt));
+}
+
+/**
+ * Admin: arşiv siparişleri sayfalı (en yeni önce) + toplam sayı.
+ * Arşiv sınırsız büyür; tek seferde tamamını belleğe çekmemek için limit/offset.
+ */
+export async function dbGetArchivedOrders(
+  limit: number,
+  offset: number,
+): Promise<{ rows: OrderRow[]; total: number }> {
+  const db = getDb();
+  if (!db) return { rows: [], total: 0 };
+  const where = inArray(orders.status, [...ARCHIVED_STATUSES]);
+  const [rows, totals] = await Promise.all([
+    db
+      .select()
+      .from(orders)
+      .where(where)
+      .orderBy(desc(orders.createdAt))
+      .limit(limit)
+      .offset(offset),
+    db.select({ value: count() }).from(orders).where(where),
+  ]);
+  return { rows, total: totals[0]?.value ?? 0 };
 }
 
 /** Admin: sipariş durumunu günceller (kargo/teslim yaşam döngüsü). */

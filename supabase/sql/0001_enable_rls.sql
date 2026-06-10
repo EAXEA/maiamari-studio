@@ -23,6 +23,8 @@ alter table public.series               enable row level security;
 alter table public.journal              enable row level security;
 alter table public.workshops            enable row level security;
 alter table public.admin_login_attempts enable row level security;
+alter table public.orders               enable row level security;
+alter table public.order_items          enable row level security;
 
 -- Bilinçli olarak HİÇBİR policy tanımlanmadı: anon/authenticated rolleri için
 -- erişim tümüyle kapalı. Uygulama owner/service rolüyle bağlandığından etkilenmez.

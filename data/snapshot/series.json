@@ -1,0 +1,77 @@
+[
+  {
+    "slug": "kapilar",
+    "title": "Kapılar",
+    "subtitle": "Linol baskı · 2013–2018",
+    "year": 2018,
+    "yearRange": "2013–2018",
+    "description": "Duygu Sinan'ın elle bastığı, sayılı edisyondaki Kapılar serisi. Her bir tabaka tek tek üretilir; mürekkebin kâğıt üzerindeki izi ve her tabakanın çıkardığı küçük farklar koleksiyonun parçasıdır.",
+    "coverImage": "/images/portfolio/kapilar/kapilar-04.jpg",
+    "artistSlug": "duygu-sinan"
+  },
+  {
+    "slug": "lord-of",
+    "title": "Lord of …",
+    "subtitle": "Linol baskı · 2022",
+    "year": 2022,
+    "description": "Türk ve Japon kültürlerinde kökleri şamanizme uzanan ortak ruhani kavramlardan beslenen iki renkli linol baskı serisi. Koruyucu ruhların vizyonlarını taşıyan kompozisyonlar, atölyede tek tek elle çoğaltılır.",
+    "coverImage": "/images/portfolio/lord-of/lord-of-01.jpg",
+    "artistSlug": "duygu-sinan"
+  },
+  {
+    "slug": "turk-hukumdarlari",
+    "title": "Türk Hükümdarları ve Mitolojik Karakterleri",
+    "subtitle": "Linol baskı · 2023",
+    "year": 2023,
+    "description": "Türk tarihindeki hükümdarları ve mitolojik karakterleri portreleyen tek renk linol baskı serisi. 23.5 cm × 25.5 cm formatında, kâğıt üzerine elle basılı.",
+    "coverImage": "/images/portfolio/turk-hukumdarlari/turk-hukumdarlari-01.jpg",
+    "artistSlug": "duygu-sinan"
+  },
+  {
+    "slug": "odak",
+    "title": "Odak",
+    "subtitle": "Linol baskı · 2022–2025",
+    "year": 2025,
+    "yearRange": "2022–2025",
+    "description": "Manzara ve gündelik anların renkli linol baskı yorumları. Sanatçının izlediği şehir köşeleri, atölyenin gündelik kareleri serinin odağında.",
+    "coverImage": "/images/portfolio/odak/odak-04.jpg",
+    "artistSlug": "duygu-sinan"
+  },
+  {
+    "slug": "unesco",
+    "title": "UNESCO",
+    "subtitle": "Linol baskı · 2026",
+    "year": 2026,
+    "description": "Beş eserlik UNESCO serisi: Güneş Kursu, Darüşşifa, Ayasofya, Akbaba Taşı ve Galata. Türkiye'nin kültürel miras hazinesine adanmış linol baskılar.",
+    "coverImage": "/images/portfolio/unesco/unesco-01.jpg",
+    "artistSlug": "duygu-sinan"
+  },
+  {
+    "slug": "basilmis-ankara",
+    "title": "Basılmış Ankara: Kaldırım Seviyesinden Şehir Notları",
+    "subtitle": "Linol baskı · 2021–2022",
+    "year": 2022,
+    "yearRange": "2021–2022",
+    "description": "Ankara'nın lögar kapaklarından, kaldırım dokusundan ve kentin gündelik izlerinden derlenen linol baskı notları.",
+    "coverImage": "/images/portfolio/basilmis-ankara/basilmis-ankara-01.jpg",
+    "artistSlug": "duygu-sinan"
+  },
+  {
+    "slug": "dokuzlar",
+    "title": "Dokuzlar",
+    "subtitle": "Linol baskı · 2025",
+    "year": 2025,
+    "description": "Tek eserden oluşan, dokuz figürlü kompozisyon. Atölyede tek tek elle basılmış sayılı edisyon.",
+    "coverImage": "/images/portfolio/dokuzlar/dokuzlar-01.jpg",
+    "artistSlug": "duygu-sinan"
+  },
+  {
+    "slug": "maia",
+    "title": "Maia",
+    "subtitle": "Linol baskı · 2025",
+    "year": 2025,
+    "description": "Sanatçının kızı Maia'ya adanmış tek eserlik dizi: My Little Sunshine. Cau-Gaufrage / körkabartma tekniğiyle hafif kâğıt üzerine basılmış.",
+    "coverImage": "/images/portfolio/maia/maia-01.jpg",
+    "artistSlug": "duygu-sinan"
+  }
+]

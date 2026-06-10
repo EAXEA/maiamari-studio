@@ -9,6 +9,7 @@ Maiamari Studio — a Next.js 16 printmaking studio site (live at www.maiamari.a
 - **Push only with explicit approval.** Every push to `master` ships a `vX.Y` semver git tag to origin and a matching `package.json` version bump.
 - **Do not change application behavior** unless asked. This is a live production site.
 - **Art/series data is derived**, synced from an external art source archive into `data/*.json`. Don't hand-edit derived data; change it at the source and re-sync.
+- **`data/snapshot/*.json` is generated** by `npm run db:snapshot` (DB → build fallback). Never hand-edit; refresh and commit it before each release.
 
 ## Conventions
 

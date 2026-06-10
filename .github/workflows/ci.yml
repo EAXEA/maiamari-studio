@@ -25,3 +25,13 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          # Sepet/checkout akışı smoke testlerde koşulsun diye CI build'i
+          # bayrak açık derlenir (canlı deploy bayraksız/kilitli kalır).
+          NEXT_PUBLIC_CHECKOUT_ENABLED: "1"
+
+      - name: Install Playwright (chromium)
+        run: npx playwright install --with-deps chromium
+
+      - name: Smoke tests
+        run: npm run test:e2e

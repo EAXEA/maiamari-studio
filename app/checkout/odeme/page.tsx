@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
-import { dbGetOrder } from "@/lib/db/orders";
-import { paymentMode } from "@/lib/payment/iyzico";
+import { headers } from "next/headers";
+import Link from "next/link";
+import { dbGetOrder, dbSetOrderPaymentToken } from "@/lib/db/orders";
+import { paymentMode, initializeCheckoutForm } from "@/lib/payment/iyzico";
 import { hasOrderAccess } from "@/lib/checkout/order-access";
 import { confirmMockPayment, cancelMockPayment } from "../actions";
 import { formatTRY } from "@/lib/format";
@@ -27,6 +29,26 @@ export default async function OdemePage({
   }
 
   const mode = paymentMode();
+
+  // GERÇEK iyzico: CF başlat → alıcıyı iyzico'nun hosted ödeme sayfasına
+  // gönder (kart formu tamamen iyzico'da; bizde kart verisi yok). Başarısız
+  // initialize sipariş durumunu DEĞİŞTİRMEZ (pending kalır) → aşağıda nazik
+  // hata + tekrar deneme gösterilir.
+  let iyzicoError: string | null = null;
+  if (mode === "iyzico") {
+    const h = await headers();
+    const ip =
+      (h.get("x-vercel-forwarded-for") ?? h.get("x-forwarded-for") ?? "")
+        .split(",")[0]
+        .trim() || "0.0.0.0";
+    const init = await initializeCheckoutForm(order, items, ip);
+    if (init.ok) {
+      await dbSetOrderPaymentToken(order.id, init.token);
+      redirect(init.paymentPageUrl);
+    }
+    iyzicoError = init.error;
+  }
+
   const confirm = confirmMockPayment.bind(null, order.id);
   const cancel = cancelMockPayment.bind(null, order.id);
 
@@ -110,8 +132,37 @@ export default async function OdemePage({
           </div>
         </div>
       ) : (
-        <div className="mt-8 p-6 border border-[color:var(--color-border)] text-sm text-[color:var(--color-muted)]">
-          iyzico Checkout Form burada yüklenecek.
+        // Bu dal yalnız initialize BAŞARISIZ olunca render edilir (başarıda
+        // yukarıda iyzico hosted ödeme sayfasına redirect edildi).
+        <div className="mt-8 p-6 border border-[color:var(--color-border)]">
+          <p className="text-sm text-[color:var(--color-press)]">
+            Ödeme sayfası açılamadı{iyzicoError ? `: ${iyzicoError}` : "."}
+          </p>
+          <p className="mt-2 text-sm text-[color:var(--color-muted)]">
+            Siparişiniz bekliyor; birkaç saniye sonra tekrar deneyebilirsiniz.
+          </p>
+          <div className="mt-5 flex gap-3">
+            <Link
+              href={`/checkout/odeme?order=${order.id}`}
+              className="inline-flex h-11 px-6 items-center text-xs tracking-[0.2em] uppercase hover:opacity-90"
+              style={{
+                background: "var(--color-walnut-dark)",
+                color: "var(--color-background)",
+              }}
+            >
+              Tekrar dene
+            </Link>
+            <Link
+              href="/cart"
+              className="inline-flex h-11 px-6 items-center text-xs tracking-[0.2em] uppercase border transition-colors hover:bg-[color:var(--color-foreground)] hover:text-[color:var(--color-background)]"
+              style={{
+                borderColor: "var(--color-foreground)",
+                color: "var(--color-foreground)",
+              }}
+            >
+              Sepete dön
+            </Link>
+          </div>
         </div>
       )}
     </div>

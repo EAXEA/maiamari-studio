@@ -135,7 +135,8 @@ export default async function JournalPage() {
                         idi; foto hücresi 38%×stretch yapısı dar+uzun olup object-cover
                         ile aşırı zoom-in yapıyordu (mobile audit v1.19). */}
                     <article
-                      className={`group bg-[color:var(--color-surface)] border border-[color:var(--color-border)] overflow-hidden transition-all duration-500 ease-out lg:hover:shadow-lg lg:hover:-translate-y-1 flex flex-col ${
+                      id={post.slug}
+                      className={`group scroll-mt-24 bg-[color:var(--color-surface)] border border-[color:var(--color-border)] overflow-hidden transition-all duration-500 ease-out lg:hover:shadow-lg lg:hover:-translate-y-1 flex flex-col ${
                         isRight
                           ? "lg:order-2 lg:ml-10 lg:flex-row"
                           : "lg:order-1 lg:mr-10 lg:flex-row-reverse"

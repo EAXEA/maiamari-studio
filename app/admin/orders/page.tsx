@@ -6,14 +6,13 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/auth";
 import { isDbConfigured } from "@/lib/db/client";
-import { dbGetAllOrders } from "@/lib/db/orders";
+import { dbGetActiveOrders, dbGetArchivedOrders } from "@/lib/db/orders";
 import type { OrderRow } from "@/lib/db/schema";
 import { formatTRY } from "@/lib/format";
-import {
-  orderStatusLabel,
-  orderBadgeStyle,
-  isArchivedStatus,
-} from "@/lib/order-status";
+import { orderStatusLabel, orderBadgeStyle } from "@/lib/order-status";
+
+/** Arşiv sayfa boyu — arşiv sınırsız büyür, tek seferde tamamı çekilmez. */
+const ARCHIVE_PAGE_SIZE = 20;
 
 export const dynamic = "force-dynamic";
 
@@ -56,17 +55,26 @@ function OrderRowLink({ o }: { o: OrderRow }) {
   );
 }
 
-export default async function AdminOrdersPage() {
+export default async function AdminOrdersPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
   await requireAdmin();
-  const all = await dbGetAllOrders();
-  const active = all.filter((o) => !isArchivedStatus(o.status));
-  const archived = all.filter((o) => isArchivedStatus(o.status));
+  const { page: pageParam } = await searchParams;
+  const page = Math.max(1, Number.parseInt(pageParam ?? "1", 10) || 1);
+  const [active, archive] = await Promise.all([
+    dbGetActiveOrders(),
+    dbGetArchivedOrders(ARCHIVE_PAGE_SIZE, (page - 1) * ARCHIVE_PAGE_SIZE),
+  ]);
+  const archived = archive.rows;
+  const totalPages = Math.max(1, Math.ceil(archive.total / ARCHIVE_PAGE_SIZE));
 
   return (
     <div className="max-w-4xl">
       <h1 className="font-display text-3xl mb-1">Siparişler</h1>
       <p className="text-sm text-[color:var(--color-muted)] mb-8">
-        {active.length} aktif · {archived.length} arşivde. En yeni önce.
+        {active.length} aktif · {archive.total} arşivde. En yeni önce.
       </p>
 
       {!isDbConfigured() && (
@@ -91,8 +99,8 @@ export default async function AdminOrdersPage() {
         )}
       </div>
 
-      {/* Arşiv — tamamlanan / iptal / başarısız */}
-      {archived.length > 0 && (
+      {/* Arşiv — tamamlanan / iptal / başarısız (sayfalı) */}
+      {archive.total > 0 && (
         <section className="mt-12">
           <h2 className="font-display text-xl mb-1">Arşiv</h2>
           <p className="text-xs text-[color:var(--color-muted)] mb-4">
@@ -102,7 +110,39 @@ export default async function AdminOrdersPage() {
             {archived.map((o) => (
               <OrderRowLink key={o.id} o={o} />
             ))}
+            {archived.length === 0 && (
+              <p className="px-4 py-6 text-sm text-[color:var(--color-muted)] text-center">
+                Bu sayfada kayıt yok.
+              </p>
+            )}
           </div>
+          {totalPages > 1 && (
+            <nav className="mt-4 flex items-center justify-between text-sm">
+              {page > 1 ? (
+                <Link
+                  href={`/admin/orders?page=${page - 1}`}
+                  className="underline underline-offset-4 hover:opacity-70"
+                >
+                  ← Önceki
+                </Link>
+              ) : (
+                <span />
+              )}
+              <span className="text-xs text-[color:var(--color-muted)] tabular-nums">
+                Sayfa {page} / {totalPages}
+              </span>
+              {page < totalPages ? (
+                <Link
+                  href={`/admin/orders?page=${page + 1}`}
+                  className="underline underline-offset-4 hover:opacity-70"
+                >
+                  Sonraki →
+                </Link>
+              ) : (
+                <span />
+              )}
+            </nav>
+          )}
         </section>
       )}
     </div>

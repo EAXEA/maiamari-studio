@@ -1,0 +1,63 @@
+[
+  {
+    "slug": "exlibris-workshop",
+    "title": "Exlibris Workshop",
+    "instructor": "Duygu Sinan",
+    "instructorInstagramHandle": "duygu.sinan.printmaker",
+    "instructorInstagramUrl": "https://www.instagram.com/duygu.sinan.printmaker?igsh=b2Jqbml3ZmdmcjZ2",
+    "schedule": "21.06.2026 14.00-16.00",
+    "description": "Kendi Exlibrisinizi Tasarlayın ve Basın!\r\n\r\nExlibris, bir kitabın kime ait olduğunu gösteren, kitapların içine yapıştırılan ya da basılan küçük özgün baskılardır. Latince “ex libris” ifadesi, “…’nın kitaplığından” anlamına gelir ve yüzyıllardır kitap sahipleri tarafından kullanılmaktadır.\r\n\r\nBu atölyede önce kendinize ait bir exlibris tasarlayacak, ardından tasarımınızı linol baskı tekniğiyle oyarak çoğaltılabilir bir baskı kalıbına dönüştüreceksiniz. Tasarım deneyiminiz olmasa da katılabilirsiniz; fikir geliştirme ve tasarım sürecinde birlikte çalışacağız.\r\n\r\nWorkshop sonunda, kitaplarınızda yıllarca kullanabileceğiniz tamamen size özel exlibris baskılarınız olacak.\r\n\r\nAtölye Detayları\r\n\r\n* Tarih: 21 Haziran 2026 Pazar\r\n* Saat: 14.00 – 16.00\r\n* Süre: 2 saat\r\n* Kredi kartı ile ödeme mümkündür.\r\n* Tüm malzemeler atölye tarafından sağlanacaktır.\r\n\r\nYanınızda yalnızca bir adet kitabınızı getirmeniz yeterli. Daha önceden hazırladığınız bir tasarımınız varsa onu da getirebilirsiniz. Tasarımınız yoksa, atölye sırasında birlikte karar vereceğiz.\r\n\r\nKontenjan sınırlıdır. Katılım için ön kayıt yaptırmayı unutmayın.\r\n\r\nKütüphanenizdeki her kitaba kendi izinizi bırakmak için sizi atölyeye bekliyoruz.",
+    "priceTRY": 1500,
+    "image": "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/a8fe5fea-43bd-486a-8041-da2253144246.jpg"
+  },
+  {
+    "slug": "linol-baski-workshop",
+    "title": "Linol Baskı Workshop",
+    "instructor": "Duygu Sinan",
+    "instructorInstagramHandle": "duygu.sinan.printmaker",
+    "instructorInstagramUrl": "https://www.instagram.com/duygu.sinan.printmaker/",
+    "priceTRY": null,
+    "image": "/images/atolye/linol-workshop.jpg",
+    "imageAlt": "Linol baskı · oyulmuş kalıp ve taze basılmış kare yan yana"
+  },
+  {
+    "slug": "canta-baski-workshop",
+    "title": "Çanta Baskı Workshop",
+    "instructor": "Duygu Sinan",
+    "instructorInstagramHandle": "duygu.sinan.printmaker",
+    "instructorInstagramUrl": "https://www.instagram.com/duygu.sinan.printmaker/",
+    "priceTRY": null,
+    "image": "/images/atolye/tools-grid.jpg",
+    "imageAlt": "Çanta baskı · atölyedeki alet ve malzeme düzeni"
+  },
+  {
+    "slug": "linol-aylik-ders",
+    "title": "Linol Baskı Aylık Ders",
+    "instructor": "Duygu Sinan",
+    "instructorInstagramHandle": "duygu.sinan.printmaker",
+    "instructorInstagramUrl": "https://www.instagram.com/duygu.sinan.printmaker/",
+    "priceTRY": null,
+    "image": "/images/atolye/print-drying.jpg",
+    "imageAlt": "Linol aylık ders · taze baskıların atölyede kurutulması"
+  },
+  {
+    "slug": "el-yapimi-kagit-workshop",
+    "title": "El Yapımı Kâğıt Workshop",
+    "instructor": "Duygu Sinan",
+    "instructorInstagramHandle": "duygu.sinan.printmaker",
+    "instructorInstagramUrl": "https://www.instagram.com/duygu.sinan.printmaker/",
+    "priceTRY": null,
+    "image": "/images/atolye/window-and-press.jpg",
+    "imageAlt": "El yapımı kâğıt · atölye penceresinden pres ve çalışma alanı"
+  },
+  {
+    "slug": "suluboya-aylik-program",
+    "title": "Suluboya Aylık Program",
+    "instructor": "Tolga İNALÖZ",
+    "instructorInstagramHandle": "tlgnlz",
+    "instructorInstagramUrl": "https://www.instagram.com/tlgnlz/",
+    "priceTRY": null,
+    "image": "/images/atolye/watercolor-framed.jpg",
+    "imageAlt": "Suluboya · zeytin dalı, Duygu Sinan tarafından çerçeveli bir çalışma"
+  }
+]

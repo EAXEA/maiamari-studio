@@ -216,7 +216,9 @@ export function SiteSearch({ variant = "desktop", onNavigate }: Props = {}) {
                             ? "K"
                             : r.kind === "series"
                               ? "S"
-                              : ""}
+                              : r.kind === "journal"
+                                ? "G"
+                                : ""}
                       </div>
                     )}
 

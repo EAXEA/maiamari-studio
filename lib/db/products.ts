@@ -114,6 +114,34 @@ export async function dbGetProductsByCategory(
   return rows.map(toProduct);
 }
 
+/**
+ * Aynı kategoriden ilgili ürünler ("Aynı koleksiyondan"). Tüm tabloyu çekip
+ * uygulamada filtrelemek yerine DB'de LIMIT'li tek sorgu.
+ */
+export async function dbGetRelatedProducts(
+  categorySlug: CategorySlug,
+  excludeId: string,
+  limit: number,
+): Promise<Product[] | null> {
+  const db = getDb();
+  if (!db) return null;
+  const rows = await db
+    .select()
+    .from(T)
+    .where(
+      and(
+        eq(T.isPublished, true),
+        eq(T.forSale, true),
+        eq(T.kind, "material"),
+        eq(T.categorySlug, categorySlug),
+        ne(T.id, excludeId),
+      ),
+    )
+    .orderBy(asc(T.sortOrder), asc(T.title))
+    .limit(limit);
+  return rows.map(toProduct);
+}
+
 // ---------------------------------------------------------------
 // Okuma — galeri (kind="artwork", yayında)
 // ---------------------------------------------------------------

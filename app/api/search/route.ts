@@ -5,10 +5,15 @@ import {
   getBusiness,
   getWorkshops,
   getSeries,
+  getJournalPosts,
 } from "@/lib/data";
 
+// İndeks her istekte tüm içeriği DB'den toplamasın: ISR ile saatte bir tazelenir;
+// admin mutasyonları revalidateStore üzerinden anında yeniler.
+export const revalidate = 3600;
+
 export type SearchItem = {
-  kind: "product" | "artist" | "category" | "series";
+  kind: "product" | "artist" | "category" | "series" | "journal";
   title: string;
   subtitle?: string;
   cover?: string;
@@ -63,6 +68,18 @@ export async function GET() {
       cover: s.coverImage,
       url: `/galeri/${s.slug}`,
       keywords: `${s.title} ${s.subtitle ?? ""} galeri seri linol baskı duygu sinan`,
+    });
+  }
+
+  // Günce yazıları
+  for (const post of await getJournalPosts()) {
+    items.push({
+      kind: "journal",
+      title: post.title,
+      subtitle: post.dateLabel ? `Günce · ${post.dateLabel}` : "Günce",
+      cover: post.image,
+      url: `/journal#${post.slug}`,
+      keywords: `${post.title} ${post.excerpt} ${post.category ?? ""} ${post.location ?? ""} günce journal blog`,
     });
   }
 
