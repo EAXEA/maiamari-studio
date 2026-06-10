@@ -36,12 +36,28 @@ export default function GizlilikPage() {
         <li>Site güvenliğinin ve hizmet kalitesinin sağlanması.</li>
       </ul>
 
-      <h2>Ödeme Bilgileri</h2>
+      <h2>Ödeme ve Kredi Kartı Güvenliği</h2>
       <p>
         Ödemeler, <strong>iyzico</strong> ödeme altyapısı üzerinden alınır. Kredi
         veya banka kartı bilgileriniz Maiamari tarafından görülmez, işlenmez ve
         saklanmaz. Kart verileriniz yalnızca lisanslı ödeme kuruluşu iyzico
         tarafından, kendi güvenlik standartları çerçevesinde işlenir.
+      </p>
+      <p>
+        Sitedeki tüm sayfalar ve ödeme adımları SSL sertifikası ile şifreli
+        (HTTPS) olarak sunulur. Kart bilgileri şifreli bağlantı üzerinden
+        doğrudan ödeme kuruluşuna iletilir; sitemizin sunucularında kart verisi
+        tutulmaz.
+      </p>
+
+      <h2>E-posta Güvenliği</h2>
+      <p>
+        Müşteri hizmetlerine gönderdiğiniz e-postalarda kredi kartı numarası,
+        şifre veya benzeri hassas bilgileri asla paylaşmayın. Maiamari sizden
+        hiçbir zaman e-posta, telefon veya mesaj yoluyla kart bilgisi ya da
+        şifre talep etmez. E-postalarda yer alan bilgilerin üçüncü şahıslara
+        karşı güvenliği garanti edilemez; hassas işlemler yalnızca site
+        üzerinden yapılmalıdır.
       </p>
 
       <h2>Üçüncü Taraf Hizmetleri</h2>
@@ -64,9 +80,37 @@ export default function GizlilikPage() {
       </ul>
       <p>
         Bu sağlayıcılar verilerinizi yalnızca ilgili hizmeti sunmak amacıyla
-        işler. Yasal zorunluluk halinde veriler yetkili kamu kurum ve
-        kuruluşlarıyla paylaşılabilir.
+        işler.
       </p>
+
+      <h2>Üçüncü Taraf Bağlantılar</h2>
+      <p>
+        Sitemiz, kolaylık sağlamak amacıyla başka internet sitelerine (örneğin
+        sosyal medya hesapları) bağlantılar içerebilir. Bu bağlantılar ilgili
+        sitelerin desteklendiği anlamına gelmez; bağlantı verilen sitelerin
+        içeriklerinden ve gizlilik uygulamalarından Maiamari sorumlu değildir.
+        Ziyaret ettiğiniz her sitenin kendi gizlilik politikasını incelemenizi
+        öneririz.
+      </p>
+
+      <h2>İstisnai Haller</h2>
+      <p>
+        Aşağıda sayılan sınırlı hallerde, kişisel verileriniz bu metnin
+        kapsamı dışında yetkili mercilerle paylaşılabilir:
+      </p>
+      <ul>
+        <li>
+          Kanun, yönetmelik ve diğer mevzuatın getirdiği zorunluluklara uyulması.
+        </li>
+        <li>
+          Yetkili idari veya adli makamlarca usulüne uygun yürütülen soruşturma
+          ya da kovuşturma kapsamında bilgi talep edilmesi.
+        </li>
+        <li>
+          Kullanıcıların hakları veya güvenliklerini korumak için bilgi
+          verilmesinin zorunlu olması.
+        </li>
+      </ul>
 
       <h2>Çerezler</h2>
       <p>
