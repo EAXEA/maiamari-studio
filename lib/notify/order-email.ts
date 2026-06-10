@@ -11,7 +11,7 @@
  *   RESEND_API_KEY="re_..."                       (zorunlu — yoksa bildirim yok)
  *   ORDER_EMAIL_FROM="Maiamari <onboarding@resend.dev>"  (test); prod: alanı
  *      Resend'de doğrulayıp "Maiamari <siparis@maiamari.art>" yap
- *   ORDER_EMAIL_TO="maiamariart@gmail.com"         (satıcıya bildirim adresi)
+ *   ORDER_EMAIL_TO="info@maiamari.art"              (satıcıya bildirim adresi)
  *   ORDER_EMAIL_CUSTOMER="1"                        (1 ise müşteriye de onay yolla)
  */
 import type { OrderRow, OrderItemRow } from "@/lib/db/schema";

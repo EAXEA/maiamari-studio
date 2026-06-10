@@ -15,7 +15,7 @@ export const SELLER = {
   address: "Küçükesat, Bülbülderesi Cd. No:90 D:B, 06660 Çankaya / Ankara",
   phone: "+90 506 588 92 77",
   phoneHref: "tel:+905065889277",
-  email: "maiamariart@gmail.com",
+  email: "info@maiamari.art",
   website: "www.maiamari.art",
   taxOffice: "Cumhuriyet Vergi Dairesi",
   taxNumber: "7700294792",
