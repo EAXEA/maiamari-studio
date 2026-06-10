@@ -35,3 +35,9 @@ jobs:
 
       - name: Smoke tests
         run: npm run test:e2e
+        env:
+          # Sahte admin kimliği: login SAYFASININ form render etmesi için
+          # (env yoksa sayfa "yapılandırılmamış" uyarısı basar, test form bulamaz).
+          # Gerçek panele erişim yok; testler giriş DENEMEZ.
+          ADMIN_PASSWORD: ci-dummy-parola-1234567
+          ADMIN_SESSION_SECRET: ci-dummy-session-secret-0123456789abcdef
