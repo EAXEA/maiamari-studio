@@ -85,6 +85,8 @@ export interface PortfolioWork {
   forSale?: boolean;
   priceTRY?: number;
   compareAtTRY?: number | null;
+  /** Satılık eser tükendi mi (status="out_of_stock"). Tükendiyse satın alma gizlenir. */
+  soldOut?: boolean;
 }
 
 export interface JournalPost {

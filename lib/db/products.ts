@@ -70,6 +70,7 @@ function toPortfolioWork(row: ProductRow): PortfolioWork {
     forSale: row.forSale,
     priceTRY: row.priceTry != null ? Number(row.priceTry) : undefined,
     compareAtTRY: row.compareAtTry != null ? Number(row.compareAtTry) : null,
+    soldOut: row.status === "out_of_stock",
   };
 }
 

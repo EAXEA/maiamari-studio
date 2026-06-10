@@ -10,7 +10,6 @@ import {
 import type { SeriesSlug } from "@/lib/types";
 import { Reveal } from "@/components/motion/reveal";
 import { InstagramInquiryButton } from "@/components/inquiry/instagram-inquiry-button";
-import { WhatsappCTA } from "@/components/inquiry/whatsapp-cta";
 import { WorksDetailList } from "@/components/portfolio/works-detail-list";
 import {
   seriesCollectionPageSchema,
@@ -157,14 +156,31 @@ export default async function SeriPage({
                 </p>
               )}
             </div>
-            <div className="flex flex-wrap gap-3 lg:justify-end">
-              <InstagramInquiryButton
-                path={`/galeri/${series.slug}`}
-                label="Instagram'dan bilgi al"
-                className="inline-flex h-11 px-6 items-center text-[12px] tracking-[0.22em] uppercase border whitespace-nowrap"
-                style={{ borderColor: "var(--color-foreground)" }}
-              />
-              <WhatsappCTA variant="button" context={`${series.title} serisindeki bir eser`} path={`/galeri/${series.slug}`} />
+            <div className="lg:justify-self-end max-w-sm text-sm leading-relaxed text-[color:var(--color-muted)]">
+              <p>
+                Eserler hakkında bilgi için{" "}
+                <InstagramInquiryButton
+                  path={`/galeri/${series.slug}`}
+                  label="Instagram"
+                  className="underline underline-offset-4 hover:text-[color:var(--color-foreground)]"
+                />{" "}
+                ya da{" "}
+                <a
+                  href={`https://wa.me/905065889277?text=${encodeURIComponent(
+                    `Merhaba, "${series.title}" serisi hakkında bilgi almak istiyorum.\n${BASE_URL}/galeri/${series.slug}`,
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline underline-offset-4 hover:text-[color:var(--color-foreground)]"
+                >
+                  WhatsApp
+                </a>
+                &apos;tan yazabilirsiniz.
+              </p>
+              <p className="mt-3">
+                Atölyeyi ziyaret edip stoktaki eser ve ürünleri yerinde de
+                alabilirsiniz.
+              </p>
             </div>
           </div>
         </Reveal>

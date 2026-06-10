@@ -219,6 +219,65 @@ export const adminLoginAttempts = pgTable("admin_login_attempts", {
     .defaultNow(),
 });
 
+/**
+ * Siparişler — kendi checkout akışı (iyzico / sandbox). Sepet onaylanınca
+ * `pending` oluşturulur; ödeme sonucuna göre `paid` / `failed` olur.
+ * Fiyatlar sipariş anında DB'den yeniden hesaplanıp burada DONDURULUR
+ * (istemci fiyatına güvenilmez). Kart verisi BURADA TUTULMAZ (iyzico'da kalır).
+ */
+export const orders = pgTable("orders", {
+  id: text("id").primaryKey(),
+  /** İnsan-okur sipariş no: "MA-20260609-AB12". */
+  orderNo: text("order_no").notNull().unique(),
+  /** pending | paid | failed | cancelled */
+  status: text("status").notNull().default("pending"),
+  buyerName: text("buyer_name").notNull().default(""),
+  buyerEmail: text("buyer_email").notNull().default(""),
+  buyerPhone: text("buyer_phone").notNull().default(""),
+  addressLine: text("address_line").notNull().default(""),
+  city: text("city").notNull().default(""),
+  /** Sipariş toplamı TL (DB'den hesaplanmış, dondurulmuş). */
+  totalTry: numeric("total_try", { precision: 10, scale: 2 }).notNull().default("0"),
+  currency: text("currency").notNull().default("TRY"),
+  /** iyzico | mock (sandbox/test) */
+  paymentProvider: text("payment_provider").notNull().default(""),
+  /** iyzico paymentId (ödeme sonucundan). */
+  paymentId: text("payment_id"),
+  /** iyzico Checkout Form token'ı. */
+  paymentToken: text("payment_token"),
+  /** iyzico conversationId (request/response eşleştirme). */
+  conversationId: text("conversation_id"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+/** Sipariş kalemleri — sipariş anındaki ürün ve fiyat anlık görüntüsü. */
+export const orderItems = pgTable("order_items", {
+  id: text("id").primaryKey(),
+  orderId: text("order_id").notNull(),
+  productId: text("product_id").notNull(),
+  slug: text("slug").notNull().default(""),
+  title: text("title").notNull().default(""),
+  /** Birim fiyat TL (sipariş anında DB'den). */
+  unitPriceTry: numeric("unit_price_try", { precision: 10, scale: 2 })
+    .notNull()
+    .default("0"),
+  qty: integer("qty").notNull().default(1),
+  /** Kalem toplamı = unitPriceTry * qty. */
+  lineTotalTry: numeric("line_total_try", { precision: 10, scale: 2 })
+    .notNull()
+    .default("0"),
+});
+
+export type OrderRow = typeof orders.$inferSelect;
+export type NewOrderRow = typeof orders.$inferInsert;
+export type OrderItemRow = typeof orderItems.$inferSelect;
+export type NewOrderItemRow = typeof orderItems.$inferInsert;
+
 export type ProductRow = typeof products.$inferSelect;
 export type NewProductRow = typeof products.$inferInsert;
 export type CategoryRow = typeof categories.$inferSelect;

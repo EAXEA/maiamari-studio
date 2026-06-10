@@ -4,6 +4,7 @@ import { getBusiness, getPortfolio, getSeries } from "@/lib/data";
 import { WhatsappCTA } from "@/components/inquiry/whatsapp-cta";
 import { PhoneCTA } from "@/components/inquiry/phone-cta";
 import { TransitInfo } from "@/components/transit/transit-info";
+import { PaymentMarks } from "@/components/brand/payment-marks";
 
 export async function SiteFooter() {
   const biz = getBusiness();
@@ -114,24 +115,24 @@ export async function SiteFooter() {
             <li>
               <WhatsappCTA variant="list" context="Maiamari atölyesi" path="/" />
             </li>
-            <li>
-              <a href={biz.contact.shopier} target="_blank" rel="noreferrer">
-                Shopier mağaza
-              </a>
-            </li>
           </ul>
         </div>
       </div>
 
       <div className="border-t border-[color:var(--color-hairline)]">
-        <div className="container-wide py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-xs text-[color:var(--color-muted)]">
-          <span>
-            © {new Date().getFullYear()} Maiamari Baskı Atölyesi · Küçükesat, Ankara
-          </span>
-          <div className="flex gap-6 [&_a]:inline-block [&_a]:py-2">
-            <Link href="/legal/kvkk">KVKK</Link>
-            <Link href="/legal/mesafeli-satis">Mesafeli Satış</Link>
-            <Link href="/legal/iade">İade ve Değişim</Link>
+        <div className="container-wide py-6 space-y-5">
+          {/* Güvenli ödeme — kabul edilen kartlar + iyzico altyapısı */}
+          <PaymentMarks />
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 text-xs text-[color:var(--color-muted)]">
+            <span>
+              © {new Date().getFullYear()} Maiamari Baskı Atölyesi · Küçükesat, Ankara
+            </span>
+            <div className="flex flex-wrap gap-x-6 gap-y-1 [&_a]:inline-block [&_a]:py-2">
+              <Link href="/legal/mesafeli-satis">Mesafeli Satış</Link>
+              <Link href="/legal/iade">Teslimat ve İade</Link>
+              <Link href="/legal/gizlilik">Gizlilik</Link>
+              <Link href="/legal/kvkk">KVKK</Link>
+            </div>
           </div>
         </div>
       </div>

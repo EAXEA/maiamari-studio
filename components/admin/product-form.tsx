@@ -83,6 +83,10 @@ export function ProductForm({
 
   // Eser satılık mı — işaretliyse fiyat alanları görünür.
   const [forSale, setForSale] = useState<boolean>(defaults.forSale);
+  // Eser tükendi mi (status=out_of_stock) — satışa kapalı, galeride "Tükendi".
+  const [soldOut, setSoldOut] = useState<boolean>(
+    defaults.status === "out_of_stock",
+  );
 
   // Seri listesi seçili sanatçıya göre filtrelenir (çok sanatçılı galeri).
   const [selectedArtist, setSelectedArtist] = useState<string>(
@@ -284,6 +288,25 @@ export function ProductForm({
               </span>
             </span>
           </label>
+
+          {/* Tükendi — satılık eser satıldıysa; satın alma gizlenir, galeride "Tükendi". */}
+          {forSale && (
+            <label className="flex items-start gap-3 text-sm">
+              <input
+                type="checkbox"
+                name="soldOut"
+                checked={soldOut}
+                onChange={(e) => setSoldOut(e.target.checked)}
+                className="h-4 w-4 mt-0.5"
+              />
+              <span>
+                Tükendi
+                <span className="block text-xs text-[color:var(--color-muted)] mt-0.5">
+                  İşaretliyse galeride &quot;Tükendi&quot; görünür, satın alma kapanır.
+                </span>
+              </span>
+            </label>
+          )}
 
           {forSale && (
             <div className="grid grid-cols-2 gap-5">

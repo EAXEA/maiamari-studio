@@ -9,6 +9,7 @@ import { formatTRY } from "@/lib/format";
 import { ProductCard } from "@/components/product/product-card";
 import { ProductGallery } from "@/components/product/product-gallery";
 import { ProductTutorialReel } from "@/components/product/product-tutorial-reel";
+import { AddToCart } from "@/components/cart/add-to-cart";
 import { getTutorialsForProduct } from "@/lib/product-tutorials";
 import {
   productSchema,
@@ -132,64 +133,28 @@ export default async function ProductPage({
               )}
           </div>
 
-          {product.status === "out_of_stock" ? (
-            <p className="mt-6 text-sm uppercase tracking-widest text-[color:var(--color-press)]">
-              Şu an stokta yok
-            </p>
-          ) : (
-            <div className="mt-8 flex gap-3">
-              <div className="relative flex-1">
-                <span
-                  className="absolute -top-2 right-3 z-10 inline-flex items-center px-2 py-0.5 text-[10px] tracking-[0.2em] uppercase font-medium"
-                  style={{
-                    background: "var(--color-accent-pink)",
-                    color: "var(--color-walnut-dark)",
-                  }}
-                >
-                  Yakında
-                </span>
-                <button
-                  disabled
-                  aria-disabled="true"
-                  className="w-full h-12 text-xs tracking-[0.2em] uppercase opacity-60 cursor-not-allowed"
-                  style={{
-                    background: "var(--color-walnut-dark)",
-                    color: "var(--color-background)",
-                  }}
-                  title="Online sepet yakında — şimdilik Shopier üzerinden sipariş alıyoruz"
-                >
-                  Sepete ekle
-                </button>
-              </div>
+          <AddToCart
+            id={product.id}
+            slug={product.slug}
+            title={product.title}
+            priceTry={product.priceTRY}
+            image={product.coverImage}
+            outOfStock={product.status === "out_of_stock"}
+          />
+          {product.sourceUrl && (
+            <p className="mt-4 text-xs" style={{ color: "var(--color-muted)" }}>
+              Dilerseniz{" "}
               <a
                 href={product.sourceUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="h-12 px-6 inline-flex items-center text-xs tracking-[0.2em] uppercase border transition-colors hover:bg-[color:var(--color-foreground)] hover:text-[color:var(--color-background)]"
-                style={{
-                  borderColor: "var(--color-foreground)",
-                  color: "var(--color-foreground)",
-                }}
+                className="underline underline-offset-4 hover:opacity-70"
               >
-                Shopier&apos;de aç
-              </a>
-            </div>
+                Shopier
+              </a>{" "}
+              üzerinden de sipariş verebilirsiniz.
+            </p>
           )}
-          <p
-            className="mt-3 text-xs"
-            style={{ color: "var(--color-muted)" }}
-          >
-            Online sepet ve güvenli ödeme yakında. Şimdilik siparişler{" "}
-            <a
-              href={product.sourceUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="underline underline-offset-4"
-            >
-              Shopier
-            </a>{" "}
-            üzerinden alınmaktadır.
-          </p>
 
           {product.description && (
             <div className="mt-10 prose prose-sm max-w-none">

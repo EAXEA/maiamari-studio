@@ -33,6 +33,15 @@ export default async function AdminLayout({
               MAIAMARI Yönetim
             </Link>
 
+            <Link
+              href="/admin/orders"
+              className="text-sm font-medium text-[color:var(--color-foreground)] hover:opacity-70"
+            >
+              Siparişler
+            </Link>
+
+            <span className="opacity-25">|</span>
+
             {/* Galeri grubu — hiyerarşi: Sanatçılar › Seriler › Eserler */}
             <div className="flex items-center gap-3">
               <span className={groupLabel}>Galeri</span>

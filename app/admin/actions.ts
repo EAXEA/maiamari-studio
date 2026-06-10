@@ -315,7 +315,8 @@ export async function saveProduct(
       // diğer mağaza alanları eser için nötr
       categorySlug: "",
       stock: 0,
-      status: "in_stock",
+      // Satılık eser "Tükendi" işaretlendiyse satışa kapalı (galeride gizlenir).
+      status: forSale && formData.get("soldOut") === "on" ? "out_of_stock" : "in_stock",
       sourceUrl: "",
     };
   } else {

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { SiteSearch } from "@/components/search/site-search";
 import { MobileMenu } from "@/components/layout/mobile-menu";
 import { PhoneCTA } from "@/components/inquiry/phone-cta";
+import { CartButton } from "@/components/cart/cart-button";
 import { getBusiness } from "@/lib/data";
 
 const NAV = [
@@ -90,34 +91,7 @@ export function SiteHeader() {
         />
 
         {/* Sepet */}
-        <Link
-          href="/cart"
-          className="relative inline-flex items-center gap-2 hover:opacity-60 shrink-0"
-          aria-label="Sepet — yakında"
-        >
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.6"
-            aria-hidden
-          >
-            <path d="M3 6h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.5L21 9H6" />
-            <circle cx="10" cy="21" r="1.2" />
-            <circle cx="17" cy="21" r="1.2" />
-          </svg>
-          <span
-            className="hidden lg:inline-flex text-[10px] tracking-[0.22em] uppercase px-2 py-0.5"
-            style={{
-              background: "var(--color-surface-2)",
-              color: "var(--color-muted)",
-            }}
-          >
-            Yakında
-          </span>
-        </Link>
+        <CartButton />
 
         {/* Mobil menü trigger — md+'ta gizli */}
         <MobileMenu nav={NAV} instagramUrl={biz.contact.instagram} />

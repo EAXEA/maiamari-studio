@@ -1,11 +1,13 @@
 "use client";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import type { PortfolioWork } from "@/lib/types";
 import { formatTRY } from "@/lib/format";
 import { Reveal } from "@/components/motion/reveal";
 import { InstagramInquiryButton } from "@/components/inquiry/instagram-inquiry-button";
-import { WhatsappCTA } from "@/components/inquiry/whatsapp-cta";
+import { useCart } from "@/components/cart/cart-provider";
+import { CHECKOUT_ENABLED } from "@/lib/checkout/flags";
 
 /** Eser galeride fiyatlı satışa açık mı (iyzico öncesi fiyat gösterimi). */
 function isPriced(w: PortfolioWork): boolean {
@@ -58,6 +60,30 @@ export function WorksDetailList({
   const [activeIdx, setActiveIdx] = useState<number | null>(null);
   const open = activeIdx !== null;
   const active = open ? works[activeIdx] : null;
+
+  const { add } = useCart();
+  const router = useRouter();
+  const [addedId, setAddedId] = useState<string | null>(null);
+  // Satılık eseri (fiyatlı) sepete ekle; görüntüleme linki = serinin galeri yolu.
+  const addArtwork = useCallback(
+    (w: PortfolioWork) => {
+      if (typeof w.priceTRY !== "number" || w.priceTRY <= 0) return;
+      add({
+        id: w.id,
+        slug: w.slug,
+        title: w.title,
+        priceTry: w.priceTRY,
+        image: w.image,
+        href: inquiryPath,
+      });
+      setAddedId(w.id);
+      window.setTimeout(
+        () => setAddedId((c) => (c === w.id ? null : c)),
+        1800,
+      );
+    },
+    [add, inquiryPath],
+  );
 
   const close = useCallback(() => setActiveIdx(null), []);
   const next = useCallback(
@@ -154,12 +180,8 @@ export function WorksDetailList({
                     <dt className="text-[color:var(--color-muted)]">Edisyon</dt>
                     <dd>
                       {work.editionSize
-                        ? `${work.editionSize} adetlik sayılı edisyon${
-                            isPriced(work) ? "" : " · fiyat DM'den"
-                          }`
-                        : isPriced(work)
-                          ? "Sayılı edisyon"
-                          : "Sayılı · DM üzerinden bilgi"}
+                        ? `${work.editionSize} adetlik sayılı edisyon`
+                        : "Sayılı edisyon"}
                     </dd>
                     {isPriced(work) && (
                       <>
@@ -205,16 +227,59 @@ export function WorksDetailList({
                     <ZoomIcon />
                     Eseri görüntüle
                   </button>
-                  {isPriced(work) && (
-                    <div className="mt-6">
-                      <WhatsappCTA
-                        variant="button"
-                        label="Sipariş ver · WhatsApp"
-                        message={`Merhaba, galerideki "${work.title}" eserini (${formatTRY(
-                          work.priceTRY!,
-                        )}) sipariş vermek istiyorum.\nhttps://www.maiamari.art${inquiryPath}`}
-                      />
+                  {!work.forSale ? (
+                    <p
+                      className="mt-7 text-xs uppercase tracking-[0.2em]"
+                      style={{ color: "var(--color-muted)" }}
+                    >
+                      Sergilik · koleksiyonda
+                    </p>
+                  ) : work.soldOut ? (
+                    <p
+                      className="mt-7 text-sm uppercase tracking-widest"
+                      style={{ color: "var(--color-press)" }}
+                    >
+                      Tükendi
+                    </p>
+                  ) : CHECKOUT_ENABLED && isPriced(work) ? (
+                    <div className="mt-7 flex flex-wrap gap-3">
+                      <button
+                        type="button"
+                        onClick={() => addArtwork(work)}
+                        className="h-11 px-6 text-xs tracking-[0.2em] uppercase transition-opacity hover:opacity-90 active:opacity-80"
+                        style={{
+                          background: "var(--color-walnut-dark)",
+                          color: "var(--color-background)",
+                        }}
+                      >
+                        {addedId === work.id ? "Sepete eklendi" : "Sepete ekle"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          addArtwork(work);
+                          router.push("/checkout");
+                        }}
+                        className="h-11 px-6 inline-flex items-center text-xs tracking-[0.2em] uppercase border transition-colors hover:bg-[color:var(--color-foreground)] hover:text-[color:var(--color-background)]"
+                        style={{
+                          borderColor: "var(--color-foreground)",
+                          color: "var(--color-foreground)",
+                        }}
+                      >
+                        Hemen al
+                      </button>
                     </div>
+                  ) : (
+                    <a
+                      href={`https://wa.me/905065889277?text=${encodeURIComponent(
+                        `Merhaba, "${work.title}" eseri hakkında fiyat ve bilgi almak istiyorum.\nhttps://www.maiamari.art${inquiryPath}`,
+                      )}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-7 inline-flex items-center gap-2 text-sm editorial-link"
+                    >
+                      Fiyat ve bilgi için yazın →
+                    </a>
                   )}
                 </div>
               </div>
@@ -339,29 +404,51 @@ export function WorksDetailList({
                   Filigran · MAIAMARI © · yalnızca dijital gösterimde
                 </p>
               </div>
-              <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-3 text-sm">
+                {!active.forSale ? (
+                  <span
+                    className="text-[11px] tracking-[0.2em] uppercase"
+                    style={{ color: "rgba(255,255,255,0.7)" }}
+                  >
+                    Sergilik · koleksiyonda
+                  </span>
+                ) : active.soldOut ? (
+                  <span
+                    className="text-[11px] tracking-[0.2em] uppercase"
+                    style={{ color: "rgba(255,255,255,0.8)" }}
+                  >
+                    Tükendi
+                  </span>
+                ) : CHECKOUT_ENABLED && isPriced(active) ? (
+                  <button
+                    type="button"
+                    onClick={() => addArtwork(active)}
+                    className="h-10 px-5 text-[11px] tracking-[0.2em] uppercase hover:opacity-90 active:opacity-80"
+                    style={{
+                      background: "var(--color-background)",
+                      color: "var(--color-walnut-dark)",
+                    }}
+                  >
+                    {addedId === active.id ? "Sepete eklendi" : "Sepete ekle"}
+                  </button>
+                ) : (
+                  <a
+                    href={`https://wa.me/905065889277?text=${encodeURIComponent(
+                      `Merhaba, "${active.title}" eseri hakkında fiyat ve bilgi almak istiyorum.\nhttps://www.maiamari.art${inquiryPath}`,
+                    )}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-white/90 hover:text-white underline underline-offset-4"
+                  >
+                    Fiyat ve bilgi için yazın →
+                  </a>
+                )}
                 <InstagramInquiryButton
                   title={active.title}
                   path={inquiryPath}
                   label="Instagram'dan bilgi al →"
                   className="text-white/90 hover:text-white underline underline-offset-4"
                 />
-                <a
-                  href={`https://wa.me/905065889277?text=${encodeURIComponent(
-                    isPriced(active)
-                      ? `Merhaba, galerideki "${active.title}" eserini (${formatTRY(
-                          active.priceTRY!,
-                        )}) sipariş vermek istiyorum.\nhttps://www.maiamari.art${inquiryPath}`
-                      : `Merhaba, "${active.title}" eseri hakkında bilgi almak istiyorum.\nhttps://www.maiamari.art${inquiryPath}`
-                  )}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-white/90 hover:text-white underline underline-offset-4"
-                >
-                  {isPriced(active)
-                    ? "Sipariş ver · WhatsApp →"
-                    : "WhatsApp'tan yaz →"}
-                </a>
               </div>
             </div>
             {works.length > 1 && (
