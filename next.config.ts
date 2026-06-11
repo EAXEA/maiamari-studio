@@ -37,7 +37,15 @@ const nextConfig: NextConfig = {
   },
 
   experimental: {
-    // App Router server components için JSON import problemi yaşamayalım
+    serverActions: {
+      // Panelden yüklenen görseller Server Action'ın multipart gövdesiyle
+      // taşınır. Next varsayılanı 1 MB'dır ve gerçek bir fotoğraf bunu kolayca
+      // aşıp isteği action koduna ulaşmadan reddettirir (404/500 belirtisi).
+      // İstemci tarafı (Dropzone) görselleri yüklemeden önce küçültür; bu yalnız
+      // güvenlik tamponudur. Vercel function payload sert tavanı ~4.5 MB
+      // olduğundan değeri onun altında tutuyoruz; asıl koruma istemci sıkıştırma.
+      bodySizeLimit: "4mb",
+    },
   },
 };
 
