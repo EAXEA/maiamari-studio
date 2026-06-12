@@ -7,7 +7,9 @@
 const MARKS = [
   { src: "/brand/payment/visa.svg", alt: "Visa" },
   { src: "/brand/payment/mastercard.svg", alt: "Mastercard" },
-  { src: "/brand/payment/iyzico.svg", alt: "iyzico ile öde" },
+  // iyzico onboarding şartı: resmi "iyzico ile Öde" logosu (iyzico-logo-pack,
+  // checkout TR colored horizontal varyantı) birebir kullanılır.
+  { src: "/brand/payment/iyzico-ile-ode.svg", alt: "iyzico ile Öde" },
 ] as const;
 
 export function PaymentMarks() {
