@@ -57,7 +57,7 @@ export default async function JournalPage() {
           <p className="mt-8 max-w-2xl text-base lg:text-lg leading-relaxed text-[color:var(--color-muted)]">
             Atölyenin gündemi, katıldığımız etkinlikler ve dönüşüm
             hikayemizden kısa kayıtlar. En yeniden eskiye doğru.
-            <span className="hidden lg:inline">
+            <span className="hidden [@media(hover:hover)]:lg:inline">
               {" "}Karta gelin, açılır.
             </span>
           </p>
@@ -178,7 +178,7 @@ export default async function JournalPage() {
                         </p>
 
                         {/* EXPAND-ON-HOVER block (desktop) — mobile always open */}
-                        <div className="max-lg:mt-5 lg:max-h-0 lg:opacity-0 lg:overflow-hidden lg:group-hover:max-h-[1200px] lg:group-hover:opacity-100 lg:transition-all lg:duration-500 lg:ease-out">
+                        <div className="max-lg:mt-5 [@media(hover:hover)]:lg:max-h-0 [@media(hover:hover)]:lg:opacity-0 [@media(hover:hover)]:lg:overflow-hidden [@media(hover:hover)]:lg:group-hover:max-h-[1200px] [@media(hover:hover)]:lg:group-hover:opacity-100 lg:transition-all lg:duration-500 lg:ease-out">
                           <div className="lg:pt-5">
                             {post.location && (
                               <p className="text-sm text-[color:var(--color-muted)] mb-4">
