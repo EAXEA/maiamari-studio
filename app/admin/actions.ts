@@ -234,7 +234,7 @@ export async function login(
   }
 
   const password = String(formData.get("password") ?? "");
-  if (!verifyPassword(password)) {
+  if (!(await verifyPassword(password))) {
     const st = await recordLoginFailure(ip);
     if (st.locked) {
       return {

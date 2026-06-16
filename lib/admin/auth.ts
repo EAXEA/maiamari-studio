@@ -1,8 +1,8 @@
 /**
  * MAIAMARI.STUDIO — Admin oturum doğrulama (server-only)
  * ------------------------------------------------------
- * Supabase'e bağımsız basit panel girişi: `ADMIN_PASSWORD` ile parola
- * kontrolü + `ADMIN_SESSION_SECRET` ile HMAC imzalı httpOnly cookie.
+ * Supabase'e bağımsız basit panel girişi: `ADMIN_PASSWORD_HASH` (bcrypt)
+ * ile parola kontrolü + `ADMIN_SESSION_SECRET` ile HMAC imzalı httpOnly cookie.
  *
  * Cookie biçimi:  base64url(payload) "." base64url(hmacSHA256(payload))
  *   payload = JSON { exp: <unix-ms> }
@@ -11,6 +11,7 @@
  * ve node:crypto importları onu zaten client bundle'dan uzak tutar.
  */
 import crypto from "node:crypto";
+import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -23,10 +24,10 @@ function getSecret(): string {
   return s;
 }
 
-function getAdminPassword(): string | null {
-  const p = process.env.ADMIN_PASSWORD;
-  if (!p || p.startsWith("<")) return null; // doldurulmamış şablon
-  return p;
+function getAdminPasswordHash(): string | null {
+  const h = process.env.ADMIN_PASSWORD_HASH;
+  if (!h || h.startsWith("<")) return null; // doldurulmamış şablon
+  return h;
 }
 
 /** İmza secret'ı geçerli mi: tanımlı, şablon değil ve yeterince uzun (≥16). */
@@ -35,22 +36,15 @@ function hasValidSecret(): boolean {
   return !!s && !s.startsWith("<") && s.length >= 16;
 }
 
-/** Panel girişi yapılandırılmış mı (parola + geçerli secret var mı). */
+/** Panel girişi yapılandırılmış mı (hash + geçerli secret var mı). */
 export function isAdminConfigured(): boolean {
-  return getAdminPassword() !== null && hasValidSecret();
+  return getAdminPasswordHash() !== null && hasValidSecret();
 }
 
-/** Önerilen minimum admin parola uzunluğu. */
-const MIN_PASSWORD_LENGTH = 12;
-
-/**
- * Yapılandırma zayıfsa uyarı döner (yoksa null). Yalnız admin'in gördüğü login
- * sayfasında gösterilir; girişi engellemez (mevcut kurulumları kilitlememek için).
- */
+/** Yapılandırma zayıfsa uyarı döner (yoksa null). */
 export function getAdminConfigWarning(): string | null {
-  const pw = getAdminPassword();
-  if (pw && pw.length < MIN_PASSWORD_LENGTH) {
-    return `ADMIN_PASSWORD çok kısa (en az ${MIN_PASSWORD_LENGTH} karakter önerilir). Brute-force'a karşı daha güçlü bir parola belirleyin.`;
+  if (!getAdminPasswordHash()) {
+    return "ADMIN_PASSWORD_HASH tanımlı değil. Bcrypt hash üretip env'e ekleyin.";
   }
   return null;
 }
@@ -67,11 +61,11 @@ function safeEqual(a: string, b: string): boolean {
   return crypto.timingSafeEqual(ab, bb);
 }
 
-/** Parolayı `ADMIN_PASSWORD` ile zamanlama-güvenli karşılaştır. */
-export function verifyPassword(input: string): boolean {
-  const expected = getAdminPassword();
-  if (!expected) return false;
-  return safeEqual(input, expected);
+/** Parolayı `ADMIN_PASSWORD_HASH` (bcrypt) ile doğrula. */
+export async function verifyPassword(input: string): Promise<boolean> {
+  const hash = getAdminPasswordHash();
+  if (!hash) return false;
+  return bcrypt.compare(input, hash);
 }
 
 /** Yeni bir imzalı oturum token'ı üret. */
