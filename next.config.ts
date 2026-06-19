@@ -17,6 +17,11 @@ function supabaseImageHost(): string {
 }
 
 const nextConfig: NextConfig = {
+  // bcryptjs CommonJS modülü Next.js bundler'ı tarafından sarmalandığında
+  // Vercel production'da TypeError: Invalid URL hatası üretiyordu.
+  // External olarak işaretleyince Node.js runtime CJS loader'ı kullanır.
+  serverExternalPackages: ["bcryptjs"],
+
   // ../data klasöründen JSON okunduğu için outputFileTracingRoot,
   // standalone build'de monorepo gibi davranıp ana klasörü tracelar.
   outputFileTracingRoot: undefined,
