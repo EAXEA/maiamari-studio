@@ -64,10 +64,29 @@ function readSnapshot<T>(file: string): T | null {
 }
 
 /**
+ * İçerik okuması için DB timeout'u. Soğuk/çapraz-bölge bir bağlantı kurulumu
+ * fonksiyon süresini (Vercel ~10s) aşıp 504 (FUNCTION_INVOCATION_TIMEOUT)
+ * üretebiliyor; `readDb` yalnız HATA yakalar, ASILMAYI değil. Asılı sorguyu
+ * burada keserek `readDb` aşağıdaki JSON/snapshot fallback zincirine düşürür
+ * (504 yerine 200, bayat olsa da içerik gelir). Warm + co-located fra1'de
+ * sorgular <100ms olduğundan bu eşik normalde hiç tetiklenmez.
+ */
+const CONTENT_DB_TIMEOUT_MS = 4000;
+
+function withDbTimeout<T>(p: Promise<T>, ms: number): Promise<T> {
+  let timer: ReturnType<typeof setTimeout>;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new Error(`db-read-timeout >${ms}ms`)), ms);
+  });
+  return Promise.race([p, timeout]).finally(() => clearTimeout(timer));
+}
+
+/**
  * İçerik okuma fallback'i. Bir DB okuması bağlantı/sorgu hatasıyla `throw`
- * ederse, hatayı YUTMADAN loglar ve "DB yok" sentinel'ini (`absent`) döndürür;
- * böylece aşağıdaki getter'lar mevcut snapshot/JSON fallback zincirine düşer ve
- * sayfa 500 yerine son iyi içerikle açılır.
+ * ederse VEYA timeout'a uğrarsa, hatayı YUTMADAN loglar ve "DB yok"
+ * sentinel'ini (`absent`) döndürür; böylece aşağıdaki getter'lar mevcut
+ * snapshot/JSON fallback zincirine düşer ve sayfa 500/504 yerine son iyi
+ * içerikle açılır.
  *
  * Sözleşme korunur: `absent` = listelerde `null`, tekil getter'larda `undefined`
  * (DB erişilebilir ama satır yoksa getter normal `null` döndürmeye devam eder →
@@ -84,7 +103,7 @@ async function readDb<T>(
   absent: T,
 ): Promise<T> {
   try {
-    return await run();
+    return await withDbTimeout(run(), CONTENT_DB_TIMEOUT_MS);
   } catch (err) {
     console.error("[content-fallback]", label, err);
     return absent;
