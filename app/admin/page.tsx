@@ -36,13 +36,21 @@ export default async function AdminProductsPage() {
             {products.length} ürün
           </p>
         </div>
-        <Link
-          href="/admin/new"
-          style={{ color: "var(--color-background)" }}
-          className="bg-[color:var(--color-foreground)] px-5 py-2.5 rounded-md text-sm font-medium"
-        >
-          + Yeni ürün
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link
+            href="/admin/health"
+            className="text-sm underline underline-offset-2 text-[color:var(--color-muted)] hover:text-[color:var(--color-foreground)]"
+          >
+            Sistem durumu
+          </Link>
+          <Link
+            href="/admin/new"
+            style={{ color: "var(--color-background)" }}
+            className="bg-[color:var(--color-foreground)] px-5 py-2.5 rounded-md text-sm font-medium"
+          >
+            + Yeni ürün
+          </Link>
+        </div>
       </div>
 
       {!isDbConfigured() && (
