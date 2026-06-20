@@ -8,22 +8,25 @@
  */
 import crypto from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
+import { cleanEnv } from "../env";
 
-const BUCKET = process.env.SUPABASE_STORAGE_BUCKET || "product-images";
+const BUCKET = cleanEnv("SUPABASE_STORAGE_BUCKET") || "product-images";
 
 function getServiceKey(): string | null {
-  const k = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  // cleanEnv: başa sızan BOM/zero-width değeri header'da ByteString hatası
+  // verir (Cannot convert … 65279). Okurken temizliyoruz.
+  const k = cleanEnv("SUPABASE_SERVICE_ROLE_KEY");
   if (!k || k.startsWith("<")) return null; // doldurulmamış şablon
   return k;
 }
 
 /** Görsel yükleme yapılandırılmış mı (secret key var mı). */
 export function isStorageConfigured(): boolean {
-  return getServiceKey() !== null && !!process.env.NEXT_PUBLIC_SUPABASE_URL;
+  return getServiceKey() !== null && !!cleanEnv("NEXT_PUBLIC_SUPABASE_URL");
 }
 
 function getClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const url = cleanEnv("NEXT_PUBLIC_SUPABASE_URL");
   const key = getServiceKey();
   if (!url || !key) return null;
   return createClient(url, key, {
@@ -123,7 +126,7 @@ export async function deleteStorageImages(
   urls: (string | null | undefined)[],
 ): Promise<void> {
   const client = getClient();
-  if (!client || !process.env.NEXT_PUBLIC_SUPABASE_URL) return;
+  if (!client || !cleanEnv("NEXT_PUBLIC_SUPABASE_URL")) return;
   const marker = `/storage/v1/object/public/${BUCKET}/`;
   const paths = Array.from(
     new Set(

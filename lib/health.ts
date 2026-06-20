@@ -14,6 +14,7 @@ import { createClient } from "@supabase/supabase-js";
 import { getDb, isDbConfigured } from "./db/client";
 import { isStorageConfigured } from "./admin/storage";
 import { isIyzicoConfigured } from "./payment/iyzico";
+import { cleanEnv } from "./env";
 
 export type ProbeState = "ok" | "warn" | "down" | "unconfigured";
 
@@ -120,7 +121,7 @@ export async function checkDatabase(): Promise<Probe> {
 // ---------------------------------------------------------------
 export async function checkStorage(): Promise<Probe> {
   const name = "Depolama (Storage)";
-  const bucket = process.env.SUPABASE_STORAGE_BUCKET || "product-images";
+  const bucket = cleanEnv("SUPABASE_STORAGE_BUCKET") || "product-images";
   if (!isStorageConfigured()) {
     return {
       name,
@@ -130,8 +131,8 @@ export async function checkStorage(): Promise<Probe> {
       detail: "SUPABASE_SERVICE_ROLE_KEY / NEXT_PUBLIC_SUPABASE_URL yok — görsel yükleme kapalı.",
     };
   }
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  const url = cleanEnv("NEXT_PUBLIC_SUPABASE_URL")!;
+  const key = cleanEnv("SUPABASE_SERVICE_ROLE_KEY")!;
   const t0 = Date.now();
   try {
     const client = createClient(url, key, {
