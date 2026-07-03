@@ -5,13 +5,17 @@ name: Supabase keep-alive
 # bu iş günlük tek bir "select 1" ile projeyi aktif tutar.
 # Secret: SUPABASE_KEEPALIVE_DB_URL = Transaction Pooler DATABASE_URL
 # (aws-*.pooler.supabase.com:6543 — GH runner IPv4-only, direct host çalışmaz).
-# NOT: GitHub, repo 60 gün commit görmezse zamanlanmış workflow'ları durdurur
-# (önce e-posta uyarısı gelir; repo aktif olduğu sürece sorun değil).
+# NOT: GitHub, repo 60 gün commit görmezse zamanlanmış workflow'ları durdurur;
+# son adımdaki self-enable API çağrısı bu sayacı commit'siz sıfırlar
+# (yine de durursa e-posta uyarısı gelir, Actions sekmesinden tek tıkla açılır).
 
 on:
   schedule:
     - cron: "23 4 * * *" # her gün 04:23 UTC (07:23 TR)
   workflow_dispatch:
+
+permissions:
+  actions: write # self-enable çağrısı için; başka izin yok
 
 jobs:
   ping:
@@ -27,3 +31,8 @@ jobs:
             exit 1
           fi
           psql "$DB_URL" -tAc "select 'keepalive-ok', now();"
+
+      - name: Cron sayacını sıfırla (workflow self-enable, commit'siz)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/supabase-keepalive.yml/enable"
