@@ -171,7 +171,7 @@ export default function CartPage() {
               <div className="flex justify-between">
                 <dt className="text-[color:var(--color-muted)]">Kargo</dt>
                 <dd className="text-[color:var(--color-muted)]">
-                  Ödeme adımında
+                  Alıcıya ait. Teslimatta ödenir.
                 </dd>
               </div>
             </dl>
@@ -181,6 +181,10 @@ export default function CartPage() {
                 {formatTRY(total)}
               </span>
             </div>
+            <p className="mt-2 text-xs leading-relaxed text-[color:var(--color-muted)]">
+              Kargo ücreti ödemeye dahil değildir; teslimatta kargo firmasına
+              ödenir.
+            </p>
 
             <Link
               href="/checkout"

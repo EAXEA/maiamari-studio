@@ -77,18 +77,40 @@ export async function POST(req: Request) {
 
   if (success && amountOk) {
     if (order.status === "pending") {
-      await dbMarkOrderPaid(order.id, {
+      // Koşullu UPDATE: eşzamanlı çifte POST'ta yalnız biri true alır →
+      // e-posta bildirimi tek sefer gider (para tarafı zaten idempotent).
+      const updated = await dbMarkOrderPaid(order.id, {
         paymentProvider: "iyzico",
         paymentId: result.paymentId ? String(result.paymentId) : undefined,
         paymentToken: token,
       });
-      // Bildirim best-effort: e-posta gönderilemese de ödeme akışı bozulmaz.
-      try {
-        const fresh = await dbGetOrder(order.id);
-        if (fresh) await notifyNewOrder(fresh.order, fresh.items);
-      } catch (e) {
-        console.error("Sipariş bildirimi gönderilemedi:", e);
+      if (updated) {
+        // Bildirim best-effort: e-posta gönderilemese de ödeme akışı bozulmaz.
+        try {
+          const fresh = await dbGetOrder(order.id);
+          if (fresh) await notifyNewOrder(fresh.order, fresh.items);
+        } catch (e) {
+          console.error("Sipariş bildirimi gönderilemedi:", e);
+        }
+      } else {
+        // Okuma anında pending'di ama UPDATE 0 satır etkiledi: bu istekle
+        // yarışan bir işlem durumu değiştirdi. Para çekilmiş olabilir — iz bırak.
+        console.error("iyzico callback: ödeme başarılı ama pending→paid geçişi bu istekte olmadı (yarış) — manuel kontrol", {
+          orderId: order.id,
+          orderNo: order.orderNo,
+          paymentId: result.paymentId,
+        });
       }
+    } else if (order.status !== "paid") {
+      // Para çekilmiş ama sipariş paid değil ve pending de değil (örn. alıcı
+      // ödeme sayfasındayken admin iptal etti). paid YAZMA; yüksek sesle logla
+      // (iade/manuel inceleme gerekir). paid ise sessiz geç: idempotent replay.
+      console.error("iyzico callback: ödeme başarılı ama sipariş durumu uyumsuz — manuel inceleme gerekli", {
+        orderId: order.id,
+        orderNo: order.orderNo,
+        status: order.status,
+        paymentId: result.paymentId,
+      });
     }
     return back(req, `/checkout/sonuc?order=${order.id}`);
   }

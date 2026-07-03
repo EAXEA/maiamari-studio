@@ -18,7 +18,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import postgres from "postgres";
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+// Bu dosya scripts/dev/ altında: repo kökü iki seviye yukarıda.
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 
 // .env.local'i yükle (değerler loglanmaz)
 const envPath = path.join(root, ".env.local");

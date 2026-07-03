@@ -103,8 +103,8 @@ export async function startCheckout(
   // (IDOR + mock ödeme tetikleme koruması).
   await grantOrderAccess(created.id);
 
-  // mock + iyzico modunda da aynı ödeme adımı sayfası (iyzico modunda iframe,
-  // mock modunda test ödeme paneli render eder).
+  // mock + iyzico modunda da aynı ödeme adımı sayfası (iyzico modunda hosted
+  // ödeme sayfasına redirect, mock modunda test ödeme paneli render eder).
   return { ok: true, payUrl: `/checkout/odeme?order=${created.id}` };
 }
 
@@ -120,17 +120,20 @@ export async function confirmMockPayment(orderId: string): Promise<void> {
     throw new Error("Test ödeme yalnız sandbox modunda kullanılabilir.");
   }
   if (!(await hasOrderAccess(orderId))) redirect("/cart");
-  await dbMarkOrderPaid(orderId, {
+  const updated = await dbMarkOrderPaid(orderId, {
     paymentProvider: "mock",
     paymentId: `MOCK-${crypto.randomUUID().slice(0, 8).toUpperCase()}`,
   });
-  // Sipariş bildirimi (Resend) — best-effort, akışı bozmaz. iyzico'da bu çağrı
-  // callback/retrieve handler'ında (paid yazıldıktan sonra) yapılacak.
-  try {
-    const data = await dbGetOrder(orderId);
-    if (data) await notifyNewOrder(data.order, data.items);
-  } catch (e) {
-    console.error("Sipariş bildirimi gönderilemedi:", e);
+  // Sipariş bildirimi (Resend) — best-effort, akışı bozmaz; yalnız gerçek
+  // pending→paid geçişinde (çift form POST'unda ikinci e-posta gitmesin).
+  // iyzico'da aynı mantık callback/retrieve handler'ında.
+  if (updated) {
+    try {
+      const data = await dbGetOrder(orderId);
+      if (data) await notifyNewOrder(data.order, data.items);
+    } catch (e) {
+      console.error("Sipariş bildirimi gönderilemedi:", e);
+    }
   }
   redirect(`/checkout/sonuc?order=${orderId}`);
 }

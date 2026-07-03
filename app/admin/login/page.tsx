@@ -30,7 +30,7 @@ export default async function AdminLoginPage() {
         <LoginForm />
       ) : (
         <p className="text-sm text-red-600 border border-red-300 bg-red-50 rounded-md px-3 py-2">
-          Panel yapılandırılmamış: <code>ADMIN_PASSWORD</code> ve{" "}
+          Panel yapılandırılmamış: <code>ADMIN_PASSWORD_HASH</code> ve{" "}
           <code>ADMIN_SESSION_SECRET</code> değerlerini <code>.env.local</code>{" "}
           dosyasına ekleyin.
         </p>

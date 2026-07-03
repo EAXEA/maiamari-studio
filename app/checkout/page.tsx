@@ -165,12 +165,22 @@ export default function CheckoutPage() {
                 </li>
               ))}
             </ul>
+            <div className="mt-4 flex justify-between text-sm">
+              <span className="text-[color:var(--color-muted)]">Kargo</span>
+              <span className="text-[color:var(--color-muted)]">
+                Alıcıya ait. Teslimatta ödenir.
+              </span>
+            </div>
             <div className="mt-5 pt-5 border-t border-[color:var(--color-hairline)] flex justify-between items-baseline">
               <span className="text-sm uppercase tracking-wider">Toplam</span>
               <span className="font-display text-2xl font-medium tabular-nums">
                 {formatTRY(total)}
               </span>
             </div>
+            <p className="mt-2 text-xs leading-relaxed text-[color:var(--color-muted)]">
+              Fiyatlara KDV dahildir. Kargo ücreti ödemeye dahil değildir;
+              teslimatta kargo firmasına ödenir.
+            </p>
 
             <button
               type="submit"

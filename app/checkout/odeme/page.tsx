@@ -100,9 +100,10 @@ export default async function OdemePage({
             Sandbox · Test ödeme
           </p>
           <p className="mt-3 text-sm leading-relaxed text-[color:var(--color-muted)]">
-            iyzico anahtarları bağlanınca burada gerçek iyzico Checkout Form
-            (kart girişi, 3D Secure) iframe olarak görünecek ve kart verisi bizde
-            saklanmayacak. Şimdilik akışı görmek için ödemeyi test edebilirsiniz.
+            iyzico anahtarları bağlanınca bu adımda iyzico&apos;nun güvenli
+            ödeme sayfasına (kart girişi, 3D Secure) yönlendirileceksiniz. Kart
+            verisi bizde saklanmaz. Şimdilik akışı görmek için ödemeyi test
+            edebilirsiniz.
           </p>
           <div className="mt-6 flex flex-col sm:flex-row gap-3">
             <form action={confirm} className="flex-1">

@@ -16,10 +16,14 @@
  */
 import type { OrderRow, OrderItemRow } from "@/lib/db/schema";
 import { SELLER } from "@/lib/legal";
+import { cleanEnv } from "@/lib/env";
 
 // Maildeki "Panelde aç" linkinin tabanı. Lokal testte SITE_URL=http://localhost:3000
 // koyunca link localhost'a gider; prod'da (Vercel) SITE_URL boşsa canlıya gider.
-const BASE_URL = process.env.SITE_URL || "https://www.maiamari.art";
+// Fonksiyon: modül-scope okuma build anında donardı; çağrı anında okunmalı.
+function baseUrl(): string {
+  return cleanEnv("SITE_URL") || "https://www.maiamari.art";
+}
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
 
 function tl(v: string | number): string {
@@ -94,7 +98,7 @@ export async function notifyNewOrder(
   const from = process.env.ORDER_EMAIL_FROM || "Maiamari <onboarding@resend.dev>";
   const ownerTo = process.env.ORDER_EMAIL_TO || SELLER.email;
   const total = tl(order.totalTry);
-  const adminUrl = `${BASE_URL}/admin/orders/${order.id}`;
+  const adminUrl = `${baseUrl()}/admin/orders/${order.id}`;
 
   // 1) SATICI bildirimi
   await send({
@@ -133,7 +137,7 @@ export async function notifyNewOrder(
           <p>Siparişiniz alındı. Sipariş numaranız <strong>${order.orderNo}</strong>.</p>
           ${itemsTable(items)}
           <p style="text-align:right;font-weight:600;margin-top:8px">Toplam ${total}</p>
-          <p style="font-size:13px;color:#888;margin-top:20px">Maiamari Baskı Atölyesi · ${BASE_URL}</p>
+          <p style="font-size:13px;color:#888;margin-top:20px">Maiamari Baskı Atölyesi · ${baseUrl()}</p>
         </div>`,
     });
   }

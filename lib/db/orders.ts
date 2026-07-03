@@ -4,7 +4,7 @@
  */
 import { getDb } from "./client";
 import { orders, orderItems, type OrderRow, type OrderItemRow } from "./schema";
-import { eq, desc, inArray, notInArray, count } from "drizzle-orm";
+import { and, eq, desc, inArray, notInArray, count } from "drizzle-orm";
 import { ARCHIVED_STATUSES } from "@/lib/order-status";
 
 export type NewOrderInput = {
@@ -92,14 +92,18 @@ export async function dbGetOrder(id: string): Promise<OrderWithItems | null> {
   return { order, items };
 }
 
-/** Ödeme başarılı: status=paid + ödeme referansları. */
+/**
+ * Ödeme başarılı: status=paid + ödeme referansları. Yalnız `pending` siparişi
+ * günceller (koşullu UPDATE) → eşzamanlı/tekrarlanan callback'te ikinci çağrı
+ * false döner ve çağıran bildirimi atlar (çifte e-posta koruması).
+ */
 export async function dbMarkOrderPaid(
   id: string,
   ref: { paymentProvider?: string; paymentId?: string; paymentToken?: string },
-): Promise<void> {
+): Promise<boolean> {
   const db = getDb();
-  if (!db) return;
-  await db
+  if (!db) return false;
+  const updated = await db
     .update(orders)
     .set({
       status: "paid",
@@ -108,7 +112,9 @@ export async function dbMarkOrderPaid(
       paymentToken: ref.paymentToken,
       updatedAt: new Date(),
     })
-    .where(eq(orders.id, id));
+    .where(and(eq(orders.id, id), eq(orders.status, "pending")))
+    .returning({ id: orders.id });
+  return updated.length > 0;
 }
 
 /**
@@ -128,7 +134,8 @@ export async function dbSetOrderPaymentToken(
     .where(eq(orders.id, id));
 }
 
-/** Ödeme başarısız / iptal. */
+/** Ödeme başarısız / iptal. Yalnız `pending` siparişi günceller — geç gelen
+ *  FAILURE callback'i paid olmuş siparişi ezemesin. */
 export async function dbMarkOrderFailed(
   id: string,
   status: "failed" | "cancelled" = "failed",
@@ -138,7 +145,7 @@ export async function dbMarkOrderFailed(
   await db
     .update(orders)
     .set({ status, updatedAt: new Date() })
-    .where(eq(orders.id, id));
+    .where(and(eq(orders.id, id), eq(orders.status, "pending")));
 }
 
 /** Admin: aktif siparişler (arşiv durumları hariç; işlem bekleyen küçük küme). */

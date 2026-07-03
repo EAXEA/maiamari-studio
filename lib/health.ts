@@ -211,7 +211,7 @@ export function checkEmail(): Probe {
 export function checkPayment(): Probe {
   const name = "Ödeme (iyzico)";
   const configured = isIyzicoConfigured();
-  const base = process.env.IYZICO_BASE_URL || "https://sandbox-api.iyzipay.com";
+  const base = cleanEnv("IYZICO_BASE_URL") || "https://sandbox-api.iyzipay.com";
   const isSandbox = /sandbox/i.test(base);
   const checkoutEnabled = process.env.NEXT_PUBLIC_CHECKOUT_ENABLED === "1";
   return {
@@ -335,6 +335,7 @@ const TRACKED_ENV = [
   "SUPABASE_STORAGE_BUCKET",
   "ADMIN_PASSWORD_HASH",
   "ADMIN_SESSION_SECRET",
+  "ORDER_ACCESS_SECRET",
   "IYZICO_API_KEY",
   "IYZICO_SECRET_KEY",
   "IYZICO_BASE_URL",

@@ -23,6 +23,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Unit tests
+        run: npm run test:unit
+
       - name: Build
         run: npm run build
         env:
@@ -38,6 +41,7 @@ jobs:
         env:
           # Sahte admin kimliği: login SAYFASININ form render etmesi için
           # (env yoksa sayfa "yapılandırılmamış" uyarısı basar, test form bulamaz).
-          # Gerçek panele erişim yok; testler giriş DENEMEZ.
-          ADMIN_PASSWORD: ci-dummy-parola-1234567
+          # Gerçek panele erişim yok; testler giriş DENEMEZ. Hash "ci-dummy"
+          # bir parolanın bcrypt'i, hiçbir gerçek ortamda kullanılmaz.
+          ADMIN_PASSWORD_HASH: $2b$10$1drEcOng0hSAxc.TVNCu.Om5yn0rLl1HQJNFmEBVoc.Rk/IV1IiZe
           ADMIN_SESSION_SECRET: ci-dummy-session-secret-0123456789abcdef

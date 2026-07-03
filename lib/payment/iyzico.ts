@@ -27,11 +27,12 @@
  */
 import crypto from "node:crypto";
 import type { OrderRow, OrderItemRow } from "@/lib/db/schema";
+import { cleanEnv } from "@/lib/env";
 
 export type PaymentMode = "iyzico" | "mock";
 
 export function isIyzicoConfigured(): boolean {
-  return Boolean(process.env.IYZICO_API_KEY && process.env.IYZICO_SECRET_KEY);
+  return Boolean(cleanEnv("IYZICO_API_KEY") && cleanEnv("IYZICO_SECRET_KEY"));
 }
 
 export function paymentMode(): PaymentMode {
@@ -40,7 +41,7 @@ export function paymentMode(): PaymentMode {
 
 /** Public site tabanı (callbackUrl için). Lokal/preview testte SITE_URL ile ezilir. */
 export function siteBaseUrl(): string {
-  return (process.env.SITE_URL || "https://www.maiamari.art").replace(/\/+$/, "");
+  return (cleanEnv("SITE_URL") || "https://www.maiamari.art").replace(/\/+$/, "");
 }
 
 // ---------------------------------------------------------------
@@ -54,10 +55,10 @@ async function iyzicoPost<T>(
   path: string,
   payload: Record<string, unknown>,
 ): Promise<T> {
-  const apiKey = process.env.IYZICO_API_KEY!;
-  const secretKey = process.env.IYZICO_SECRET_KEY!;
+  const apiKey = cleanEnv("IYZICO_API_KEY")!;
+  const secretKey = cleanEnv("IYZICO_SECRET_KEY")!;
   const base = (
-    process.env.IYZICO_BASE_URL || "https://sandbox-api.iyzipay.com"
+    cleanEnv("IYZICO_BASE_URL") || "https://sandbox-api.iyzipay.com"
   ).replace(/\/+$/, "");
 
   // İmzalanan gövde ile gönderilen gövde BAYT BAYT aynı olmalı → tek stringify.
@@ -83,6 +84,8 @@ async function iyzicoPost<T>(
     },
     body,
     cache: "no-store",
+    // Asılı kalan iyzico isteği Vercel fonksiyonunu kilitlemesin.
+    signal: AbortSignal.timeout(10_000),
   });
   // iyzico hata durumlarını da 200 + {status:"failure"} gövdesiyle döner;
   // HTTP hatası yalnız ağ/altyapı sorunudur.
@@ -114,7 +117,7 @@ function verifySignature(
   params: Array<string | number | undefined | null>,
   signature: string | undefined,
 ): boolean {
-  const secret = process.env.IYZICO_SECRET_KEY;
+  const secret = cleanEnv("IYZICO_SECRET_KEY");
   if (!secret || !signature) return false;
   const data = params.map((p) => (p == null ? "" : String(p))).join(":");
   const expected = crypto
@@ -178,7 +181,7 @@ function normalizeGsm(phone: string): string {
 
 /** Taksit seçenekleri: IYZICO_INSTALLMENTS="1,2,3" (varsayılan tek çekim). */
 function enabledInstallments(): number[] {
-  const raw = process.env.IYZICO_INSTALLMENTS;
+  const raw = cleanEnv("IYZICO_INSTALLMENTS");
   if (!raw) return [1];
   const list = raw
     .split(",")
