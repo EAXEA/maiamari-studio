@@ -19,9 +19,24 @@ const STATE: Record<ProbeState, { label: string; cls: string }> = {
   unconfigured: { label: "Yapılandırılmamış", cls: "bg-gray-50 text-gray-500 border-gray-300" },
 };
 
+/** Kalan pencereyi "6 gün 21 sa" biçiminde yazar. */
+function fmtRemaining(ms: number | null): string {
+  if (ms == null) return "—";
+  if (ms <= 0) return "DOLDU";
+  const gun = Math.floor(ms / 86_400_000);
+  const saat = Math.floor((ms % 86_400_000) / 3_600_000);
+  return gun > 0 ? `${gun} gün ${saat} sa` : `${saat} sa`;
+}
+
+function fmtDate(iso: string | null): string {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleString("tr-TR", { timeZone: "Europe/Istanbul" });
+}
+
 export default async function HealthPage() {
   await requireAdmin();
-  const { probes, meta, checkedAt } = await runHealth();
+  const { probes, keepalive, meta, checkedAt } = await runHealth();
+  const ka = STATE[keepalive.state];
 
   return (
     <div className="max-w-3xl">
@@ -69,6 +84,42 @@ export default async function HealthPage() {
             </div>
           );
         })}
+
+        {/* Keep-alive sayaçları — Supabase pause (7g) + GitHub cron (60g).
+            Sayaç son BAŞARILI keep-alive run'ına göre "garanti taban"dır;
+            diğer DB aktiviteleri Supabase saatini ayrıca sıfırlar. */}
+        <div className="border border-[color:var(--color-hairline)] rounded-lg p-4">
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="font-medium">Keep-alive Sayaçları</h2>
+            <span className={`text-[11px] px-2 py-0.5 rounded-full border ${ka.cls}`}>
+              {ka.label}
+            </span>
+          </div>
+          <p className="text-sm text-[color:var(--color-muted)] mt-2">
+            {keepalive.detail}
+          </p>
+          <dl className="mt-3 space-y-1.5 text-xs">
+            {[
+              ["Supabase pause penceresi (7 gün)", fmtRemaining(keepalive.sbRemainingMs)],
+              ["GitHub cron penceresi (60 gün)", fmtRemaining(keepalive.ghRemainingMs)],
+              [
+                "Son keep-alive",
+                `${fmtDate(keepalive.lastRunAt)}${keepalive.lastRunOk === false ? " · BAŞARISIZ" : ""}`,
+              ],
+              ["Son commit", fmtDate(keepalive.lastCommitAt)],
+            ].map(([k, v]) => (
+              <div key={k} className="flex justify-between gap-4">
+                <dt className="text-[color:var(--color-muted)]">{k}</dt>
+                <dd className="font-mono text-right">{v}</dd>
+              </div>
+            ))}
+          </dl>
+          {keepalive.error && (
+            <code className="mt-2 block text-xs text-red-600 break-all">
+              {keepalive.error}
+            </code>
+          )}
+        </div>
       </div>
 
       {/* Build / runtime */}

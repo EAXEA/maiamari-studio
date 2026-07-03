@@ -41,8 +41,24 @@ export type RuntimeMeta = {
   envPresence: { name: string; present: boolean }[];
 };
 
+export type KeepaliveStatus = {
+  state: ProbeState;
+  /** Son keep-alive çalışmasının başlangıcı (ISO) veya null. */
+  lastRunAt: string | null;
+  lastRunOk: boolean | null;
+  /** GitHub workflow durumu (active / disabled_inactivity / ...). */
+  workflowState: string | null;
+  lastCommitAt: string | null;
+  /** Kalan pencereler (ms); negatif = aşıldı, null = hesaplanamadı. */
+  sbRemainingMs: number | null;
+  ghRemainingMs: number | null;
+  detail: string;
+  error?: string;
+};
+
 export type HealthReport = {
   probes: Probe[];
+  keepalive: KeepaliveStatus;
   meta: RuntimeMeta;
   checkedAt: string;
 };
@@ -209,6 +225,107 @@ export function checkPayment(): Probe {
 }
 
 // ---------------------------------------------------------------
+// Keep-alive sayaçları — Supabase pause (7 gün) + GitHub cron (60 gün)
+// Kaynak: GitHub public API (repo public → token/secret GEREKMEZ).
+// Sayaçlar son BAŞARILI keep-alive çalışmasına göre "garanti taban"dır;
+// başka her DB aktivitesi (bu sayfanın select 1'i dahil) Supabase saatini
+// ayrıca sıfırlar, yani gerçek kalan süre gösterilenden az olamaz.
+// ---------------------------------------------------------------
+const KEEPALIVE_WORKFLOW = "supabase-keepalive.yml";
+const SB_WINDOW_MS = 7 * 24 * 60 * 60 * 1000;
+const GH_WINDOW_MS = 60 * 24 * 60 * 60 * 1000;
+
+function ghRepo(): string {
+  const owner = process.env.VERCEL_GIT_REPO_OWNER;
+  const slug = process.env.VERCEL_GIT_REPO_SLUG;
+  return owner && slug ? `${owner}/${slug}` : "EAXEA/maiamari-studio";
+}
+
+async function ghJson<T>(path: string): Promise<T> {
+  const res = await withTimeout(
+    fetch(`https://api.github.com/repos/${ghRepo()}${path}`, {
+      headers: {
+        Accept: "application/vnd.github+json",
+        // GitHub, User-Agent'sız istekleri reddeder.
+        "User-Agent": "maiamari-health",
+      },
+      // Anonim limit 60 istek/saat — her panel yenilemesinde GitHub'ı dövme.
+      next: { revalidate: 300 },
+    }),
+  );
+  if (!res.ok) throw new Error(`GitHub API ${res.status} (${path})`);
+  return res.json() as Promise<T>;
+}
+
+export async function checkKeepalive(): Promise<KeepaliveStatus> {
+  try {
+    const [wf, runs, commits] = await Promise.all([
+      ghJson<{ state?: string }>(`/actions/workflows/${KEEPALIVE_WORKFLOW}`),
+      ghJson<{
+        workflow_runs?: { conclusion: string | null; run_started_at: string }[];
+      }>(`/actions/workflows/${KEEPALIVE_WORKFLOW}/runs?per_page=1`),
+      ghJson<{ commit?: { committer?: { date?: string } } }[]>(
+        "/commits?per_page=1",
+      ),
+    ]);
+    const run = runs.workflow_runs?.[0] ?? null;
+    const lastRunAt = run?.run_started_at ?? null;
+    const lastRunOk = run ? run.conclusion === "success" : null;
+    const workflowState = wf.state ?? null;
+    const lastCommitAt = commits[0]?.commit?.committer?.date ?? null;
+
+    const elapsed = lastRunAt ? Date.now() - Date.parse(lastRunAt) : null;
+    // Başarısız run pencereyi sıfırlamaz — sayaç yalnız başarılı run'a dayanır.
+    const anchor = lastRunOk && elapsed != null ? elapsed : null;
+    const sbRemainingMs = anchor != null ? SB_WINDOW_MS - anchor : null;
+    const ghRemainingMs = anchor != null ? GH_WINDOW_MS - anchor : null;
+
+    let state: ProbeState = "ok";
+    let detail = "Günlük cron çalışıyor; iki pencere de güvende.";
+    if (workflowState !== "active") {
+      state = "down";
+      detail = `Workflow devre dışı (state: ${workflowState ?? "bilinmiyor"}) — Actions sekmesinden etkinleştir.`;
+    } else if (!run) {
+      state = "warn";
+      detail = "Henüz hiç çalışma kaydı yok.";
+    } else if (!lastRunOk) {
+      state = "down";
+      detail = "Son keep-alive çalışması BAŞARISIZ — Actions log'una bak.";
+    } else if (anchor != null && anchor > 5 * 24 * 60 * 60 * 1000) {
+      state = "down";
+      detail = "Son başarılı çalışma 5 günden eski — Supabase pause penceresi daralıyor.";
+    } else if (anchor != null && anchor > 2 * 24 * 60 * 60 * 1000) {
+      state = "warn";
+      detail = "Günlük cron aksıyor görünüyor (son başarılı çalışma >2 gün önce).";
+    }
+
+    return {
+      state,
+      lastRunAt,
+      lastRunOk,
+      workflowState,
+      lastCommitAt,
+      sbRemainingMs,
+      ghRemainingMs,
+      detail,
+    };
+  } catch (err) {
+    return {
+      state: "warn",
+      lastRunAt: null,
+      lastRunOk: null,
+      workflowState: null,
+      lastCommitAt: null,
+      sbRemainingMs: null,
+      ghRemainingMs: null,
+      detail:
+        "GitHub API'ye ulaşılamadı — sayaçlar hesaplanamadı (servislerin kendisi etkilenmez).",
+      error: errText(err),
+    };
+  }
+}
+
+// ---------------------------------------------------------------
 // Build / runtime meta
 // ---------------------------------------------------------------
 const TRACKED_ENV = [
@@ -245,9 +362,14 @@ export function getRuntimeMeta(): RuntimeMeta {
 // Toplu rapor — probe'lar kendi içinde hata yakalar; allSettled gerekmez.
 // ---------------------------------------------------------------
 export async function runHealth(): Promise<HealthReport> {
-  const [db, storage] = await Promise.all([checkDatabase(), checkStorage()]);
+  const [db, storage, keepalive] = await Promise.all([
+    checkDatabase(),
+    checkStorage(),
+    checkKeepalive(),
+  ]);
   return {
     probes: [db, storage, checkEmail(), checkPayment()],
+    keepalive,
     meta: getRuntimeMeta(),
     checkedAt: new Date().toISOString(),
   };
