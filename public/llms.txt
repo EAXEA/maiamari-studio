@@ -1,0 +1,25 @@
+# Maiamari Baskı Atölyesi
+
+> Ankara Çankaya Küçükesat'ta linol baskı atölyesi, sanat galerisi ve baskı malzemeleri mağazası. Kurucu: sanatçı Duygu Sinan. Sayılı edisyon özgün linol baskılar, el yapımı kâğıtlar, baskı malzemeleri ve sanat atölyeleri (workshop) sunar.
+
+Adres: Bülbülderesi Cd. No:90/B, Küçükesat, Çankaya, Ankara, Türkiye
+Telefon: 0506 588 92 77
+E-posta: info@maiamari.art
+Instagram: https://www.instagram.com/maiamari.studio/
+Çalışma günleri: Pazartesi - Cumartesi (ziyaret randevuyla)
+
+## Ana bölümler
+
+- [Galeri](https://www.maiamari.art/galeri): Duygu Sinan'ın sayılı edisyon linol baskı serileri; eserler atölyede yerinde de görülebilir
+- [Mağaza](https://www.maiamari.art/shop): linol baskı boyaları, linolyum plakalar, merdaneler, oyma aletleri, el yapımı kâğıtlar, baskı çantaları
+- [Atölyeler](https://www.maiamari.art/atolyeler): linol baskı, suluboya, çanta baskı ve el yapımı kâğıt atölye programları
+- [Günce](https://www.maiamari.art/journal): atölyeden notlar, rehberler ve duyurular
+- [Hakkında](https://www.maiamari.art/about): atölyenin ve kurucu Duygu Sinan'ın hikayesi
+- [İletişim ve SSS](https://www.maiamari.art/contact): adres, randevu, ulaşım ve sık sorulan sorular
+
+## Optional
+
+- [Mesafeli satış koşulları](https://www.maiamari.art/legal/mesafeli-satis)
+- [İade ve teslimat](https://www.maiamari.art/legal/iade)
+- [Site haritası](https://www.maiamari.art/sitemap.xml)
+- [Ürün feed'i (RSS)](https://www.maiamari.art/feed.xml)

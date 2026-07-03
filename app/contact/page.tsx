@@ -3,8 +3,43 @@ import { getBusiness } from "@/lib/data";
 import { WhatsappCTA } from "@/components/inquiry/whatsapp-cta";
 import { PhoneCTA } from "@/components/inquiry/phone-cta";
 import { TransitInfo } from "@/components/transit/transit-info";
+import { faqPageSchema, jsonLdScript } from "@/lib/structured-data";
 
 export const metadata = { title: "İletişim" };
+
+// SSS içeriği tek kaynak: hem sayfada render edilir hem FAQPage şemasına basılır.
+const FAQ_ITEMS = [
+  {
+    question: "Atölyeyi ziyaret edebilir miyim?",
+    answer:
+      "Evet. Atölyemiz Ankara Çankaya Küçükesat'ta, Bülbülderesi Caddesi No:90/B adresindedir. Ziyaret öncesi telefonla kısa bir randevu almanızı rica ediyoruz; böylece ilgilendiğiniz eser, malzeme ya da atölye programı için yeterli zaman ayırabiliriz.",
+  },
+  {
+    question: "Atölye çalışmalarına nasıl katılabilirim?",
+    answer:
+      "Linol baskı, suluboya, çanta baskı ve el yapımı kâğıt atölyelerimizin güncel programı Atölyeler sayfasında yer alır. Kayıt için telefon ya da WhatsApp ile ulaşmanız yeterli.",
+  },
+  {
+    question: "Galerideki eserler satılık mı?",
+    answer:
+      "Galeride Duygu Sinan'ın sayılı edisyon özgün baskıları sergilenir. Satıştaki eserler seri sayfalarında işaretlidir; fiyat ve edisyon bilgisi için WhatsApp ya da telefonla ulaşabilirsiniz. Eserleri atölyemizde yerinde de görebilirsiniz.",
+  },
+  {
+    question: "Baskı malzemesi satıyor musunuz?",
+    answer:
+      "Evet. Linol baskı boyaları, linolyum plakalar, merdaneler, oyma aletleri ve el yapımı kâğıtlar mağazamızda ve atölyemizde satılır.",
+  },
+  {
+    question: "Türkiye içine gönderim yapıyor musunuz?",
+    answer:
+      "Evet, eser ve malzemeler Türkiye içine kargoyla gönderilebilir. Güncel gönderim koşulları için sipariş öncesinde bizimle iletişime geçebilirsiniz.",
+  },
+  {
+    question: "Özel sipariş ya da iş birliği yapıyor musunuz?",
+    answer:
+      "Özel baskı çalışmaları, kurumsal atölye etkinlikleri ve iş birlikleri için e-posta ya da WhatsApp üzerinden yazabilirsiniz.",
+  },
+];
 
 export default function ContactPage() {
   const biz = getBusiness();
@@ -143,7 +178,28 @@ export default function ContactPage() {
           />
         </div>
       </div>
+
+      <section className="mt-20 lg:mt-28 max-w-3xl" aria-labelledby="sss-baslik">
+        <h2 id="sss-baslik" className="font-display text-2xl lg:text-3xl mb-8">
+          Sık Sorulanlar
+        </h2>
+        <dl className="space-y-8">
+          {FAQ_ITEMS.map((item) => (
+            <div key={item.question}>
+              <dt className="font-display text-lg mb-2">{item.question}</dt>
+              <dd className="text-sm leading-relaxed text-[color:var(--color-muted)] max-w-prose">
+                {item.answer}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </section>
     </div>
+
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={jsonLdScript(faqPageSchema(FAQ_ITEMS))}
+    />
     </div>
   );
 }

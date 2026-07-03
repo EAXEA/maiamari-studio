@@ -351,6 +351,27 @@ export function galleryLandingSchema(allSeries: Series[]) {
 }
 
 /**
+ * FAQPage — /contact sayfasındaki Sık Sorulanlar bölümü.
+ * Google FAQ rich result + AI asistanlarının (AI Overview, ChatGPT vb.)
+ * işletme sorularına doğrudan cevap bulabilmesi için.
+ */
+export function faqPageSchema(items: Array<{ question: string; answer: string }>) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": `${BASE_URL}/contact#faq`,
+    mainEntity: items.map((it) => ({
+      "@type": "Question",
+      name: it.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: it.answer,
+      },
+    })),
+  };
+}
+
+/**
  * Yardımcı: schema objesini <script type="application/ld+json"> tag'i olarak basmak için
  * dangerouslySetInnerHTML payload'u üretir.
  */
