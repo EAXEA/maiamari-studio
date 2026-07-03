@@ -1,0 +1,29 @@
+name: Supabase keep-alive
+
+# Supabase Free plan, 7 gün DB inaktivitesinde projeyi duraklatıyor.
+# Vitrin snapshot fallback'iyle ayakta kalır ama sipariş/ödeme/admin DB ister;
+# bu iş günlük tek bir "select 1" ile projeyi aktif tutar.
+# Secret: SUPABASE_KEEPALIVE_DB_URL = Transaction Pooler DATABASE_URL
+# (aws-*.pooler.supabase.com:6543 — GH runner IPv4-only, direct host çalışmaz).
+# NOT: GitHub, repo 60 gün commit görmezse zamanlanmış workflow'ları durdurur
+# (önce e-posta uyarısı gelir; repo aktif olduğu sürece sorun değil).
+
+on:
+  schedule:
+    - cron: "23 4 * * *" # her gün 04:23 UTC (07:23 TR)
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: DB ping (select 1)
+        env:
+          DB_URL: ${{ secrets.SUPABASE_KEEPALIVE_DB_URL }}
+        run: |
+          if [ -z "$DB_URL" ]; then
+            echo "SUPABASE_KEEPALIVE_DB_URL secret tanımlı değil" >&2
+            exit 1
+          fi
+          psql "$DB_URL" -tAc "select 'keepalive-ok', now();"
