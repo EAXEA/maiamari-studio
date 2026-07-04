@@ -37,6 +37,12 @@ export function getDb(): PostgresJsDatabase<typeof schema> | null {
       prepare: false,
       max: 5,
       idle_timeout: 20,
+      // pgbouncer TRANSACTION modunda (pooler:6543) bağlantı-başına otomatik
+      // tip kataloğu sorgusu (fetch_types) eşzamanlı bağlantı kurulumlarında
+      // birbirine girip havuzu KALICI kilitliyor (tüm sorgular sonsuz kuyruk;
+      // lokal repro: 12 paralel sorgu = wedge, fetch_types:false = 12/12 OK).
+      // Şemada pg array/custom tip yok (galeri jsonb) → kapatmak güvenli.
+      fetch_types: false,
     });
     g._maiamariDb = drizzle(client, { schema });
   }
