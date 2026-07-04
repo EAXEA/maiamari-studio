@@ -23,17 +23,21 @@ import {
   paymentMode,
   retrieveCheckoutForm,
   verifyCfRetrieveSignature,
+  siteBaseUrl,
 } from "@/lib/payment/iyzico";
 
 export const dynamic = "force-dynamic";
 
-function back(req: Request, path: string): NextResponse {
-  // Yönlendirme istek host'una göre (preview/tünel testinde de doğru kalsın).
-  return NextResponse.redirect(new URL(path, req.url), 303);
+function back(path: string): NextResponse {
+  // Yönlendirme tabanı SITE_URL (yoksa canlı domain). req.url KULLANILMAZ:
+  // tünel/proxy arkasında req.url "https://localhost:3000" çözülüyor ve alıcı
+  // ödeme sonrası SSL hatasına düşüyordu (Faz C sandbox testinde yaşandı).
+  // callbackUrl da zaten siteBaseUrl'den üretiliyor; ikisi hep aynı origin.
+  return NextResponse.redirect(new URL(path, siteBaseUrl()), 303);
 }
 
 export async function POST(req: Request) {
-  if (paymentMode() !== "iyzico") return back(req, "/cart");
+  if (paymentMode() !== "iyzico") return back("/cart");
 
   let token = "";
   try {
@@ -42,7 +46,7 @@ export async function POST(req: Request) {
   } catch {
     /* gövde form değilse token boş kalır */
   }
-  if (!token) return back(req, "/cart");
+  if (!token) return back("/cart");
 
   // Otorite: iyzico'dan sonucu çek.
   let result;
@@ -50,11 +54,11 @@ export async function POST(req: Request) {
     result = await retrieveCheckoutForm(token);
   } catch (e) {
     console.error("iyzico retrieve isteği başarısız:", e);
-    return back(req, "/cart");
+    return back("/cart");
   }
   if (result.status !== "success") {
     console.error("iyzico retrieve reddetti:", result.errorMessage);
-    return back(req, "/cart");
+    return back("/cart");
   }
   if (!verifyCfRetrieveSignature(result)) {
     // İmza tutmuyorsa yanıtın bütünlüğüne güvenilemez — siparişe DOKUNMA.
@@ -62,12 +66,12 @@ export async function POST(req: Request) {
       basketId: result.basketId,
       conversationId: result.conversationId,
     });
-    return back(req, "/cart");
+    return back("/cart");
   }
 
   const orderId = String(result.basketId ?? "");
   const data = orderId ? await dbGetOrder(orderId) : null;
-  if (!data) return back(req, "/cart");
+  if (!data) return back("/cart");
   const { order } = data;
 
   const success = result.paymentStatus === "SUCCESS";
@@ -112,7 +116,7 @@ export async function POST(req: Request) {
         paymentId: result.paymentId,
       });
     }
-    return back(req, `/checkout/sonuc?order=${order.id}`);
+    return back(`/checkout/sonuc?order=${order.id}`);
   }
 
   if (success && !amountOk) {
@@ -130,10 +134,10 @@ export async function POST(req: Request) {
   if (order.status === "pending") {
     await dbMarkOrderFailed(order.id, "failed");
   }
-  return back(req, `/checkout/sonuc?order=${order.id}`);
+  return back(`/checkout/sonuc?order=${order.id}`);
 }
 
 /** Elle/GET gelenler için nazik yönlendirme (iyzico her zaman POST kullanır). */
-export async function GET(req: Request) {
-  return back(req, "/cart");
+export async function GET() {
+  return back("/cart");
 }

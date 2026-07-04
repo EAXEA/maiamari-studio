@@ -11,6 +11,7 @@ import {
   normalizePriceForSignature,
   verifyCfRetrieveSignature,
   verifyCfInitSignature,
+  latin1Safe,
   type CfRetrieveResult,
   type CfInitializeResult,
 } from "../../lib/payment/iyzico";
@@ -113,6 +114,20 @@ test("verifyCfRetrieveSignature: BOM'lu secret env'i de doğrular (cleanEnv)", (
     assert.equal(verifyCfRetrieveSignature(makeRetrieveResult()), true);
   } finally {
     process.env.IYZICO_SECRET_KEY = TEST_SECRET;
+  }
+});
+
+test("latin1Safe: iyzico CPP btoa güvenliği (Türkçe karakterler)", () => {
+  // ş/ğ/ı Latin1 dışı → ASCII'ye çevrilir; ç/ö/ü Latin1 içinde → korunur.
+  assert.equal(latin1Safe("cihan şenocak"), "cihan senocak");
+  assert.equal(latin1Safe("Baskı Atölyesi"), "Baski Atölyesi");
+  assert.equal(latin1Safe("İsimsiz / Untitled"), "Isimsiz / Untitled");
+  assert.equal(latin1Safe("Ağaç Göğe Şükür"), "Agaç Göge Sükür");
+  assert.equal(latin1Safe("çanta ödeme ünite"), "çanta ödeme ünite");
+  // Sonuçta Latin1 dışı hiçbir karakter kalmamalı (btoa garantisi).
+  const hard = latin1Safe("Ayşe 🎨 Ürgüp — İğne");
+  for (const ch of hard) {
+    assert.ok((ch.codePointAt(0) as number) <= 0xff, `Latin1 dışı kaldı: ${ch}`);
   }
 });
 

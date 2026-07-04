@@ -170,6 +170,33 @@ export type CheckoutFormInit =
   | { ok: true; token: string; paymentPageUrl: string }
   | { ok: false; error: string };
 
+/**
+ * iyzico hosted ödeme sayfası (CPP) sipariş verisini tarayıcıda btoa() ile
+ * encode ediyor; btoa Latin1 (0x00-0xFF) dışı karakterde InvalidCharacterError
+ * fırlatır ve sayfa BOŞ kalır. Türkçe ş/Ş, ğ/Ğ, ı/İ Latin1'de YOK (ç/ö/ü var).
+ * Bu yüzden iyzico'ya giden görüntü alanları (ad, adres, ürün adı, kategori)
+ * Latin1-güvenli hale çevrilir; DB/site metinleri DEĞİŞMEZ. (Sandbox testinde
+ * "cihan şenocak" + "Baskı Atölyesi" ile birebir yaşandı, 2026-07-04.)
+ */
+const TR_LATIN1_MAP: Record<string, string> = {
+  ş: "s", Ş: "S", ğ: "g", Ğ: "G", ı: "i", İ: "I",
+};
+export function latin1Safe(s: string): string {
+  const tr = s.replace(/[şŞğĞıİ]/g, (ch) => TR_LATIN1_MAP[ch]);
+  let out = "";
+  for (const ch of tr) {
+    if ((ch.codePointAt(0) as number) <= 0xff) {
+      out += ch;
+      continue;
+    }
+    // Diğer Latin1-dışı karakterler: aksanı at (é→e gibi zaten Latin1 ama
+    // ör. "ā"→"a"); hâlâ sığmıyorsa '?' (emoji vb.).
+    const ascii = ch.normalize("NFD").replace(/[̀-ͯ]/g, "");
+    out += ascii && (ascii.codePointAt(0) as number) <= 0xff ? ascii : "?";
+  }
+  return out;
+}
+
 /** "+90..." formuna normalize etmeye çalışır; tanınmayan formatı aynen geçirir. */
 function normalizeGsm(phone: string): string {
   const d = phone.replace(/\D/g, "");
@@ -200,10 +227,13 @@ export async function initializeCheckoutForm(
   items: OrderItemRow[],
   buyerIp: string,
 ): Promise<CheckoutFormInit> {
-  const nameParts = order.buyerName.trim().split(/\s+/);
+  const nameParts = latin1Safe(order.buyerName).trim().split(/\s+/);
   const surname = nameParts.length > 1 ? nameParts.pop()! : nameParts[0];
   const name = nameParts.join(" ") || surname;
   const total = String(order.totalTry);
+  const address = latin1Safe(order.addressLine);
+  const city = latin1Safe(order.city);
+  const contactName = latin1Safe(order.buyerName);
 
   const payload = {
     locale: "tr",
@@ -223,27 +253,27 @@ export async function initializeCheckoutForm(
       email: order.buyerEmail,
       // TCKN checkout'ta toplanmıyor (alan CF için zorunlu; fatura süreci ayrı).
       identityNumber: "11111111111",
-      registrationAddress: order.addressLine,
+      registrationAddress: address,
       ip: buyerIp,
-      city: order.city,
+      city,
       country: "Turkey",
     },
     shippingAddress: {
-      contactName: order.buyerName,
-      city: order.city,
+      contactName,
+      city,
       country: "Turkey",
-      address: order.addressLine,
+      address,
     },
     billingAddress: {
-      contactName: order.buyerName,
-      city: order.city,
+      contactName,
+      city,
       country: "Turkey",
-      address: order.addressLine,
+      address,
     },
     basketItems: items.map((it) => ({
       id: it.productId ?? it.id,
-      name: it.title,
-      category1: "Baskı Atölyesi",
+      name: latin1Safe(it.title),
+      category1: "Baski Atolyesi",
       itemType: "PHYSICAL",
       // iyzico sepet kalemi adetsizdir: satır toplamı (birim × adet) gönderilir.
       price: String(it.lineTotalTry),
