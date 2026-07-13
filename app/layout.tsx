@@ -36,6 +36,13 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  verification: {
+    // Pinterest işletme hesabı site sahiplenme (Pinterest'e Bağlantı → Web siteleri).
+    // <meta name="p:domain_verify" content="..."/> olarak render edilir.
+    other: {
+      "p:domain_verify": "1661f41e1f67a175f121a6a6e0d3d02b",
+    },
+  },
   openGraph: {
     title: "MAIAMARI · Baskı Atölyesi ve Galeri",
     description:
