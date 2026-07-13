@@ -13,6 +13,7 @@
     "db:generate": "drizzle-kit generate",
     "db:studio": "drizzle-kit studio",
     "db:snapshot": "node scripts/export-snapshot.mjs",
+    "snapshot:claude": "node scripts/export-claude-snapshot.mjs",
     "db:seed": "node scripts/seed-products.mjs",
     "db:seed:cats": "node scripts/seed-categories.mjs",
     "db:seed:journal": "node scripts/seed-journal.mjs",
