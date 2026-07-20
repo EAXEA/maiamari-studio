@@ -118,10 +118,16 @@ export default function GizlilikPage() {
 
       <h2>Çerezler</h2>
       <p>
-        Sitemiz, temel işlevlerin çalışması ve kullanım deneyiminin
-        iyileştirilmesi için çerezler kullanır. Tarayıcı ayarlarınızdan çerezleri
-        yönetebilir veya silebilirsiniz; ancak bazı çerezlerin devre dışı
-        bırakılması sitenin bazı bölümlerinin çalışmasını etkileyebilir.
+        Sitemiz yalnızca hizmetin çalışması için gerekli olan zorunlu çerezleri
+        ve benzeri yerel depolama araçlarını kullanır (örneğin oturum yönetimi,
+        alışveriş sepetinin tutulması ve güvenlik). Bu çerezler, hizmetin
+        sunulabilmesi için gerekli olduğundan ayrıca açık rızanıza tabi değildir.
+      </p>
+      <p>
+        Sitemiz reklam, pazarlama veya üçüncü taraf analiz/izleme amaçlı çerez
+        kullanmaz. Tarayıcı ayarlarınızdan çerezleri yönetebilir veya
+        silebilirsiniz; ancak zorunlu çerezlerin devre dışı bırakılması sitenin
+        bazı bölümlerinin (örneğin sepet ve ödeme) çalışmasını etkileyebilir.
       </p>
 
       <h2>Saklama Süresi</h2>
