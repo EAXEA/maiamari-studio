@@ -21,7 +21,7 @@ export const SELLER = {
   taxNumber: "7700294792",
 } as const;
 
-export const LEGAL_UPDATED = "10 Haziran 2026";
+export const LEGAL_UPDATED = "20 Temmuz 2026";
 
 /** Cayma hakkı süresi (gün) ve bedel iadesi süresi (gün), yasal standart. */
 export const WITHDRAWAL_DAYS = 14;

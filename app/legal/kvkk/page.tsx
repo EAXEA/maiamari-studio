@@ -63,15 +63,53 @@ export default function KvkkPage() {
       <h2>Kişisel Verilerin Aktarılması</h2>
       <p>
         Verileriniz, yukarıdaki amaçlarla sınırlı olmak üzere KVKK&apos;nın 8. ve
-        9. maddeleri çerçevesinde; ödeme kuruluşu (iyzico), anlaşmalı kargo
-        firması ve barındırma/altyapı hizmet sağlayıcıları ile; yasal yükümlülük
-        halinde yetkili kamu kurum ve kuruluşlarıyla paylaşılabilir.
+        9. maddeleri çerçevesinde aşağıdaki taraflarla paylaşılabilir:
+      </p>
+      <ul>
+        <li>
+          Ödeme kuruluşu iyzico: ödeme işleminin gerçekleştirilmesi amacıyla,
+          yurt içinde.
+        </li>
+        <li>
+          Anlaşmalı kargo firması: teslimatın yapılabilmesi için ad, adres ve
+          telefon bilgisi, yurt içinde.
+        </li>
+        <li>
+          Barındırma, veritabanı ve e-posta altyapısı hizmet sağlayıcıları:
+          sitenin ve sipariş sisteminin çalıştırılması için gerekli teknik işleme
+          amacıyla.
+        </li>
+        <li>
+          Yasal yükümlülük halinde yetkili kamu kurum ve kuruluşları.
+        </li>
+      </ul>
+
+      <h2>Yurt Dışına Aktarım</h2>
+      <p>
+        Sitenin ve sipariş sisteminin çalışabilmesi için kullanılan barındırma,
+        veritabanı ve e-posta altyapısı hizmetleri, sunucuları yurt dışında
+        (Avrupa Birliği ve Amerika Birleşik Devletleri) bulunan hizmet
+        sağlayıcılar tarafından sunulmaktadır. Bu kapsamda kişisel verileriniz
+        KVKK&apos;nın 9. maddesi çerçevesinde yurt dışına aktarılmaktadır. Söz
+        konusu aktarım, hizmet sağlayıcılarla akdedilen ve verilerinizin yalnızca
+        ilgili hizmetin sunulması amacıyla, uygun güvenlik ve koruma tedbirleri
+        altında işlenmesini sağlayan veri işleme sözleşmelerine dayanılarak
+        gerçekleştirilir.
       </p>
 
       <h2>Veri Toplama Yöntemi</h2>
       <p>
         Kişisel verileriniz, {SELLER.website} sitesi üzerinden elektronik ortamda,
         sipariş ve iletişim formları ile çerezler aracılığıyla toplanır.
+      </p>
+
+      <h2>Saklama Süresi</h2>
+      <p>
+        Kişisel verileriniz, işleme amacının gerektirdiği süre boyunca ve ilgili
+        mevzuatta öngörülen yasal saklama süreleri (örneğin ticari defter ve
+        kayıtlar için Türk Ticaret Kanunu uyarınca 10 yıl)
+        boyunca saklanır. Bu sürelerin sonunda verileriniz silinir, yok edilir
+        veya anonim hale getirilir.
       </p>
 
       <h2>İlgili Kişinin Hakları</h2>

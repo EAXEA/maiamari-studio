@@ -74,8 +74,12 @@ export default function GizlilikPage() {
           yapılabilmesi için ad ve adres bilgisi).
         </li>
         <li>
-          <strong>Barındırma ve altyapı:</strong> sitenin ve veritabanının
-          çalıştığı bulut hizmet sağlayıcıları.
+          <strong>Barındırma ve altyapı:</strong> sitenin, veritabanının ve
+          e-posta bildirimlerinin çalıştığı bulut hizmet sağlayıcıları.
+          Sunucuları yurt dışında (Avrupa Birliği ve Amerika Birleşik Devletleri)
+          bulunmaktadır; ayrıntı için{" "}
+          <a href="/legal/kvkk">KVKK Aydınlatma Metni</a> sayfasındaki yurt dışına
+          aktarım bölümüne bakabilirsiniz.
         </li>
       </ul>
       <p>
