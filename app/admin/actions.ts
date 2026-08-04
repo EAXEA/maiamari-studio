@@ -98,9 +98,10 @@ function revalidateStore(
   for (const s of sections) {
     if (s === "shop") {
       revalidatePath("/shop", "layout"); // /shop + /shop/[kategori]
-      revalidatePath("/urun", "layout"); // ürün/eser detay sayfaları
+      revalidatePath("/urun", "layout"); // ürün detay sayfaları
     } else if (s === "gallery") {
       revalidatePath("/galeri", "layout"); // /galeri + /galeri/[seri] + /galeri/sanatci/[slug]
+      revalidatePath("/eser", "layout"); // eser detay sayfaları (/eser/[slug])
     } else if (s === "journal") {
       revalidatePath("/journal"); // günce kronoloji (tek sayfa)
     } else {
