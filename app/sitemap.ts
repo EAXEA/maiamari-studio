@@ -1,5 +1,11 @@
 import type { MetadataRoute } from "next";
-import { getAllProducts, getCategories, getSeries, getArtists } from "@/lib/data";
+import {
+  getAllProducts,
+  getCategories,
+  getSeries,
+  getArtists,
+  getAllArtworks,
+} from "@/lib/data";
 
 const BASE_URL = "https://www.maiamari.art";
 
@@ -46,11 +52,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
+  // Eserler: her birinin kanonik adresi /eser/<slug>.
+  const artworkRoutes: MetadataRoute.Sitemap = (await getAllArtworks()).map((w) => ({
+    url: `${BASE_URL}/eser/${w.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }));
+
   return [
     ...staticRoutes,
     ...seriesRoutes,
     ...artistRoutes,
     ...categoryRoutes,
     ...productRoutes,
+    ...artworkRoutes,
   ];
 }

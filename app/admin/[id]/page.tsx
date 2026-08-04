@@ -66,7 +66,7 @@ export default async function EditProductPage({
         {isArtwork ? "Eseri düzenle" : "Ürünü düzenle"}
       </h1>
       <p className="text-sm text-[color:var(--color-muted)] mb-8">
-        {isArtwork ? `/galeri/${row.seriesSlug ?? ""}` : `/urun/${row.slug}`}
+        {isArtwork ? `/eser/${row.slug}` : `/urun/${row.slug}`}
       </p>
       <ProductForm
         action={saveProduct}

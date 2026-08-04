@@ -26,7 +26,7 @@ test("ana sayfa: başlık, hero ve ana nav", async ({ page }) => {
   expect(errors).toEqual([]);
 });
 
-test("galeri: landing ve seri sayfası render olur", async ({ page }) => {
+test("galeri: landing → seri → eser sayfası gezinmesi", async ({ page }) => {
   await page.goto("/galeri");
   await expect(page.locator("h1").first()).toBeVisible();
   const firstSeries = page.locator('main a[href^="/galeri/"]').first();
@@ -34,7 +34,33 @@ test("galeri: landing ve seri sayfası render olur", async ({ page }) => {
   await firstSeries.click();
   await expect(page).toHaveURL(/\/galeri\/.+/);
   await expect(page.locator("h1").first()).toBeVisible();
+
+  // Seri sayfasındaki eser kartları kendi sayfalarına link vermeli.
+  const firstWork = page.locator('main a[href^="/eser/"]').first();
+  await expect(firstWork).toBeVisible();
+  await firstWork.click();
+  await expect(page).toHaveURL(/\/eser\/.+/);
+  await expect(page.locator("h1").first()).toBeVisible();
   await expect(page.locator("main img").first()).toBeVisible();
+});
+
+test("eser sayfası: canonical ve VisualArtwork markup basar", async ({ page }) => {
+  await page.goto("/galeri");
+  await page.locator('main a[href^="/galeri/"]').first().click();
+  await page.locator('main a[href^="/eser/"]').first().click();
+  const pathname = new URL(page.url()).pathname;
+
+  const canonical = await page
+    .locator('link[rel="canonical"]')
+    .getAttribute("href");
+  expect(canonical).toContain(pathname);
+
+  const blocks = await page
+    .locator('script[type="application/ld+json"]')
+    .allTextContents();
+  expect(blocks.some((b) => b.includes('"VisualArtwork"'))).toBe(true);
+  // JSON-LD'deki url canonical ile aynı olmalı (301 veren adres gösterilmemeli).
+  expect(blocks.some((b) => b.includes(`/eser/`))).toBe(true);
 });
 
 test("mağaza → ürün → sepet → checkout formu", async ({ page }) => {

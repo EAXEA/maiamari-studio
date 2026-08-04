@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import {
   getProductBySlug,
   getAllProducts,
   getCategoryBySlug,
   getRelatedProducts,
+  getArtworkBySlug,
 } from "@/lib/data";
 import { formatTRY } from "@/lib/format";
 import { ProductCard } from "@/components/product/product-card";
@@ -55,7 +56,13 @@ export default async function ProductPage({
 }) {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
-  if (!product) notFound();
+  if (!product) {
+    // Eserlerin kanonik adresi /eser/<slug>. /urun/<eser-slug> eskiden
+    // açılıyordu (kind filtresiz sorgu); kopya içerik olmasın diye 301.
+    const artwork = await getArtworkBySlug(slug);
+    if (artwork) permanentRedirect(`/eser/${slug}`);
+    notFound();
+  }
 
   // cat ve ilgili ürünler birbirinden bağımsız → paralel.
   const [cat, related] = await Promise.all([
