@@ -10,7 +10,7 @@ import {
 import type { SeriesSlug } from "@/lib/types";
 import { Reveal } from "@/components/motion/reveal";
 import { InstagramInquiryButton } from "@/components/inquiry/instagram-inquiry-button";
-import { WorksDetailList } from "@/components/portfolio/works-detail-list";
+import { WorksGrid } from "@/components/portfolio/works-grid";
 import {
   seriesCollectionPageSchema,
   breadcrumbSchema,
@@ -186,14 +186,9 @@ export default async function SeriPage({
         </Reveal>
       </section>
 
-      {/* 2. Tüm eserler — her birinin kendi detay kartı (foto + künye + lightbox) */}
+      {/* 2. Tüm eserler — vitrin ızgarası; künye ve satın alma /eser/<slug>'da */}
       <section className="container-x py-16 lg:py-24">
-        <WorksDetailList
-          works={works}
-          seriesName={series.title}
-          inquiryPath={`/galeri/${series.slug}`}
-          paperNote={series.paperNote}
-        />
+        <WorksGrid works={works} paperNote={series.paperNote} />
       </section>
 
       {/* 3. Cross-link → next series */}

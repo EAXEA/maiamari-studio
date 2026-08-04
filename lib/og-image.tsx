@@ -5,7 +5,13 @@
 import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { getProductBySlug, getCategoryBySlug, getSeriesBySlug, getPortfolioBySeries } from "./data";
+import {
+  getProductBySlug,
+  getCategoryBySlug,
+  getSeriesBySlug,
+  getPortfolioBySeries,
+  getArtworkBySlug,
+} from "./data";
 
 function formatPriceForOG(value: number): string {
   return `${value.toLocaleString("tr-TR")} ₺`;
@@ -450,6 +456,78 @@ export async function productOGImage(slug: string) {
             >
               <BrandFooter />
             </div>
+          </div>
+        </div>
+      </Frame>
+    ),
+    { ...OG_SIZE, fonts },
+  );
+}
+
+/** Eser OG görseli — /eser/[slug] paylaşımlarında görünür. */
+export async function artworkOGImage(slug: string) {
+  const fonts = await loadFonts();
+  const work = await getArtworkBySlug(slug);
+  if (!work) return defaultOGImage();
+  const image = work.image ? await loadPublicAsBase64(work.image) : null;
+  const meta = [
+    work.technique ?? "Linol baskı",
+    work.year ? String(work.year) : null,
+    work.editionSize ? `${work.editionSize} adetlik edisyon` : null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
+
+  return new ImageResponse(
+    (
+      <Frame>
+        <div style={{ width: "100%", height: "100%", display: "flex", gap: 56 }}>
+          <div
+            style={{
+              width: 470,
+              height: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: BRAND.surface,
+              padding: 36,
+              boxSizing: "border-box",
+            }}
+          >
+            {image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={image}
+                alt=""
+                width={398}
+                height={430}
+                style={{ objectFit: "contain", maxWidth: "100%", maxHeight: "100%" }}
+              />
+            ) : (
+              <div style={{ display: "flex", fontSize: 24, color: BRAND.muted }}>
+                {work.title}
+              </div>
+            )}
+          </div>
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              paddingTop: 12,
+              paddingBottom: 12,
+            }}
+          >
+            <div style={{ display: "flex", flexDirection: "column", gap: 26 }}>
+              <div style={{ display: "flex", fontSize: 54, color: BRAND.foreground }}>
+                {work.title}
+              </div>
+              <div style={{ display: "flex", fontSize: 26, color: BRAND.muted }}>
+                {meta}
+              </div>
+            </div>
+            <BrandFooter />
           </div>
         </div>
       </Frame>
