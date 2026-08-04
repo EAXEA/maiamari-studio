@@ -48,6 +48,8 @@ test("eser sayfası: canonical ve VisualArtwork markup basar", async ({ page }) 
   await page.goto("/galeri");
   await page.locator('main a[href^="/galeri/"]').first().click();
   await page.locator('main a[href^="/eser/"]').first().click();
+  // Client-side navigasyon bitmeden page.url() hâlâ seri adresini döner.
+  await expect(page).toHaveURL(/\/eser\/.+/);
   const pathname = new URL(page.url()).pathname;
 
   const canonical = await page
