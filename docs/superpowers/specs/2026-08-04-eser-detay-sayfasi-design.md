@@ -31,6 +31,15 @@ açılıyor ve URL değişmiyor. Sonuçları:
 | 2 | URL şeması | **`/eser/[slug]`** (düz). `/galeri/[series]/[work]` elendi: `seriesSlug` nullable olduğu için istisna kovası borcu doğuruyor, seri değişimi URL kırıyor |
 | 3 | Seri sayfası davranışı | **Kart artık `/eser/<slug>`'a link.** Lightbox kaldırılıyor; seri içi gezinme eser sayfasındaki önceki/sonraki linkleriyle karşılanıyor (bunlar server HTML'de olduğu için Google seriyi zincirleme tarar) |
 | 4 | Satılık olmayan eserde CTA | **Yok.** Sadece görsel + künye + açıklama. WhatsApp/Instagram butonu gösterilmez |
+| 5 | Seri sayfası kart içeriği | **Vitrin/detay ayrımı.** Kart yalnız görsel + başlık + tek satır özet + "Eseri gör" linki gösterir. Tam künye, açıklama, fiyat ve satın alma eser sayfasına taşınır |
+
+**Karar #5'in gerekçesi:** `works-detail-list.tsx` bugün her eser için tam künyeyi
+(sanatçı, seri, teknik, kâğıt, boyut, yıl, edisyon, seri no, filigran notu),
+açıklamayı, fiyatı ve sepet butonlarını seri sayfasında render ediyor. Eser
+sayfası aynı içeriği tekrarlarsa iki URL neredeyse birebir aynı metni taşır ve
+Google bunları kopya sayar; bu, projenin çözmek istediği duplicate-content
+sorununu yeni bir yerde üretir. Vitrin/detay ayrımı hem bunu önler hem de 15-20
+eserli serilerde aşırı uzayan sayfayı kısaltır.
 
 ## 3. Veri katmanı
 
@@ -70,16 +79,22 @@ Mevcut desen korunuyor: `lib/db/products.ts` sorguları → `lib/data.ts` içind
 1. Kırıntı navigasyon: `Galeri › <Seri> › <Eser>`. `seriesSlug` yoksa
    `Galeri › <Eser>`.
 2. Görsel. Eser tek görselli olduğu için `ProductGallery` yerine sade bir
-   `next/image` + tıklayınca büyütme. Görsel oranı `imageWidth/imageHeight`
-   alanlarından korunur (CLS önlemi).
+   `next/image`, seri kartlarındaki pasapartu çerçevesiyle. Görsel oranı
+   `imageWidth/imageHeight` alanlarından korunur (CLS önlemi). Ek client JS
+   (lightbox/zoom) yok.
 3. Başlık (`h1`) + sanatçı adı, sanatçı sayfasına link (`/galeri/sanatci/<slug>`).
 4. Künye tablosu: teknik, kâğıt, ölçü, edisyon (`editionSize`), ilk seri no
    (`firstSerial`), yıl. Boş alanlar satır olarak render edilmez.
-5. Açıklama metni (`description`).
-6. **Satış bloğu — yalnız `forSale && priceTRY > 0` ise:** fiyat + `AddToCart`
-   (mevcut bileşen). Aksi halde bu blok hiç render edilmez (karar #4).
-7. Önceki / sonraki eser linkleri (aynı seri içinde). Seri yoksa gizli.
-8. `opengraph-image.tsx` — `app/urun/[slug]/opengraph-image.tsx` deseni; eser
+5. Açıklama metni (`description`). `works-detail-list.tsx` içindeki
+   `cleanDescription` yardımcısı (arşiv şablon CTA cümlesini render'da düşürür)
+   `lib/gallery/clean-description.ts` dosyasına taşınır ve buradan kullanılır.
+6. Filigran notu (kartlardan taşınan metin): "MAIAMARI © · yalnızca dijital
+   gösterimde. Teslim edilen fiziksel baskı filigransızdır."
+7. **Satış bloğu — yalnız `forSale && priceTRY > 0` ise:** fiyat + `AddToCart`
+   (mevcut bileşen, `href="/eser/<slug>"` ile). `soldOut` ise `outOfStock`
+   prop'u geçilir. Aksi halde bu blok hiç render edilmez (karar #4).
+8. Önceki / sonraki eser linkleri (aynı seri içinde). Seri yoksa gizli.
+9. `opengraph-image.tsx` — `app/urun/[slug]/opengraph-image.tsx` deseni; eser
    görselini ve başlığı basar.
 
 **Structured data:**
@@ -87,7 +102,9 @@ Mevcut desen korunuyor: `lib/db/products.ts` sorguları → `lib/data.ts` içind
 - `visualArtworkSchema(work, series)` her eserde.
 - `productSchema` **yalnız** `forSale && priceTRY > 0` eserlerde. Satılık
   olmayan eser Product schema almaz; fiyatsız Product markup Merchant Center'da
-  hata üretir.
+  hata üretir. `productSchema` bugün URL'i `${BASE_URL}/urun/${slug}` olarak
+  sabit üretiyor; opsiyonel `urlOverride` parametresi eklenip eserde
+  `/eser/<slug>` geçilir, aksi halde markup 301 veren bir adresi gösterir.
 - `breadcrumbSchema`.
 
 **Metadata:** `title` = eser başlığı, `description` = açıklama (boşsa künyeden
@@ -96,9 +113,13 @@ Mevcut desen korunuyor: `lib/db/products.ts` sorguları → `lib/data.ts` içind
 ## 5. Keşif ve yönlendirme
 
 - **Seri sayfası:** `components/portfolio/works-detail-list.tsx` (486 satır)
-  sadeleşir. Lightbox state'i, klavye yakalama, focus yönetimi ve `addArtwork`
-  mantığı kaldırılır; kart düz bir `<Link href={/eser/${w.slug}}>` olur.
-  Sepete ekleme sorumluluğu eser sayfasına taşınır.
+  yerini `components/portfolio/works-grid.tsx` alır. Kaldırılanlar: lightbox
+  state'i ve JSX'i, klavye yakalama, body scroll lock, `addArtwork`, `useCart`,
+  `useRouter`, tam künye `<dl>`'i, açıklama paragrafı, fiyat/sepet blokları,
+  WhatsApp ve Instagram CTA'ları. Kalan kart: `<Link href={/eser/${w.slug}}>`
+  içinde görsel + başlık + tek satır özet (`technique · year · editionSize`) +
+  satılık ve tükenmemişse fiyat. Bileşen client değil server component olur
+  (`"use client"` düşer), `Reveal` sarmalayıcısı korunur.
 - **Sitemap:** `app/sitemap.ts` içine `getAllArtworks()` üzerinden
   `/eser/<slug>` girdileri, `priority: 0.7`, `changeFrequency: "monthly"`.
 - **301 yönlendirme:** `app/urun/[slug]/page.tsx` içinde ürün bulunamazsa
