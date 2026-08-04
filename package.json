@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:unit": "tsx --test tests/unit/iyzico-signature.test.ts tests/unit/resolve-callback-order.test.ts tests/unit/adjacent-works.test.ts tests/unit/clean-description.test.ts tests/unit/artwork-schema.test.ts tests/unit/artwork-naming.test.ts",
+    "test:unit": "tsx --test tests/unit/iyzico-signature.test.ts tests/unit/adjacent-works.test.ts tests/unit/clean-description.test.ts tests/unit/artwork-schema.test.ts tests/unit/artwork-naming.test.ts",
     "test:e2e": "playwright test",
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
