@@ -7,7 +7,10 @@ import { ProductCard } from "@/components/product/product-card";
 // runtime'da DB'den yeniden üretir (atolyeler/journal/galeri ile aynı mimari).
 export const revalidate = 60;
 
-export const metadata = { title: "Mağaza" };
+export const metadata = {
+  title: "Mağaza",
+  alternates: { canonical: "/shop" },
+};
 
 export default async function ShopPage() {
   const products = (await getAllProducts()).filter(

@@ -1,5 +1,19 @@
 [
   {
+    "id": "mai_1de765e0-b9a3-4a2a-8857-6153d2e6767b",
+    "slug": "abig-oyma-seti",
+    "title": "Abig Oyma Seti",
+    "description": "Rölyef ve lino baskı için beş bıçak içeren çok yönlü kesme aleti seti.\r\n\r\nBeş bıçak ve ahşap saplı set\r\n0,6 mm çelik bıçaklar\r\nPlastik koruyucu kutusu içerisinde gönderilir.",
+    "priceTRY": 1200,
+    "compareAtTRY": null,
+    "status": "in_stock",
+    "statuses": [],
+    "categorySlug": "aletler",
+    "coverImage": "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/4a712465-6045-44ca-b323-25392ca87893.jpg",
+    "gallery": [],
+    "sourceUrl": ""
+  },
+  {
     "id": "38261472",
     "slug": "gold-altin-rengi-parlak-linol-baski-boyasi",
     "title": "Gold (Altın rengi ) Parlak Linol Baskı Boyası",
@@ -36,6 +50,20 @@
     "sourceUrl": "https://www.shopier.com/maiamari/38261423"
   },
   {
+    "id": "mai_7927e44f-d36b-491d-a19d-7275730cdf85",
+    "slug": "pfeil-l-11-0-5-oyma-bicagi",
+    "title": "Pfeil L 11/0.5 Oyma Bıçağı",
+    "description": "İsviçre çeliğinden üretilmiş profesyonel oyma bıçağı",
+    "priceTRY": 2500,
+    "compareAtTRY": null,
+    "status": "in_stock",
+    "statuses": [],
+    "categorySlug": "aletler",
+    "coverImage": "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/c0f5127d-82f4-4e76-86fd-6bd6f1116c55.jpg",
+    "gallery": [],
+    "sourceUrl": ""
+  },
+  {
     "id": "38261382",
     "slug": "kirmizi-linol-boyasi",
     "title": "Kırmızı Linol Boyası",
@@ -52,6 +80,20 @@
       "/images/shopier/38261382/img_02.jpeg"
     ],
     "sourceUrl": "https://www.shopier.com/maiamari/38261382"
+  },
+  {
+    "id": "mai_c4af7c15-5551-4b7a-bb8b-0c177e5cdc89",
+    "slug": "pfeil-l9-2-oyma-bicagi",
+    "title": "Pfeil L9/2 Oyma Bıçağı",
+    "description": "İsviçre çeliğinden üretilmiş profesyonel oyma bıçağı",
+    "priceTRY": 2500,
+    "compareAtTRY": null,
+    "status": "in_stock",
+    "statuses": [],
+    "categorySlug": "aletler",
+    "coverImage": "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/64157d9c-fb7c-40f2-88a1-36103254f694.jpg",
+    "gallery": [],
+    "sourceUrl": ""
   },
   {
     "id": "38261297",
@@ -730,7 +772,7 @@
   {
     "id": "30189302",
     "slug": "cizgili-puffer-tablet-kitap-cantasi",
-    "title": "Çİzgili Puffer Tablet & Kitap Çantası",
+    "title": "Hardal & Pembe Çizgili Puffer Tablet & Kitap Çantası",
     "description": "Çİzgili Puffer Tablet & Kitap Çantası",
     "priceTRY": 550,
     "compareAtTRY": null,
@@ -990,8 +1032,8 @@
   {
     "id": "29612416",
     "slug": "organizer-canta",
-    "title": "Organizer çanta",
-    "description": "Organizer çanta",
+    "title": "Organizer Çanta · Suluboya Çiçek",
+    "description": "Krem zemin üzerine pembe ve mercan tonlarında suluboya çiçek, turkuaz yapraklarla. Kanvas kumaştan, fermuarlı organizer çanta. Çantanızın içinde dağılan küçük eşyalar için: kalem, kablo, makyaj malzemesi, defter.",
     "priceTRY": 399,
     "compareAtTRY": null,
     "status": "out_of_stock",
@@ -1012,8 +1054,8 @@
   {
     "id": "29612318",
     "slug": "organizer-canta-2",
-    "title": "Organizer çanta",
-    "description": "Organizer çanta",
+    "title": "Organizer Çanta · Kırmızı Geometrik",
+    "description": "Kırmızı ve beyaz kırık çizgilerden oluşan geometrik desen. Kanvas kumaştan, fermuarlı organizer çanta. Çantanızın içinde dağılan küçük eşyalar için: kalem, kablo, makyaj malzemesi, defter.",
     "priceTRY": 399,
     "compareAtTRY": null,
     "status": "out_of_stock",
@@ -1034,8 +1076,8 @@
   {
     "id": "29612045",
     "slug": "organizer-canta-3",
-    "title": "Organizer çanta",
-    "description": "Organizer çanta",
+    "title": "Organizer Çanta · Palmiye Çizgi",
+    "description": "Siyah beyaz çizgi zemin üzerinde yeşil palmiye yaprakları. Kanvas kumaştan, fermuarlı organizer çanta. Çantanızın içinde dağılan küçük eşyalar için: kalem, kablo, makyaj malzemesi, defter.",
     "priceTRY": 299.9,
     "compareAtTRY": null,
     "status": "out_of_stock",

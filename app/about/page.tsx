@@ -10,7 +10,10 @@ import { TransitInfo } from "@/components/transit/transit-info";
 // gelir (CLAUDE.md veri kaynağı kuralı), DB-staleness kapsamı dışında.
 export const revalidate = 60;
 
-export const metadata = { title: "Hakkımızda" };
+export const metadata = {
+  title: "Hakkımızda",
+  alternates: { canonical: "/about" },
+};
 
 const VALUES = [
   { name: "Özen", desc: "Her baskıda, her malzemede, her atölyede." },

@@ -22,6 +22,26 @@
     "soldOut": false
   },
   {
+    "id": "mai_bb93e87c-3c92-4c6c-820b-6749a378d262",
+    "slug": "tatbikat",
+    "title": "Tatbikat",
+    "description": "Duygu Sinan’ın Odak serisinden, Reduction (eksiltme) tekniği ile üretilmiş Linol baskı. 285 gsm Fabriano Rosaspina Bianco kâğıdına basılmış",
+    "image": "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/4a83548f-f28f-4f07-9a49-ced0a7ddfbca.jpg",
+    "year": 2026,
+    "series": "odak",
+    "technique": "X3 - Linolyum Baskı - Reduction Print ( Eksiltme Baskı )",
+    "paper": "285 gsm Fabriano Rosaspina Bianco",
+    "dimensions": "35 cm x 50 cm / 13.78” x 19.69” ( Kâğıt ), 29 cm x 40 cm / 11.42”  x 15.75” ( Baskı Alanı )",
+    "editionSize": 12,
+    "printCount": 12,
+    "firstSerial": "#BASKI-2026-0701",
+    "artist": "Duygu Sinan",
+    "forSale": true,
+    "priceTRY": 12000,
+    "compareAtTRY": null,
+    "soldOut": false
+  },
+  {
     "id": "artwork-002",
     "slug": "kapilar-02",
     "title": "İsimsiz / Untitled",

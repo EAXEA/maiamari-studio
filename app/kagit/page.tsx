@@ -6,6 +6,7 @@ export const metadata = {
   title: "El Yapımı Kâğıt · Hikaye",
   description:
     "Atölyenin altındaki kâğıt fabrikası. Maiamari'de el yapımı kâğıdın 12 adımlık üretim süreci. Altındağ Belediyesi Kültür & Sanatevi için Duygu Sinan tarafından hazırlanan görsel kılavuz.",
+  alternates: { canonical: "/kagit" },
 };
 
 const STEPS = [
