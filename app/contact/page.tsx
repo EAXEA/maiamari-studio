@@ -5,7 +5,10 @@ import { PhoneCTA } from "@/components/inquiry/phone-cta";
 import { TransitInfo } from "@/components/transit/transit-info";
 import { faqPageSchema, jsonLdScript } from "@/lib/structured-data";
 
-export const metadata = { title: "İletişim" };
+export const metadata = {
+  title: "İletişim",
+  alternates: { canonical: "/contact" },
+};
 
 // SSS içeriği tek kaynak: hem sayfada render edilir hem FAQPage şemasına basılır.
 const FAQ_ITEMS = [

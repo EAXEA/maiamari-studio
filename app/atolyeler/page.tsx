@@ -46,7 +46,10 @@ function instructorAvatarPath(name: string): string | undefined {
  */
 export const dynamic = "force-dynamic";
 
-export const metadata = { title: "Atölyeler" };
+export const metadata = {
+  title: "Atölyeler",
+  alternates: { canonical: "/atolyeler" },
+};
 
 export default async function AtolyelerPage() {
   const workshops = await getWorkshops();

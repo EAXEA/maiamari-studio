@@ -33,9 +33,10 @@ export const metadata: Metadata = {
   },
   description:
     "Ankara Çankaya'da bir baskı atölyesi ve galeri. Özgün linol baskılar, el yapımı kâğıtlar, baskı malzemeleri ve atölye programları.",
-  alternates: {
-    canonical: "/",
-  },
+  // DİKKAT: burada `alternates.canonical` TANIMLANMAZ. Layout'taki canonical
+  // kendi canonical'ını tanımlamayan HER sayfaya miras kalır; /shop ve /journal
+  // bu yüzden Google'a "ana sayfanın kopyasıyım" diyordu (29.07.2026 tespiti).
+  // Her sayfa kendi canonical'ını verir; ana sayfanınki app/page.tsx'te.
   verification: {
     // Pinterest işletme hesabı site sahiplenme (Pinterest'e Bağlantı → Web siteleri).
     // <meta name="p:domain_verify" content="..."/> olarak render edilir.

@@ -12,7 +12,10 @@ import { Reveal } from "@/components/motion/reveal";
  */
 export const dynamic = "force-dynamic";
 
-export const metadata = { title: "Günce" };
+export const metadata = {
+  title: "Günce",
+  alternates: { canonical: "/journal" },
+};
 
 function yearMonth(iso: string): { year: string; month: string } {
   const d = new Date(iso + "T00:00:00");

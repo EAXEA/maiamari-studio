@@ -26,6 +26,12 @@ import { TransitInfo } from "@/components/transit/transit-info";
  */
 export const revalidate = 60;
 
+// Canonical artık layout'tan miras alınmıyor (miras her sayfayı ana sayfanın
+// kopyası gösteriyordu); ana sayfa kendi canonical'ını burada verir.
+export const metadata = {
+  alternates: { canonical: "/" },
+};
+
 export default async function HomePage() {
   const biz = getBusiness();
   // Bağımsız fetch'ler paralel (ardışık waterfall yerine tek tur).

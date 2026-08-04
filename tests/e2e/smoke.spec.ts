@@ -100,3 +100,35 @@ test("yasal sayfalar yayında (iyzico gereksinimi)", async ({ page }) => {
     await expect(page.locator("h1").first()).toBeVisible();
   }
 });
+
+/**
+ * Canonical regresyon sigortası. Root layout'ta tanımlı bir canonical, kendi
+ * canonical'ını vermeyen her sayfaya miras kalır ve o sayfaları Google'a "ana
+ * sayfanın kopyası" olarak bildirir (29.07.2026'da /shop ve /journal böyle
+ * dizin dışı kalmıştı). Yeni sayfa eklenirken aynı tuzağa düşülmesin.
+ */
+const CANONICAL_ROUTES = [
+  "/",
+  "/shop",
+  "/journal",
+  "/galeri",
+  "/atolyeler",
+  "/about",
+  "/contact",
+  "/kagit",
+];
+
+for (const route of CANONICAL_ROUTES) {
+  test(`canonical: ${route} kendi adresini gösterir`, async ({ page }) => {
+    await page.goto(route);
+    const canonical = await page
+      .locator('link[rel="canonical"]')
+      .getAttribute("href");
+    // Next.js kök canonical'ı sondaki eğik çizgi olmadan basar (eşdeğer).
+    const expected =
+      route === "/"
+        ? "https://www.maiamari.art"
+        : `https://www.maiamari.art${route}`;
+    expect(canonical).toBe(expected);
+  });
+}

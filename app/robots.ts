@@ -8,7 +8,9 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/cart"],
+        // /cart ve /checkout client bileşeni olduğu için metadata (noindex)
+        // veremiyor; dizine girmemeleri robots kuralıyla sağlanır.
+        disallow: ["/api/", "/cart", "/checkout"],
       },
     ],
     sitemap: `${BASE_URL}/sitemap.xml`,
