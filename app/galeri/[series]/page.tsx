@@ -188,7 +188,7 @@ export default async function SeriPage({
 
       {/* 2. Tüm eserler — vitrin ızgarası; künye ve satın alma /eser/<slug>'da */}
       <section className="container-x py-16 lg:py-24">
-        <WorksGrid works={works} paperNote={series.paperNote} />
+        <WorksGrid works={works} series={series} paperNote={series.paperNote} />
       </section>
 
       {/* 3. Cross-link → next series */}

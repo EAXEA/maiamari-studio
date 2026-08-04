@@ -11,6 +11,7 @@ import type { SeriesSlug, Product } from "@/lib/types";
 import { formatTRY } from "@/lib/format";
 import { adjacentWorks } from "@/lib/gallery/adjacent-works";
 import { cleanDescription } from "@/lib/gallery/clean-description";
+import { artworkNaming } from "@/lib/gallery/artwork-naming";
 import { AddToCart } from "@/components/cart/add-to-cart";
 import {
   visualArtworkSchema,
@@ -53,13 +54,17 @@ export async function generateMetadata({
   const { slug } = await params;
   const work = await getArtworkBySlug(slug);
   if (!work) return {};
+  const series = work.series ? await getSeriesBySlug(work.series) : null;
+  // İsimsiz eserlerde başlık seri + eser numarasıyla ayrışır; aksi halde 27
+  // sayfa aynı başlıkla çıkar ve arama motoru bunları kopya sayar.
+  const naming = artworkNaming(work, series);
   const desc = cleanDescription(work.description || "") || fallbackDescription(work);
   return {
-    title: work.title,
+    title: naming.pageTitle,
     description: desc,
     alternates: { canonical: `/eser/${work.slug}` },
     openGraph: {
-      title: work.title,
+      title: naming.pageTitle,
       description: desc,
       // OG image: app/eser/[slug]/opengraph-image.tsx file convention.
     },
@@ -81,6 +86,11 @@ export default async function ArtworkPage({
     : [];
   const { prev, next } = adjacentWorks(siblings, work.slug);
 
+  // Görünen adlar: isimsiz eserlerde seri + eser numarasıyla ayrışır.
+  const naming = artworkNaming(work, series);
+  const prevNaming = prev ? artworkNaming(prev, series) : null;
+  const nextNaming = next ? artworkNaming(next, series) : null;
+
   // Satış bloğu ve Product markup yalnız fiyatlı-satılık eserde. Satılık
   // olmayan eserde hiçbir CTA basılmaz (tasarım kararı #4).
   const isPriced =
@@ -94,14 +104,18 @@ export default async function ArtworkPage({
     ...(series
       ? [{ name: series.title, url: `${BASE_URL}/galeri/${series.slug}` }]
       : []),
-    { name: work.title, url: `${BASE_URL}/eser/${work.slug}` },
+    { name: naming.cardTitle, url: `${BASE_URL}/eser/${work.slug}` },
   ]);
 
   return (
     <div className="container-x py-12 lg:py-16">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={jsonLdScript(visualArtworkSchema(work, series))}
+        dangerouslySetInnerHTML={jsonLdScript(
+          // schemaName: "İsimsiz (Kapılar 03), 2015" — 27 isimsiz eser
+          // arama motorunda birbirinden ayrışsın.
+          visualArtworkSchema({ ...work, title: naming.schemaName }, series),
+        )}
       />
       {isPriced && (
         <script
@@ -171,8 +185,11 @@ export default async function ArtworkPage({
 
         {/* Künye */}
         <div className="lg:pt-6">
-          <h1 className="font-display text-3xl md:text-4xl lg:text-5xl leading-[1.05] tracking-tight">
-            <span className="italic">{work.title}</span>
+          {naming.eyebrow && (
+            <p className="eyebrow tabular-nums">{naming.eyebrow}</p>
+          )}
+          <h1 className="font-display mt-4 text-3xl md:text-4xl lg:text-5xl leading-[1.05] tracking-tight">
+            <span className="italic">{naming.heading}</span>
           </h1>
 
           <dl className="mt-8 grid grid-cols-[max-content_1fr] gap-x-8 gap-y-2 text-sm">
@@ -263,16 +280,16 @@ export default async function ArtworkPage({
       {/* Seri içi gezinme — server HTML'de, arama motoru zincirleme tarar */}
       {(prev || next) && (
         <nav className="mt-20 pt-10 border-t border-[color:var(--color-hairline)] flex justify-between gap-6 text-sm">
-          {prev ? (
+          {prev && prevNaming ? (
             <Link href={`/eser/${prev.slug}`} className="editorial-link">
-              ← {prev.title}
+              ← {prevNaming.cardTitle}
             </Link>
           ) : (
             <span />
           )}
-          {next ? (
+          {next && nextNaming ? (
             <Link href={`/eser/${next.slug}`} className="editorial-link text-right">
-              {next.title} →
+              {nextNaming.cardTitle} →
             </Link>
           ) : (
             <span />

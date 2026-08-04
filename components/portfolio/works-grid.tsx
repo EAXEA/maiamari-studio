@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { PortfolioWork } from "@/lib/types";
+import type { PortfolioWork, Series } from "@/lib/types";
 import { formatTRY } from "@/lib/format";
 import { Reveal } from "@/components/motion/reveal";
+import { artworkNaming } from "@/lib/gallery/artwork-naming";
 
 /** Eser fiyatlı satışa açık mı (vitrinde fiyat gösterimi). */
 function isPriced(w: PortfolioWork): boolean {
@@ -29,9 +30,12 @@ function summaryLine(w: PortfolioWork, paperNote?: string): string {
  */
 export function WorksGrid({
   works,
+  series,
   paperNote,
 }: {
   works: PortfolioWork[];
+  /** Kart adında isimsiz eserleri ayrıştırmak için (Kapılar 03). */
+  series: Series | null;
   paperNote?: string;
 }) {
   return (
@@ -54,7 +58,7 @@ export function WorksGrid({
               </div>
             </figure>
             <h2 className="font-display italic mt-5 text-xl lg:text-2xl leading-tight">
-              {work.title}
+              {artworkNaming(work, series).cardTitle}
             </h2>
             <p className="mt-2 text-sm text-[color:var(--color-muted)]">
               {summaryLine(work, paperNote)}
