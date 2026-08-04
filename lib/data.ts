@@ -16,6 +16,8 @@ import {
   dbGetProductById,
   dbGetRelatedProducts,
   dbGetArtworksBySeries,
+  dbGetArtworkBySlug,
+  dbGetAllArtworks,
 } from "./db/products";
 import { dbGetCategories, dbGetCategoryBySlug } from "./db/categories";
 import { dbGetSeries, dbGetSeriesBySlug } from "./db/series";
@@ -441,6 +443,26 @@ export const getPortfolioBySeries = cache(
     return getPortfolio().filter((w) => (w.series ?? "kapilar") === slug);
   },
 );
+
+/** Tek eser, slug ile (eser detay sayfası). DB yoksa portfolio.json'a düşer. */
+export const getArtworkBySlug = cache(
+  async (slug: string): Promise<PortfolioWork | null> => {
+    const fromDb = await readDb(
+      "getArtworkBySlug",
+      () => dbGetArtworkBySlug(slug),
+      undefined,
+    );
+    // undefined = DB yok → JSON fallback; null = DB'de bulunamadı
+    if (fromDb !== undefined) return fromDb;
+    return getPortfolio().find((w) => w.slug === slug) || null;
+  },
+);
+
+/** Yayındaki tüm eserler (statik parametreler + sitemap). */
+export const getAllArtworks = cache(async (): Promise<PortfolioWork[]> => {
+  const fromDb = await readDb("getAllArtworks", dbGetAllArtworks, null);
+  return fromDb ?? getPortfolio();
+});
 
 export const getJournalPosts = cache(async (): Promise<JournalPost[]> => {
   // DB varsa ondan (boş tablo = [] döner, fallback'e DÜŞMEZ); DB yoksa

@@ -164,12 +164,44 @@ export async function dbGetArtworksBySeries(
   return rows.map(toPortfolioWork);
 }
 
+/** Tek eser, slug ile (eser detay sayfası). Yayında olmayan eser dönmez. */
+export async function dbGetArtworkBySlug(
+  slug: string,
+): Promise<PortfolioWork | null | undefined> {
+  const db = getDb();
+  if (!db) return undefined; // undefined = DB yok → fallback; null = bulunamadı
+  const rows = await db
+    .select()
+    .from(T)
+    .where(and(eq(T.kind, "artwork"), eq(T.isPublished, true), eq(T.slug, slug)))
+    .limit(1);
+  return rows[0] ? toPortfolioWork(rows[0]) : null;
+}
+
+/** Yayındaki tüm eserler (generateStaticParams + sitemap). */
+export async function dbGetAllArtworks(): Promise<PortfolioWork[] | null> {
+  const db = getDb();
+  if (!db) return null;
+  const rows = await db
+    .select()
+    .from(T)
+    .where(and(eq(T.kind, "artwork"), eq(T.isPublished, true)))
+    .orderBy(asc(T.sortOrder), asc(T.title));
+  return rows.map(toPortfolioWork);
+}
+
 export async function dbGetProductBySlug(
   slug: string,
 ): Promise<Product | null | undefined> {
   const db = getDb();
   if (!db) return undefined; // undefined = DB yok → fallback; null = DB'de bulunamadı
-  const rows = await db.select().from(T).where(eq(T.slug, slug)).limit(1);
+  // kind filtresi: eser (kind="artwork") /urun/ altından açılmasın. Eserlerin
+  // kanonik adresi /eser/<slug>; yönlendirme app/urun/[slug]/page.tsx'te.
+  const rows = await db
+    .select()
+    .from(T)
+    .where(and(eq(T.slug, slug), eq(T.kind, "material")))
+    .limit(1);
   return rows[0] ? toProduct(rows[0]) : null;
 }
 

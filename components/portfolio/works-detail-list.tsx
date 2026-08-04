@@ -8,26 +8,13 @@ import { Reveal } from "@/components/motion/reveal";
 import { InstagramInquiryButton } from "@/components/inquiry/instagram-inquiry-button";
 import { useCart } from "@/components/cart/cart-provider";
 import { CHECKOUT_ENABLED } from "@/lib/checkout/flags";
+import { cleanDescription } from "@/lib/gallery/clean-description";
 
 /** Eser galeride fiyatlı satışa açık mı (iyzico öncesi fiyat gösterimi). */
 function isPriced(w: PortfolioWork): boolean {
   return !!w.forSale && typeof w.priceTRY === "number" && w.priceTRY > 0;
 }
 
-/**
- * Arşiv sync'inden gelen şablon CTA cümlesini gösterimde temizler.
- * "...Edisyon, boyut ve fiyat bilgisi için iletişime geçin." — edisyon, boyut
- * (ve fiyatlı eserlerde fiyat) zaten künyede gösterildiğinden bu cümle artık
- * gereksiz/çelişik. Kaynak veriye/DB'ye DOKUNULMAZ; yalnız render'da düşülür.
- */
-function cleanDescription(desc: string): string {
-  return desc
-    .replace(
-      /\s*Edisyon,\s*boyut\s*ve\s*fiyat\s*bilgisi\s*için\s*iletişime\s*geçin\.?\s*/giu,
-      " ",
-    )
-    .trim();
-}
 // NOTE: Galeri görselleri arşivde baked-in watermark ile geliyor
 // (Masaüstü\duygu arşiv\images_watermarked\). CSS overlay watermark
 // kaldırıldı — çift watermark gerekmez.

@@ -111,9 +111,11 @@ export function websiteSchema() {
 
 /**
  * Product schema — /urun/[slug] sayfasında basılır.
+ * `urlOverride`: eserler /eser/<slug> adresinde yaşar; markup'taki url
+ * canonical ile çelişmemeli (aksi halde 301 veren bir adres gösterilir).
  */
-export function productSchema(product: Product) {
-  const url = `${BASE_URL}/urun/${product.slug}`;
+export function productSchema(product: Product, urlOverride?: string) {
+  const url = urlOverride ?? `${BASE_URL}/urun/${product.slug}`;
   const images = product.gallery.length > 0
     ? product.gallery.map((p) => `${BASE_URL}${p}`)
     : [`${BASE_URL}${product.coverImage}`];
@@ -171,20 +173,25 @@ export function breadcrumbSchema(items: Array<{ name: string; url: string }>) {
  * VisualArtwork — galeri serisindeki tek bir eser.
  * Google Images rich result + "Artworks by Duygu Sinan" Knowledge panel için.
  */
-export function visualArtworkSchema(work: PortfolioWork, series: Series) {
+export function visualArtworkSchema(work: PortfolioWork, series: Series | null) {
   const absoluteImage = work.image.startsWith("http")
     ? work.image
     : `${BASE_URL}${work.image}`;
-  const seriesUrl = `${BASE_URL}/galeri/${series.slug}`;
+  // Eserin kanonik adresi kendi sayfasıdır; markup canonical ile çelişmemeli.
+  const workUrl = `${BASE_URL}/eser/${work.slug}`;
 
   return {
     "@context": "https://schema.org",
     "@type": "VisualArtwork",
-    "@id": `${seriesUrl}#${work.slug}`,
+    "@id": workUrl,
     name: work.title,
     image: absoluteImage,
-    url: seriesUrl,
-    description: work.description || `${work.title}. ${series.title} serisinden linol baskı.`,
+    url: workUrl,
+    description:
+      work.description ||
+      (series
+        ? `${work.title}. ${series.title} serisinden linol baskı.`
+        : `${work.title}. Linol baskı.`),
     creator: {
       "@type": "Person",
       name: work.artist || "Duygu Sinan",
@@ -198,7 +205,9 @@ export function visualArtworkSchema(work: PortfolioWork, series: Series) {
       dateCreated: String(work.year),
       copyrightYear: work.year,
     }),
-    isPartOf: { "@id": `${seriesUrl}#collection` },
+    ...(series && {
+      isPartOf: { "@id": `${BASE_URL}/galeri/${series.slug}#collection` },
+    }),
   };
 }
 
