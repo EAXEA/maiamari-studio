@@ -27,6 +27,21 @@ function supabaseImageHost(): string {
  *   iyzico ödeme akışı tam-sayfa yönlendirmedir (embed değil) → CSP'yi etkilemez.
  */
 const supabaseHost = supabaseImageHost();
+
+/**
+ * İhlal raporlarının düştüğü uç (app/api/csp-report/route.ts). Rapor yalnız
+ * log'a yazılır, DB'ye DEĞİL.
+ *
+ * YALNIZ `report-uri` kullanılıyor, `report-to` BİLEREK YOK. Sebep (2026-08-06
+ * ölçümü): `report-to` mevcutsa Chrome `report-uri`'yi YOK SAYAR. `report-to`
+ * ise `Reporting-Endpoints` başlığına bağlıdır ve oradaki değer MUTLAK URL
+ * olmalıdır — göreli yol geçersiz sayılır. İkisi birden konunca sonuç, hiç
+ * rapor gelmemesiydi: report-uri gölgelenmiş, report-to ise geçersiz uca
+ * bağlanmıştı. `report-uri` kullanımdan kalkıyor ama çalışıyor ve anında
+ * teslim ediyor; geçici teşhis için doğru tercih bu.
+ */
+const CSP_REPORT_PATH = "/api/csp-report";
+
 const cspReportOnly = [
   "default-src 'self'",
   "base-uri 'self'",
@@ -38,6 +53,7 @@ const cspReportOnly = [
   "script-src 'self' 'unsafe-inline'",
   "font-src 'self' data:",
   `connect-src 'self' https://${supabaseHost}`,
+  `report-uri ${CSP_REPORT_PATH}`,
 ].join("; ");
 
 const securityHeaders = [
