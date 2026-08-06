@@ -151,6 +151,15 @@ export function verifyCfInitSignature(r: CfInitializeResult): boolean {
   return verifySignature([r.conversationId, r.token], r.signature);
 }
 
+/**
+ * Callback token'ının sha256 hex özeti. Ham CF token'ı hiçbir yerde (DB,
+ * log) tutulmaz; sipariş eşleştirmesi ve callback idempotency bu hash
+ * üzerinden yapılır (bkz. lib/db/orders.ts dbFindOrderByTokenHash).
+ */
+export function hashCallbackToken(token: string): string {
+  return crypto.createHash("sha256").update(token, "utf8").digest("hex");
+}
+
 // ---------------------------------------------------------------
 // Initialize — hosted ödeme sayfası
 // ---------------------------------------------------------------

@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import Link from "next/link";
-import { dbGetOrder, dbSetOrderPaymentToken } from "@/lib/db/orders";
-import { paymentMode, initializeCheckoutForm } from "@/lib/payment/iyzico";
+import { dbGetOrder, dbSetOrderPaymentInit } from "@/lib/db/orders";
+import { paymentMode, initializeCheckoutForm, hashCallbackToken } from "@/lib/payment/iyzico";
 import { hasOrderAccess } from "@/lib/checkout/order-access";
 import { confirmMockPayment, cancelMockPayment } from "../actions";
 import { formatTRY } from "@/lib/format";
@@ -43,7 +43,11 @@ export default async function OdemePage({
         .trim() || "0.0.0.0";
     const init = await initializeCheckoutForm(order, items, ip);
     if (init.ok) {
-      await dbSetOrderPaymentToken(order.id, init.token);
+      // Ham token DB'ye YAZILMAZ — yalnız sha256 hash'i, redirect'ten ÖNCE
+      // (callback hızlı yolu bununla bulur; bulamazsa iyzico'ya sorar).
+      await dbSetOrderPaymentInit(order.id, {
+        tokenHash: hashCallbackToken(init.token),
+      });
       redirect(init.paymentPageUrl);
     }
     iyzicoError = init.error;

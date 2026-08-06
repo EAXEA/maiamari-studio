@@ -93,13 +93,63 @@ export async function dbGetOrder(id: string): Promise<OrderWithItems | null> {
 }
 
 /**
+ * Callback'te ham token'ı işlemeden önceki ucuz yerel kontrol: token'ın
+ * sha256 hash'i initialize sırasında kaydettiğimiz `paymentTokenHash` ile
+ * eşleşiyor mu. Eşleşmezse çağıran iyzico'ya HİÇ gitmeden reddedebilir.
+ */
+export async function dbFindOrderByTokenHash(
+  tokenHash: string,
+): Promise<OrderWithItems | null> {
+  const db = getDb();
+  if (!db) return null;
+  const [order] = await db
+    .select()
+    .from(orders)
+    .where(eq(orders.paymentTokenHash, tokenHash))
+    .limit(1);
+  if (!order) return null;
+  const items = await db
+    .select()
+    .from(orderItems)
+    .where(eq(orderItems.orderId, order.id));
+  return { order, items };
+}
+
+/**
+ * CUTOVER UYUMLULUĞU (2026-07): bu hash-tabanlı eşleştirme deploy edilmeden
+ * ÖNCE initialize edilmiş siparişlerde `paymentTokenHash` YOK, yalnız eski
+ * ham `paymentToken` kolonu dolu. Bu fonksiyon YALNIZ `dbFindOrderByTokenHash`
+ * sonuçsuz kalınca, ve YALNIZ `pending` siparişler arasında ham token'ı
+ * arar — geçiş dönemindeki yarım kalmış ödemeler callback'i kaybetmesin diye.
+ * Kalıcı yol DEĞİLDİR: bulunan sipariş için ham token hiçbir yere YENİDEN
+ * yazılmaz/loglanmaz; asıl otorite (imza+tutar doğrulaması) değişmez.
+ */
+export async function dbFindPendingOrderByLegacyToken(
+  token: string,
+): Promise<OrderWithItems | null> {
+  const db = getDb();
+  if (!db) return null;
+  const [order] = await db
+    .select()
+    .from(orders)
+    .where(and(eq(orders.paymentToken, token), eq(orders.status, "pending")))
+    .limit(1);
+  if (!order) return null;
+  const items = await db
+    .select()
+    .from(orderItems)
+    .where(eq(orderItems.orderId, order.id));
+  return { order, items };
+}
+
+/**
  * Ödeme başarılı: status=paid + ödeme referansları. Yalnız `pending` siparişi
  * günceller (koşullu UPDATE) → eşzamanlı/tekrarlanan callback'te ikinci çağrı
  * false döner ve çağıran bildirimi atlar (çifte e-posta koruması).
  */
 export async function dbMarkOrderPaid(
   id: string,
-  ref: { paymentProvider?: string; paymentId?: string; paymentToken?: string },
+  ref: { paymentProvider?: string; paymentId?: string },
 ): Promise<boolean> {
   const db = getDb();
   if (!db) return false;
@@ -109,7 +159,6 @@ export async function dbMarkOrderPaid(
       status: "paid",
       paymentProvider: ref.paymentProvider,
       paymentId: ref.paymentId,
-      paymentToken: ref.paymentToken,
       updatedAt: new Date(),
     })
     .where(and(eq(orders.id, id), eq(orders.status, "pending")))
@@ -118,19 +167,31 @@ export async function dbMarkOrderPaid(
 }
 
 /**
- * Initialize'da üretilen CF token'ını siparişe iliştirir (takip/teşhis).
- * Aynı sipariş için yeniden initialize edilirse son token yazılır; ödeme
- * doğrulaması token eşitliğine değil retrieve imzası + basketId'ye dayanır.
+ * Initialize'da üretilen CF sonucunu siparişe iliştirir: ham token DEĞİL,
+ * yalnız sha256 hash'i + üretim zamanı (teşhis). Hosted ödeme sayfası URL'i
+ * BİLİNÇLİ olarak saklanmaz — okuyucusu yok, canlı ödeme oturumu linkini
+ * boşuna tutmayız (bkz. schema.ts paymentPageUrl yorumu).
+ *
+ * Callback siparişi bu hash'e göre bulmayı DENER; bulamazsa iyzico'ya sorup
+ * basketId ile eşleştirir (bkz. route.ts) — yani hash, doğruluğun değil
+ * yalnız hızlı yolun anahtarıdır. Aynı sipariş yeniden initialize edilirse
+ * son hash yazılır ve öncekinin hızlı yolu kaybolur; o durumda callback
+ * otomatik olarak iyzico-otoriter yola düşer, ödeme kaybolmaz.
  */
-export async function dbSetOrderPaymentToken(
+export async function dbSetOrderPaymentInit(
   id: string,
-  token: string,
+  init: { tokenHash: string },
 ): Promise<void> {
   const db = getDb();
   if (!db) return;
+  const now = new Date();
   await db
     .update(orders)
-    .set({ paymentToken: token, updatedAt: new Date() })
+    .set({
+      paymentTokenHash: init.tokenHash,
+      paymentTokenIssuedAt: now,
+      updatedAt: now,
+    })
     .where(eq(orders.id, id));
 }
 

@@ -243,8 +243,31 @@ export const orders = pgTable("orders", {
   paymentProvider: text("payment_provider").notNull().default(""),
   /** iyzico paymentId (ödeme sonucundan). */
   paymentId: text("payment_id"),
-  /** iyzico Checkout Form token'ı. */
+  /**
+   * ESKİ: ham iyzico CF token'ı tutuyordu. ARTIK YAZILMIYOR (2026-07 —
+   * ham token DB'de tutulmaz, callback eşleştirmesi paymentTokenHash ile
+   * yapılır). Tarihsel satırlarda değer kalabilir.
+   */
   paymentToken: text("payment_token"),
+  /**
+   * sha256(token) hex — callback'te ham token'ı DB'ye yazmadan eşleştirme.
+   * `.unique()`: Postgres unique index NULL'ları birbirine eşit saymaz →
+   * birden fazla NULL (henüz initialize edilmemiş/legacy sipariş) serbest,
+   * yalnız gerçek hash değerleri tekil siparişe bağlanır.
+   */
+  paymentTokenHash: text("payment_token_hash").unique(),
+  /**
+   * REZERVE — YAZILMIYOR, OKUNMUYOR. iyzico'nun hosted ödeme sayfası URL'i
+   * için ayrıldı ama initialize sonucu bu kolona YAZILMAZ: canlı bir ödeme
+   * oturumu linkini okuyucusu olmadan saklamak gereksiz veri sorumluluğudur.
+   * Kolon, ileride doğrulanmış bir token ömrüyle cache/reuse yapılırsa yeni
+   * migration gerekmesin diye duruyor. Dolu sanıp okumayın.
+   */
+  paymentPageUrl: text("payment_page_url"),
+  /** paymentTokenHash ne zaman üretildi — teşhis (destek/iade konuşmasında
+   *  "ödeme sayfası ne zaman açıldı" sorusu). updatedAt başka mutasyonlarca
+   *  da dokunulduğu için AYRI kolon. */
+  paymentTokenIssuedAt: timestamp("payment_token_issued_at", { withTimezone: true }),
   /** iyzico conversationId (request/response eşleştirme). */
   conversationId: text("conversation_id"),
   createdAt: timestamp("created_at", { withTimezone: true })
