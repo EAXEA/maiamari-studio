@@ -2,19 +2,33 @@
  * iyzico Checkout Form callback'i.
  *
  * iyzico, alıcının tarayıcısını ödeme sonrası buraya POST'lar (body: token).
- * Bu POST'a GÜVENİLMEZ — herkes POST'layabilir. Otorite zinciri:
+ * Bu POST'a GÜVENİLMEZ — herkes POST'layabilir. Otorite zinciri (değişmedi):
  *   token → server-to-server RETRIEVE → response signature doğrula →
  *   basketId'den siparişi bul → tutar/para birimi çapraz kontrol →
  *   paymentStatus SUCCESS ise (ve sipariş hâlâ pending ise) paid işaretle.
+ *
+ * HIZLI YOL (2026-07): initialize sırasında token'ın sha256 hash'i siparişe
+ * yazılır (ham token DB'de TUTULMAZ). Callback'te aynı hash'le sipariş yerelde
+ * bulunabilirse ve sipariş ZATEN `paid` ise, iyzico'ya hiç gidilmeden
+ * idempotent olarak sonuç sayfasına dönülür (tekrarlanan POST'ların maliyeti
+ * sıfır).
+ *
+ * DİKKAT — hash bir KAPI DEĞİL, yalnız kestirmedir. Eşleşme bulunamazsa istek
+ * REDDEDİLMEZ; eski iyzico-otoriter yola düşülür. Nedeni: `paymentTokenHash`
+ * tek kolondur ve aynı sipariş yeniden initialize edilirse (alıcı geri tuşuna
+ * basıp ödeme sayfasına tekrar girerse) önceki hash kaybolur. Hash'i kapı
+ * yapsaydık, alıcı eski sekmedeki ödeme sayfasından ödemeyi tamamladığında
+ * PARA ÇEKİLİR ama sipariş `pending` kalırdı. Doğruluk, hash eşleşmesine
+ * DEĞİL retrieve imzası + basketId + tutar kontrolüne dayanır.
+ *
  * Sonra alıcı /checkout/sonuc'a yönlendirilir (sayfa sahiplik cookie'sini
  * zaten doğruluyor; cookie alıcının tarayıcısında startCheckout'ta kuruldu).
- *
- * Idempotent: tekrarlanan POST'larda sipariş zaten paid ise yalnız yönlendirir
- * (e-posta tekrar gitmez).
  */
 import { NextResponse } from "next/server";
 import {
   dbGetOrder,
+  dbFindOrderByTokenHash,
+  dbFindPendingOrderByLegacyToken,
   dbMarkOrderPaid,
   dbMarkOrderFailed,
 } from "@/lib/db/orders";
@@ -23,8 +37,10 @@ import {
   paymentMode,
   retrieveCheckoutForm,
   verifyCfRetrieveSignature,
+  hashCallbackToken,
   siteBaseUrl,
 } from "@/lib/payment/iyzico";
+import { resolveCallbackOrder } from "@/lib/checkout/resolve-callback-order";
 
 export const dynamic = "force-dynamic";
 
@@ -48,6 +64,21 @@ export async function POST(req: Request) {
   }
   if (!token) return back("/cart");
 
+  const tokenHash = hashCallbackToken(token);
+
+  // Hızlı yol araması. Öncelik hash'te; bulunamazsa CUTOVER FALLBACK olarak
+  // yalnız `pending` siparişlerde eski ham `paymentToken` denenir (bu deploy'dan
+  // önce initialize edilmiş, hash'i olmayan siparişler için). İkisi de boş
+  // dönebilir — bu bir RET SEBEBİ DEĞİLDİR, aşağıda iyzico'ya sorulur.
+  const byHash = await dbFindOrderByTokenHash(tokenHash);
+  const byLegacyToken = byHash ? null : await dbFindPendingOrderByLegacyToken(token);
+  const local = resolveCallbackOrder(byHash, byLegacyToken);
+
+  // Kestirme: zaten ödenmiş — idempotent replay, iyzico'ya gitmeye gerek yok.
+  if (local && local.order.status === "paid") {
+    return back(`/checkout/sonuc?order=${local.order.id}`);
+  }
+
   // Otorite: iyzico'dan sonucu çek.
   let result;
   try {
@@ -70,6 +101,21 @@ export async function POST(req: Request) {
   }
 
   const orderId = String(result.basketId ?? "");
+
+  // Çapraz kontrol: yerelde bir eşleşme bulduysak, iyzico'nun döndüğü basketId
+  // ile aynı siparişi göstermeli. Uyuşmuyorsa bir eşleştirme karışıklığı var —
+  // siparişe DOKUNMA. (Yerel eşleşme yoksa bu kontrol atlanır; otorite zaten
+  // imza + tutar kontrolüdür.)
+  if (local && local.order.id !== orderId) {
+    console.error("iyzico callback: yerel eşleşme basketId ile uyuşmuyor — reddedildi", {
+      localOrderId: local.order.id,
+      basketId: orderId,
+    });
+    return back("/cart");
+  }
+
+  // Otoriter satırı retrieve SONRASI taze oku (ağ çağrısı sırasında durum
+  // değişmiş olabilir).
   const data = orderId ? await dbGetOrder(orderId) : null;
   if (!data) return back("/cart");
   const { order } = data;
@@ -86,7 +132,6 @@ export async function POST(req: Request) {
       const updated = await dbMarkOrderPaid(order.id, {
         paymentProvider: "iyzico",
         paymentId: result.paymentId ? String(result.paymentId) : undefined,
-        paymentToken: token,
       });
       if (updated) {
         // Bildirim best-effort: e-posta gönderilemese de ödeme akışı bozulmaz.

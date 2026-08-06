@@ -12,6 +12,7 @@ import {
   verifyCfRetrieveSignature,
   verifyCfInitSignature,
   latin1Safe,
+  hashCallbackToken,
   type CfRetrieveResult,
   type CfInitializeResult,
 } from "../../lib/payment/iyzico";
@@ -129,6 +130,16 @@ test("latin1Safe: iyzico CPP btoa güvenliği (Türkçe karakterler)", () => {
   for (const ch of hard) {
     assert.ok((ch.codePointAt(0) as number) <= 0xff, `Latin1 dışı kaldı: ${ch}`);
   }
+});
+
+test("hashCallbackToken: deterministik, girdi değişince çıktı değişir, ham token'ı içermez", () => {
+  const h1 = hashCallbackToken("cf-token-abc");
+  const h2 = hashCallbackToken("cf-token-abc");
+  const h3 = hashCallbackToken("cf-token-DEĞİŞİK");
+  assert.equal(h1, h2); // deterministik
+  assert.notEqual(h1, h3); // girdi değişince çıktı değişir
+  assert.match(h1, /^[0-9a-f]{64}$/); // sha256 hex, 64 karakter
+  assert.equal(h1.includes("cf-token-abc"), false); // ham token sızmıyor
 });
 
 test("verifyCfInitSignature: doğru imza kabul, tahrifat reddedilir", () => {
