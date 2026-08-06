@@ -91,7 +91,16 @@ jobs:
             | sudo tee /etc/apt/sources.list.d/pgdg.list > /dev/null
           sudo apt-get update -qq
           sudo apt-get install -y -qq postgresql-client-17
-          pg_dump --version
+          # Runner'da ön-yüklü pg_dump 16 var ve PATH'te önce geliyor. pg_dump
+          # kendinden YENİ bir sunucuyu dump etmeyi reddeder (17.6 sunucu vs 16
+          # istemci = "server version mismatch"). Bu yüzden 17'nin dizinini
+          # PATH'in başına alıyoruz.
+          echo "/usr/lib/postgresql/17/bin" >> "$GITHUB_PATH"
+          # ...ve gerçekten 17 kullandığımızı DOĞRULUYORUZ. Sürüm sürüklenmesi
+          # sessizce geçerse hata ancak dump adımında ortaya çıkar.
+          "/usr/lib/postgresql/17/bin/pg_dump" --version
+          "/usr/lib/postgresql/17/bin/pg_dump" --version | grep -q ' 17\.' \
+            || { echo "::error::pg_dump 17 bulunamadi"; exit 1; }
 
       - name: Canlıdaki satır sayılarını oku (doğrulamanın referansı)
         id: beklenen
