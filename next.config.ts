@@ -16,7 +16,49 @@ function supabaseImageHost(): string {
   return "wagaijlbpdyfbmhsjmho.supabase.co";
 }
 
+/**
+ * Güvenlik başlıkları (2026-07-20 sertleştirme).
+ * - Statik başlıklar ENFORCE: clickjacking (X-Frame-Options), MIME-sniff
+ *   (nosniff), referrer sızıntısı (Referrer-Policy), gereksiz tarayıcı
+ *   API'leri (Permissions-Policy). Bunlar siteyi bozmaz.
+ * - CSP yalnız REPORT-ONLY: bloklamaz, sadece ihlal bildirir. Next inline
+ *   script/style ürettiği için script/style-src 'unsafe-inline' ile başlıyoruz;
+ *   ihlaller Playwright/konsol ile gözlenip daraltıldıktan sonra ENFORCE'a geçilecek.
+ *   iyzico ödeme akışı tam-sayfa yönlendirmedir (embed değil) → CSP'yi etkilemez.
+ */
+const supabaseHost = supabaseImageHost();
+const cspReportOnly = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "object-src 'none'",
+  "frame-ancestors 'none'",
+  "form-action 'self'",
+  `img-src 'self' data: https://${supabaseHost}`,
+  "style-src 'self' 'unsafe-inline'",
+  "script-src 'self' 'unsafe-inline'",
+  "font-src 'self' data:",
+  `connect-src 'self' https://${supabaseHost}`,
+].join("; ");
+
+const securityHeaders = [
+  { key: "X-Frame-Options", value: "DENY" },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  {
+    key: "Permissions-Policy",
+    value: "camera=(), microphone=(), geolocation=(), browsing-topics=()",
+  },
+  { key: "Content-Security-Policy-Report-Only", value: cspReportOnly },
+];
+
 const nextConfig: NextConfig = {
+  // Framework/sürüm ifşasını kapat (X-Powered-By: Next.js başlığı gönderilmez).
+  poweredByHeader: false,
+
+  async headers() {
+    return [{ source: "/:path*", headers: securityHeaders }];
+  },
+
   // bcryptjs CommonJS modülü Next.js bundler'ı tarafından sarmalandığında
   // Vercel production'da TypeError: Invalid URL hatası üretiyordu.
   // External olarak işaretleyince Node.js runtime CJS loader'ı kullanır.
