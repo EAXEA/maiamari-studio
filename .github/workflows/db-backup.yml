@@ -1,0 +1,199 @@
+name: DB yedek (siparişler + katalog)
+
+# NEDEN: orders + order_items müşteri kişisel verisi içerir (ad/adres/tel/e-posta)
+# ve Supabase Free plan'da otomatik yedek/PITR YOKTUR. Bu iş, veriyi günlük olarak
+# şifreli bir artifact'e alır. Keep-alive (supabase-keepalive.yml) projeyi ayakta
+# tutar ama YEDEK DEĞİLDİR: veri bozulmasına, yanlış silmeye, hesap kaybına karşı
+# hiçbir koruma sağlamaz.
+#
+# KAPSAM: yalnız `public` şeması. Supabase'in kendi şemaları (auth/storage/realtime)
+# bilinçli olarak DIŞARIDA — dump izni yok ve bizim verimiz değil.
+# `admin_login_attempts` hariç: geçici rate-limit durumu, IP tutuyor, değeri yok.
+#
+# DOĞRULAMA FELSEFESİ: bir yedek işinin en sinsi hata modu her gün "başarılı"
+# koşup KULLANILAMAZ dosya üretmektir. Bu yüzden dump'ı metin olarak ayrıştırıp
+# "herhalde tamamdır" demiyoruz; her koşuda BOŞ bir Postgres 17'ye GERÇEKTEN
+# geri yükleyip satır sayılarını canlıyla karşılaştırıyoruz. Yani restore testi
+# yılda iki kez hatırlanması gereken bir el işi değil, günlük otomatik kapı.
+#
+# GEREKEN SECRET'LAR (Settings → Secrets and variables → Actions):
+#   BACKUP_DB_URL         Supabase **SESSION pooler, port 5432** bağlantı dizesi.
+#                         ⚠️ Transaction pooler (6543) KULLANMA — pg_dump'ın
+#                         karmaşık sorguları orada bozulur (iyzico Faz C'de
+#                         yaşandı). Keep-alive'ın secret'ı 6543'tür, YENİDEN
+#                         KULLANILAMAZ; bu ayrı bir secret olmak zorunda.
+#   BACKUP_GPG_PASSPHRASE Yedeği açacak parola. Kopyasını Bitwarden'da sakla —
+#                         bu parola kaybolursa yedekler kurtarılamaz.
+#
+# ELLE GERİ YÜKLEME (felaket anı):
+#   1) Actions → ilgili koşu → artifact'i indir, aç.
+#   2) gpg --batch --decrypt --output yedek.sql yedek.sql.gpg
+#   3) psql "$HEDEF_URL" < yedek.sql
+#   4) select count(*) from orders;  → sayıyı doğrula.
+#
+# ⚠️ Bu dosyanın ürettiği hiçbir şey repoya COMMIT EDİLMEZ. Repo PUBLIC'tir;
+# katalog snapshot'ı (data/snapshot) girer, sipariş verisi ASLA girmez.
+
+on:
+  schedule:
+    - cron: "17 3 * * *" # her gün 03:17 UTC (06:17 TR) — keep-alive'dan (04:23) ayrı
+  workflow_dispatch:
+
+permissions:
+  actions: write # yalnız aşağıdaki self-enable çağrısı için
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    # Yedeği geri yükleyip doğrulayacağımız tek kullanımlık Postgres.
+    # Sürüm canlıyla aynı ana sürüm (17) olmalı, yoksa restore uyuşmazlığı
+    # gerçek bir felakette de yaşanır ve bunu ancak o gün öğreniriz.
+    services:
+      dogrulama-db:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: dogrulama
+          POSTGRES_DB: dogrulama
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+
+    env:
+      DOGRULAMA_URL: postgresql://postgres:dogrulama@localhost:5433/dogrulama
+
+    steps:
+      - name: Secret'lar tanımlı mı
+        env:
+          DB_URL: ${{ secrets.BACKUP_DB_URL }}
+          PASSPHRASE: ${{ secrets.BACKUP_GPG_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          [ -n "$DB_URL" ] || { echo "::error::BACKUP_DB_URL secret tanımlı değil"; exit 1; }
+          [ -n "$PASSPHRASE" ] || { echo "::error::BACKUP_GPG_PASSPHRASE secret tanımlı değil"; exit 1; }
+          case "$DB_URL" in
+            *:6543*) echo "::error::BACKUP_DB_URL transaction pooler (6543) görünüyor; pg_dump SESSION pooler (5432) ister"; exit 1 ;;
+          esac
+          echo "secret'lar tamam"
+
+      - name: postgresql-client 17 kur (canlı sunucu PG 17.6)
+        run: |
+          set -euo pipefail
+          sudo install -d /usr/share/postgresql-common/pgdg
+          curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc \
+            | sudo tee /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc > /dev/null
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" \
+            | sudo tee /etc/apt/sources.list.d/pgdg.list > /dev/null
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-client-17
+          pg_dump --version
+
+      - name: Canlıdaki satır sayılarını oku (doğrulamanın referansı)
+        id: beklenen
+        env:
+          DB_URL: ${{ secrets.BACKUP_DB_URL }}
+        run: |
+          set -euo pipefail
+          ORDERS=$(psql "$DB_URL" -tAc "select count(*) from public.orders")
+          ITEMS=$(psql "$DB_URL" -tAc "select count(*) from public.order_items")
+          URUN=$(psql "$DB_URL" -tAc "select count(*) from public.products")
+          echo "orders=$ORDERS"  >> "$GITHUB_OUTPUT"
+          echo "items=$ITEMS"    >> "$GITHUB_OUTPUT"
+          echo "urun=$URUN"      >> "$GITHUB_OUTPUT"
+          echo "canlı: $ORDERS sipariş, $ITEMS kalem, $URUN ürün"
+
+      - name: pg_dump (public şeması)
+        env:
+          DB_URL: ${{ secrets.BACKUP_DB_URL }}
+        run: |
+          set -euo pipefail
+          pg_dump "$DB_URL" \
+            --schema=public \
+            --exclude-table=public.admin_login_attempts \
+            --no-owner --no-privileges \
+            --format=plain \
+            --file=yedek.sql
+          ls -lh yedek.sql
+          test -s yedek.sql
+
+      - name: GERÇEK RESTORE TESTİ — yedeği boş Postgres'e geri yükle
+        run: |
+          set -euo pipefail
+          # ON_ERROR_STOP bilinçli KAPALI: Supabase'e özgü zararsız satırlar
+          # (extension/rol referansları) restore'u durdurmasın. Asıl iddia
+          # aşağıdaki satır sayısı karşılaştırmasıdır — veri gerçekten
+          # gelmediyse sayılar tutmaz ve iş kırmızıya döner.
+          psql "$DOGRULAMA_URL" -f yedek.sql > restore.log 2>&1 || true
+          # ⚠️ restore.log'un İÇERİĞİ BİLİNÇLİ OLARAK LOGLANMAZ. Repo PUBLIC,
+          # dolayısıyla Actions logları da herkese açıktır; psql bir COPY
+          # satırında hata verirse o satırı (müşteri adı/adresi/e-postası ile
+          # birlikte) çıktıya döker. Yalnız hata SAYISI raporlanır.
+          HATA=$(grep -c 'ERROR' restore.log || true)
+          echo "restore tamamlandı; psql çıktısında $HATA hata satırı"
+          echo "(detay bilinçli olarak gizlendi — teşhis gerekirse yedeği indirip lokalde geri yükle)"
+
+      - name: Geri yüklenen veriyi canlıyla karşılaştır
+        env:
+          BEKLENEN_ORDERS: ${{ steps.beklenen.outputs.orders }}
+          BEKLENEN_ITEMS: ${{ steps.beklenen.outputs.items }}
+          BEKLENEN_URUN: ${{ steps.beklenen.outputs.urun }}
+        run: |
+          set -euo pipefail
+          GELEN_ORDERS=$(psql "$DOGRULAMA_URL" -tAc "select count(*) from public.orders")
+          GELEN_ITEMS=$(psql "$DOGRULAMA_URL" -tAc "select count(*) from public.order_items")
+          GELEN_URUN=$(psql "$DOGRULAMA_URL" -tAc "select count(*) from public.products")
+          echo "orders   canlı=$BEKLENEN_ORDERS  geri_yüklenen=$GELEN_ORDERS"
+          echo "items    canlı=$BEKLENEN_ITEMS  geri_yüklenen=$GELEN_ITEMS"
+          echo "products canlı=$BEKLENEN_URUN  geri_yüklenen=$GELEN_URUN"
+          [ "$GELEN_ORDERS" = "$BEKLENEN_ORDERS" ] || { echo "::error::orders satır sayısı tutmuyor — yedek KULLANILAMAZ"; exit 1; }
+          [ "$GELEN_ITEMS"  = "$BEKLENEN_ITEMS"  ] || { echo "::error::order_items satır sayısı tutmuyor — yedek KULLANILAMAZ"; exit 1; }
+          [ "$GELEN_URUN"   = "$BEKLENEN_URUN"   ] || { echo "::error::products satır sayısı tutmuyor — yedek KULLANILAMAZ"; exit 1; }
+          # Kişisel verinin gerçekten geldiğini de doğrula (boş string kolonlar
+          # dolu satır sayısıyla maskelenebilir).
+          BOS_EPOSTA=$(psql "$DOGRULAMA_URL" -tAc "select count(*) from public.orders where coalesce(buyer_email,'') = ''")
+          [ "$BOS_EPOSTA" = "0" ] || { echo "::error::geri yüklenen siparişlerde $BOS_EPOSTA adet boş e-posta — veri bozuk"; exit 1; }
+          echo "restore testi GEÇTİ — bu yedek gerçekten geri yüklenebilir"
+
+      - name: GPG ile şifrele (AES256)
+        env:
+          PASSPHRASE: ${{ secrets.BACKUP_GPG_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          # Parola argv'ye veya diske YAZILMAZ; stdin üzerinden fd 0 ile verilir.
+          printf '%s' "$PASSPHRASE" | gpg --batch --yes --symmetric \
+            --cipher-algo AES256 --passphrase-fd 0 \
+            --output yedek.sql.gpg yedek.sql
+          # Şifrelenmiş dosyanın gerçekten açılabildiğini burada doğrula —
+          # bozuk/yanlış parolayla şifrelenmiş bir yedeği felaket anında
+          # keşfetmek en kötü senaryodur.
+          printf '%s' "$PASSPHRASE" | gpg --batch --yes --decrypt \
+            --passphrase-fd 0 --output kontrol.sql yedek.sql.gpg
+          cmp yedek.sql kontrol.sql && echo "şifrele/çöz turu doğrulandı"
+          # Şifresiz kopyaları bırakma (runner geçici olsa da).
+          shred -u yedek.sql kontrol.sql restore.log
+          ls -lh yedek.sql.gpg
+
+      - name: Tarih etiketi
+        id: tarih
+        run: echo "gun=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+
+      - name: Artifact olarak yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: db-yedek-${{ steps.tarih.outputs.gun }}
+          path: yedek.sql.gpg
+          retention-days: 90
+          if-no-files-found: error
+
+      - name: Cron sayacını sıfırla (workflow self-enable, commit'siz)
+        # GitHub, repo 60 gün commit görmezse zamanlanmış workflow'ları durdurur.
+        # Yedek işinin sessizce durması en kötü senaryo — keep-alive ile aynı
+        # korumayı buraya da koyuyoruz.
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/db-backup.yml/enable"
