@@ -13,6 +13,7 @@ import { ProductGallery } from "@/components/product/product-gallery";
 import { ProductTutorialReel } from "@/components/product/product-tutorial-reel";
 import { AddToCart } from "@/components/cart/add-to-cart";
 import { getTutorialsForProduct } from "@/lib/product-tutorials";
+import { productMetaDescription } from "@/lib/seo/product-meta";
 import {
   productSchema,
   breadcrumbSchema,
@@ -37,13 +38,16 @@ export async function generateMetadata({
   const { slug } = await params;
   const p = await getProductBySlug(slug);
   if (!p) return {};
+  // Arama sonucu için ham açıklama yerine bağlam taşıyan meta üretilir.
+  // Sayfada görünen kopya değişmez; yalnız <head> ve arama sonucu etkilenir.
+  const metaDescription = productMetaDescription(p);
   return {
     title: p.title,
-    description: p.description,
+    description: metaDescription,
     alternates: { canonical: `/urun/${p.slug}` },
     openGraph: {
       title: p.title,
-      description: p.description,
+      description: metaDescription,
       // OG image: app/urun/[slug]/opengraph-image.tsx file convention.
     },
   };
@@ -86,7 +90,9 @@ export default async function ProductPage({
     <div className="container-x py-12 lg:py-16">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={jsonLdScript(productSchema(product))}
+        dangerouslySetInnerHTML={jsonLdScript(
+          productSchema(product, undefined, cat?.name),
+        )}
       />
       <script
         type="application/ld+json"
