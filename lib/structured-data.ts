@@ -110,11 +110,50 @@ export function websiteSchema() {
 }
 
 /**
+ * Mağaza malzemelerinin hedef kitlesi. Malzemeler atölye pratiğinde ve güzel
+ * sanatlar derslerinde kullanılıyor; bunu makine-okur beyan etmek arama ve LLM
+ * tarafında ürünü doğru bağlama oturtur. Sayfada görünür karşılığı yoktur.
+ *
+ * Yalnız kind="material" için; eserlerde (visualArtworkSchema) kullanılmaz.
+ */
+const MATERIAL_AUDIENCE = {
+  "@type": "EducationalAudience",
+  educationalRole: "student",
+  audienceType: "Güzel sanatlar öğrencileri ve baskı atölyeleri",
+} as const;
+
+/**
+ * Kategori başına, ürünün gerçek kullanım bağlamını anlatan arama terimleri.
+ * Anahtar kelime yığma değil: her biri ürünün ne olduğunu ve hangi derste
+ * kullanıldığını tarif eder. Bilinmeyen kategoride alan hiç basılmaz.
+ */
+const CATEGORY_KEYWORDS: Record<string, string> = {
+  "linol-boyalari":
+    "linol baskı boyası, su bazlı blok baskı boyası, güzel sanatlar malzemesi, baskıresim atölyesi",
+  linolyum:
+    "linolyum plaka, oyma linol, yüksek baskı, güzel sanatlar baskıresim dersi malzemesi",
+  merdaneler:
+    "baskı merdanesi, kauçuk merdane, linol baskı merdanesi, güzel sanatlar atölye malzemesi",
+  "el-yapimi-kagitlar":
+    "el yapımı kâğıt, baskı kâğıdı, pamuk lifli kâğıt, güzel sanatlar resim ve baskı kâğıdı",
+  aletler:
+    "linol oyma bıçağı, baskı aletleri, kayıt pini, güzel sanatlar atölye ekipmanı",
+  cantalar: "kanvas kitap çantası, el dikimi çanta, atölye hediyesi",
+};
+
+/**
  * Product schema — /urun/[slug] sayfasında basılır.
  * `urlOverride`: eserler /eser/<slug> adresinde yaşar; markup'taki url
  * canonical ile çelişmemeli (aksi halde 301 veren bir adres gösterilir).
+ * `categoryName`: okunabilir kategori adı ("Linol Boyaları"). Kategoriler
+ * panelden düzenlendiği için burada slug→ad haritası tutulmaz, çağıran taraf
+ * geçirir. Verilmezse `category` alanı hiç basılmaz; slug basmaktan iyidir.
  */
-export function productSchema(product: Product, urlOverride?: string) {
+export function productSchema(
+  product: Product,
+  urlOverride?: string,
+  categoryName?: string,
+) {
   const url = urlOverride ?? `${BASE_URL}/urun/${product.slug}`;
   const images = product.gallery.length > 0
     ? product.gallery.map((p) => `${BASE_URL}${p}`)
@@ -127,6 +166,13 @@ export function productSchema(product: Product, urlOverride?: string) {
         ? "https://schema.org/LimitedAvailability"
         : "https://schema.org/InStock";
 
+  // Eserler de bu şemadan geçer (/eser/[slug], categorySlug boş). İzleyici ve
+  // kategori alanları yalnız mağaza malzemesine aittir; esere basılmaz.
+  // categorySlug tipte boş stringi kapsamaz ama eser çağrısı "" gönderir
+  // (app/eser/[slug] içindeki cast'in aynası) → karşılaştırma string üzerinden.
+  const isMaterial = (product.categorySlug as string) !== "";
+  const keywords = isMaterial ? CATEGORY_KEYWORDS[product.categorySlug] : undefined;
+
   return {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -135,6 +181,9 @@ export function productSchema(product: Product, urlOverride?: string) {
     image: images,
     url,
     sku: product.id,
+    ...(isMaterial ? { audience: MATERIAL_AUDIENCE } : {}),
+    ...(isMaterial && categoryName ? { category: categoryName } : {}),
+    ...(keywords ? { keywords } : {}),
     brand: {
       "@type": "Brand",
       name: "Maiamari",
@@ -266,6 +315,7 @@ export function categoryCollectionPageSchema(category: Category, products: Produ
     name: `${category.name} · MAIAMARI`,
     description: category.description,
     url,
+    audience: MATERIAL_AUDIENCE,
     isPartOf: { "@id": `${BASE_URL}#website` },
     mainEntity: {
       "@type": "ItemList",
