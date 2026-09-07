@@ -4,9 +4,11 @@ import { WhatsappCTA } from "@/components/inquiry/whatsapp-cta";
 import { PhoneCTA } from "@/components/inquiry/phone-cta";
 import { TransitInfo } from "@/components/transit/transit-info";
 import { faqPageSchema, jsonLdScript } from "@/lib/structured-data";
+import { pageDescription } from "@/lib/seo/page-meta";
 
 export const metadata = {
   title: "İletişim",
+  description: pageDescription("/contact"),
   alternates: { canonical: "/contact" },
 };
 

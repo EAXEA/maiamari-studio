@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getAllProducts, getCategories } from "@/lib/data";
 import { ProductCard } from "@/components/product/product-card";
+import { pageDescription } from "@/lib/seo/page-meta";
 
 // ISR: panelden eklenen ürün/kategori canlıda ~60sn'de yansısın. Build'de
 // getDb()=null → JSON seed fallback üretilir, deploy sonrası taze değil; ISR
@@ -9,6 +10,7 @@ export const revalidate = 60;
 
 export const metadata = {
   title: "Mağaza",
+  description: pageDescription("/shop"),
   alternates: { canonical: "/shop" },
 };
 
