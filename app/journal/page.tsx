@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { getJournalPosts } from "@/lib/data";
 import { Reveal } from "@/components/motion/reveal";
+import { pageDescription } from "@/lib/seo/page-meta";
 
 /**
  * Günce DB-otoriter: panelden eklenen günceler canlıda anında görünsün.
@@ -14,6 +15,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Günce",
+  description: pageDescription("/journal"),
   alternates: { canonical: "/journal" },
 };
 

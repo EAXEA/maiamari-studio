@@ -7,6 +7,7 @@ import { WhatsappCTA } from "@/components/inquiry/whatsapp-cta";
 import { PhoneCTA } from "@/components/inquiry/phone-cta";
 import { WORKSHOP_IMAGES } from "@/lib/workshop-images";
 import { InstructorAvatar } from "@/components/instructor/instructor-avatar";
+import { pageDescription } from "@/lib/seo/page-meta";
 
 /**
  * Eğitmen adından lokal avatar yolu (varsa). public/images/instructors/<slug>.jpg
@@ -48,6 +49,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Atölyeler",
+  description: pageDescription("/atolyeler"),
   alternates: { canonical: "/atolyeler" },
 };
 

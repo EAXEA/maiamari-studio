@@ -4,6 +4,7 @@ import { getBusiness, getPortfolio, getSeries } from "@/lib/data";
 import { Reveal } from "@/components/motion/reveal";
 import { PhoneCTA } from "@/components/inquiry/phone-cta";
 import { TransitInfo } from "@/components/transit/transit-info";
+import { pageDescription } from "@/lib/seo/page-meta";
 
 // ISR: DB'den türeyen seri sayısı taze kalsın. NOT: ömür boyu portfolyo
 // metrikleri (eser/baskı/yıl/kâğıt) bilinçli olarak arşiv portfolio.json'ından
@@ -12,6 +13,7 @@ export const revalidate = 60;
 
 export const metadata = {
   title: "Hakkımızda",
+  description: pageDescription("/about"),
   alternates: { canonical: "/about" },
 };
 

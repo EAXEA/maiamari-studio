@@ -10,6 +10,7 @@ import {
   websiteSchema,
   jsonLdScript,
 } from "@/lib/structured-data";
+import { SITE_DESCRIPTION } from "@/lib/seo/page-meta";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -31,8 +32,7 @@ export const metadata: Metadata = {
     default: "MAIAMARI · Baskı Atölyesi ve Galeri",
     template: "%s · MAIAMARI",
   },
-  description:
-    "Ankara Çankaya'da bir baskı atölyesi ve galeri. Özgün linol baskılar, el yapımı kâğıtlar, baskı malzemeleri ve atölye programları.",
+  description: SITE_DESCRIPTION,
   // DİKKAT: burada `alternates.canonical` TANIMLANMAZ. Layout'taki canonical
   // kendi canonical'ını tanımlamayan HER sayfaya miras kalır; /shop ve /journal
   // bu yüzden Google'a "ana sayfanın kopyasıyım" diyordu (29.07.2026 tespiti).
