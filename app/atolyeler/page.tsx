@@ -1,5 +1,3 @@
-import fs from "node:fs";
-import path from "node:path";
 import Image from "next/image";
 import { getWorkshops } from "@/lib/data";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
@@ -10,9 +8,14 @@ import { InstructorAvatar } from "@/components/instructor/instructor-avatar";
 import { pageDescription } from "@/lib/seo/page-meta";
 
 /**
- * Eğitmen adından lokal avatar yolu (varsa). public/images/instructors/<slug>.jpg
- * formatında dosya beklenir. Kullanıcı dosyayı koyduğunda otomatik render olur.
+ * Fotoğrafı olan eğitmenlerin slug listesi (public/images/instructors/<slug>.jpg).
+ * Diskten fs.existsSync ile bakılmaz: sayfa force-dynamic olduğu için Vercel
+ * fonksiyonunda public/ bulunmayabilir ve foto canlıda sessizce initials'a düşer.
+ * Yeni eğitmen fotosu eklerken dosyayı koy + slug'ı buraya ekle.
  */
+const INSTRUCTOR_AVATARS = new Set(["duygu-sinan", "tolga-inaloz"]);
+
+/** Eğitmen adından avatar yolu; listede yoksa undefined (initials gösterilir). */
 function instructorAvatarPath(name: string): string | undefined {
   const slug = name
     .toLocaleLowerCase("tr-TR")
@@ -24,14 +27,7 @@ function instructorAvatarPath(name: string): string | undefined {
     .replace(/[ğĞ]/g, "g")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
-  const filePath = path.join(
-    process.cwd(),
-    "public",
-    "images",
-    "instructors",
-    `${slug}.jpg`,
-  );
-  return fs.existsSync(filePath)
+  return INSTRUCTOR_AVATARS.has(slug)
     ? `/images/instructors/${slug}.jpg`
     : undefined;
 }
@@ -123,11 +119,21 @@ export default async function AtolyelerPage() {
                   <span className="text-[10px] lg:text-[11px] tracking-[0.3em] uppercase text-[color:var(--color-muted)]">
                     {isWorkshop ? "Workshop" : "Aylık · Küçük grup"}
                   </span>
-                  <InstructorAvatar
-                    name={w.instructor}
-                    avatarSrc={instructorAvatarPath(w.instructor)}
-                    size={36}
-                  />
+                  {/* Birden çok eğitmen "A, B" olarak girilir → üst üste binen avatarlar */}
+                  <div className="flex -space-x-2 shrink-0">
+                    {w.instructor
+                      .split(/\s*,\s*/)
+                      .filter(Boolean)
+                      .map((name) => (
+                        <InstructorAvatar
+                          key={name}
+                          name={name}
+                          avatarSrc={instructorAvatarPath(name)}
+                          size={36}
+                          className="ring-2 ring-[color:var(--color-surface)]"
+                        />
+                      ))}
+                  </div>
                 </div>
 
                 <h2
