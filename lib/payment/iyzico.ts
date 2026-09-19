@@ -359,7 +359,17 @@ export async function initializeCheckoutForm(
 
   let result: CfInitializeResult;
   try {
-    result = await iyzicoPost<CfInitializeResult>(INITIALIZE_PATH, payload);
+    // Tekrar deneme: iyzico API'si bağlantıları aralıklı olarak ECONNRESET
+    // ile kesiyor (19.09.2026'da ölçüldü, ~%17). Tek deneme yapıldığında her
+    // 6 alıcıdan biri ödeme sayfasını hiç açamıyordu.
+    //
+    // Başarısız bir initialize'ı tekrarlamak GÜVENLİDİR: alıcı henüz kart
+    // bilgisi girmemiştir, para hareketi yoktur. En kötü ihtimalle iyzico
+    // tarafında kullanılmayan bir ödeme oturumu açılır ve kendiliğinden
+    // sona erer. Buna karşılık tekrarlamamanın bedeli alıcıyı kaybetmektir.
+    result = await iyzicoPost<CfInitializeResult>(INITIALIZE_PATH, payload, {
+      retries: 2,
+    });
   } catch (e) {
     console.error("iyzico initialize isteği başarısız:", e);
     return { ok: false, error: "Ödeme sağlayıcısına ulaşılamadı." };
@@ -418,11 +428,12 @@ export type CfRetrieveResult = {
 export async function retrieveCheckoutForm(
   token: string,
 ): Promise<CfRetrieveResult> {
-  // Salt okuma olduğu için tekrarı güvenli. initializeCheckoutForm BİLİNÇLİ
-  // olarak tekrarlanmaz (her çağrı yeni ödeme oturumu üretir).
+  // Salt okuma olduğu için tekrarı güvenli. Kopma oranı ölçüldüğü için
+  // (19.09.2026, ~%17) iki tekrar: üç denemenin üçünün birden kopma
+  // olasılığı binde 5'e iner.
   return iyzicoPost<CfRetrieveResult>(
     RETRIEVE_PATH,
     { locale: "tr", token },
-    { retries: 1 },
+    { retries: 2 },
   );
 }
