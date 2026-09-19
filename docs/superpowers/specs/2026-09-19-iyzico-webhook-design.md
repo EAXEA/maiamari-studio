@@ -316,18 +316,31 @@ yeşil kalmalı; callback'in dış davranışı değişmiyor.
 
 ## Devreye alma sırası
 
-Sıra önemli. Webhook URL'i, uç nokta canlıda çalışmadan **önce** tanımlanırsa
-iyzico var olmayan bir adrese bildirim gönderir.
+Sıra kritik, iki ayrı sebepten.
+
+**Önce şema, sonra kod.** Drizzle `select()` tüm kolonları adlandırarak sorgular.
+İki yeni kolon veritabanında yokken kod canlıya alınırsa `orders` üzerindeki
+HER sorgu `column "payment_attention_reason" does not exist` ile patlar: admin
+paneli, sipariş sonuç sayfası ve ödeme callback'i dahil. Yani migration
+uygulanmadan yapılan bir deploy, çözmeye çalıştığımız sorunu büyütür.
+(19.09'da yerel doğrulamada bizzat gözlendi: webhook 500 döndü.)
+
+**Sonra webhook URL'i.** Uç nokta canlıda çalışmadan önce tanımlanırsa iyzico
+var olmayan bir adrese bildirim gönderir.
 
 1. Kod yazılır, birim testler geçer, PR açılır.
-2. Canlıya alınır. `https://www.maiamari.art/api/payment/iyzico/webhook`
+2. **Şema canlı veritabanına uygulanır** (iki nullable kolon; mevcut satırlara
+   dokunmaz, veri kaybı yoktur). Proje `db:push` deseniyle çalışıyor;
+   `lib/db/migrations` git'te izlenmiyor ve `db:generate` baseline üretiyor, bu
+   yüzden migration dosyası repoya eklenmez.
+3. Kod canlıya alınır. `https://www.maiamari.art/api/payment/iyzico/webhook`
    erişilebilir olur (imzasız POST'a 401 dönmesiyle doğrulanır).
-3. iyzico panelinde tanımlanır: Ayarlar → Firma Ayarları → İşyeri Bildirimleri
+4. iyzico panelinde tanımlanır: Ayarlar → Firma Ayarları → İşyeri Bildirimleri
    → URL alanı (şu an boş). Ajan girebilir, ancak **kaydetmeden önce yazacağı
-   değeri gösterip onay alır** — canlı ödeme altyapısı ayarı, sessizce
+   değeri gösterip onay alır**; canlı ödeme altyapısı ayarı sessizce
    değiştirilmez.
-4. Kontrollü test ödemesi yapılır, webhook'un geldiği logdan doğrulanır.
-5. Bekleyen üç sipariş temizlenir: `MA-20260918-BC2F` → `paid` +
+5. Kontrollü test ödemesi yapılır, webhook'un geldiği logdan doğrulanır.
+6. Bekleyen üç sipariş temizlenir: `MA-20260918-BC2F` → `paid` +
    `payment_id 4207393587`; `MA-20260918-A0E2` ve `MA-20260918-3AA6` →
    `cancelled`. Her biri için yazılacak değer önce gösterilir, onay alınır.
    Alıcıya bilgilendirme ayrı iş olarak ele alınır.
@@ -343,6 +356,8 @@ iyzico var olmayan bir adrese bildirim gönderir.
 | Uyarı maili gürültüsü | Yalnız para hareketi olabilecek durumlarda; konu satırında sipariş no |
 | Canlı ödeme akışına dokunma / regresyon | Callback'in dış davranışı değişmiyor, gövdesi taşınıyor; mevcut testler yeşil kalmalı |
 | Webhook'un başarısız/ara denemeleri siparişi erkenden kapatır | `source: "webhook"` — webhook yalnız ödenmişi kapatır, ödenmemiş ilan edemez |
+| Şema uygulanmadan deploy → tüm sipariş sorguları kırılır | Devreye alma sırası: önce şema, sonra kod. Adım 2 atlanamaz |
+| Uyarı ele alındıktan sonra panelde asılı kalır | Sipariş `paid` olunca ve admin durumu elle değiştirince bayrak temizlenir |
 | `payment/detail` ile `conversationId` sorgusu bu tasarımda kullanılmıyor | Gerekmiyor: webhook `token` taşıyor. İleride uzlaştırma eklenirse yol açık |
 
 ### Kalan, çözülmeyen risk
