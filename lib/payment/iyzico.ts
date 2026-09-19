@@ -201,8 +201,23 @@ export function verifyWebhookSignature(
   header: string | null | undefined,
   body: IyzicoWebhookBody,
 ): boolean {
+  const expected = computeWebhookSignature(body);
+  if (!expected || !header) return false;
+  const a = Buffer.from(expected, "utf8");
+  const b = Buffer.from(String(header), "utf8");
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+
+/**
+ * Beklenen imzayı üretir. `verifyWebhookSignature` bunu kullanır; ayrıca
+ * teşhis için dışa açıktır (hesaplanan ile gelenin ÖNEKLERİ karşılaştırılıp
+ * loglanabilsin diye). Secret yoksa null döner.
+ */
+export function computeWebhookSignature(
+  body: IyzicoWebhookBody,
+): string | null {
   const secret = cleanEnv("IYZICO_SECRET_KEY");
-  if (!secret || !header) return false;
+  if (!secret) return null;
   const data =
     secret +
     String(body.iyziEventType ?? "") +
@@ -210,13 +225,7 @@ export function verifyWebhookSignature(
     String(body.token ?? "") +
     String(body.paymentConversationId ?? "") +
     String(body.status ?? "");
-  const expected = crypto
-    .createHmac("sha256", secret)
-    .update(data, "utf8")
-    .digest("hex");
-  const a = Buffer.from(expected, "utf8");
-  const b = Buffer.from(String(header), "utf8");
-  return a.length === b.length && crypto.timingSafeEqual(a, b);
+  return crypto.createHmac("sha256", secret).update(data, "utf8").digest("hex");
 }
 
 /**
