@@ -232,6 +232,30 @@ test("bayrak zaten varsa uyari maili tekrar gitmez", async () => {
   assert.equal(calls.notifiedAttention.length, 0);
 });
 
+test("beklenmedik hata (DB dustu) retryable doner, istisna sizmaz", async () => {
+  const { deps, calls } = makeDeps({
+    findByTokenHash: async () => {
+      throw new Error('column "payment_attention_reason" does not exist');
+    },
+  });
+  const out = await settleCheckoutFormPayment("tok", { source: "webhook" }, deps);
+  assert.equal(out.kind, "retryable");
+  assert.deepEqual(calls.markPaid, []);
+  assert.deepEqual(calls.markFailed, []);
+});
+
+test("paid yazildiktan sonraki hata odemeyi retryable'a dusurmez", async () => {
+  // markPaid basarili oldu; sonrasindaki bildirim/temizlik hatasi ödemeyi
+  // geri almaz, sonuc paid kalmalidir.
+  const { deps } = makeDeps({
+    clearAttention: async () => {
+      throw new Error("bayrak temizlenemedi");
+    },
+  });
+  const out = await settleCheckoutFormPayment("tok", { source: "callback" }, deps);
+  assert.equal(out.kind, "paid");
+});
+
 test("markPaid false donerse (yaris) mail gonderilmez", async () => {
   const { deps, calls } = makeDeps({ markPaid: async () => false });
   const out = await settleCheckoutFormPayment("tok", { source: "callback" }, deps);

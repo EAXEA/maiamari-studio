@@ -114,10 +114,35 @@ async function raiseAttention(
   }
 }
 
+/**
+ * Dış kabuk: beklenmedik hiçbir istisna dışarı sızmaz.
+ *
+ * Neden: uzlaştırma DB'ye ve ağa dokunur. Bir istisna route'a kadar çıkarsa
+ * webhook 500 döner; 500 de 2xx olmadığı için iyzico tekrar dener, yani sonuç
+ * tesadüfen doğrudur ama sözleşmemiz belirsizleşir ve log kirlenir. Burada
+ * açıkça `retryable` diyoruz: çağıran 503 döner, niyet okunur olur.
+ * (Şema migration'ı uygulanmadan deploy edilirse tam olarak bu yaşanır.)
+ */
 export async function settleCheckoutFormPayment(
   token: string,
   opts: { source: "callback" | "webhook" },
   deps: SettleDeps = defaultSettleDeps,
+): Promise<SettleOutcome> {
+  try {
+    return await settle(token, opts, deps);
+  } catch (e) {
+    console.error("Ödeme uzlaştırma beklenmedik hatayla durdu:", e);
+    return {
+      kind: "retryable",
+      reason: "Ödeme sonucu işlenemedi, beklenmedik bir hata oluştu.",
+    };
+  }
+}
+
+async function settle(
+  token: string,
+  opts: { source: "callback" | "webhook" },
+  deps: SettleDeps,
 ): Promise<SettleOutcome> {
   const isCallback = opts.source === "callback";
   const tokenHash = deps.hashToken(token);
@@ -245,8 +270,10 @@ export async function settleCheckoutFormPayment(
         paymentId: result.paymentId ? String(result.paymentId) : undefined,
       });
       if (updated) {
-        await deps.clearAttention(order.id);
+        // Bayrak temizliği ve bildirim best-effort: ödeme zaten yazıldı,
+        // buradaki bir hata onu geri almaz ve `retryable`a düşürmez.
         try {
+          await deps.clearAttention(order.id);
           const fresh = await deps.getOrder(order.id);
           if (fresh) await deps.notifyNewOrder(fresh.order, fresh.items);
         } catch (e) {
