@@ -54,6 +54,7 @@ const RETRIEVE_PATH = "/payment/iyzipos/checkoutform/auth/ecom/detail";
 async function iyzicoPost<T>(
   path: string,
   payload: Record<string, unknown>,
+  opts?: { retries?: number },
 ): Promise<T> {
   const apiKey = cleanEnv("IYZICO_API_KEY")!;
   const secretKey = cleanEnv("IYZICO_SECRET_KEY")!;
@@ -62,37 +63,58 @@ async function iyzicoPost<T>(
   ).replace(/\/+$/, "");
 
   // İmzalanan gövde ile gönderilen gövde BAYT BAYT aynı olmalı → tek stringify.
+  // Tekrar denemelerde de AYNI gövde gönderilir, bu yüzden döngü dışında.
   const body = JSON.stringify(payload);
-  const randomKey = `${Date.now()}${Math.floor(Math.random() * 1e9)}`;
-  const signature = crypto
-    .createHmac("sha256", secretKey)
-    .update(randomKey + path + body, "utf8")
-    .digest("hex");
-  const authorization =
-    "IYZWSv2 " +
-    Buffer.from(
-      `apiKey:${apiKey}&randomKey:${randomKey}&signature:${signature}`,
-      "utf8",
-    ).toString("base64");
 
-  const res = await fetch(`${base}${path}`, {
-    method: "POST",
-    headers: {
-      Authorization: authorization,
-      "x-iyzi-rnd": randomKey,
-      "Content-Type": "application/json",
-    },
-    body,
-    cache: "no-store",
-    // Asılı kalan iyzico isteği Vercel fonksiyonunu kilitlemesin.
-    signal: AbortSignal.timeout(10_000),
-  });
-  // iyzico hata durumlarını da 200 + {status:"failure"} gövdesiyle döner;
-  // HTTP hatası yalnız ağ/altyapı sorunudur.
-  if (!res.ok) {
-    throw new Error(`iyzico HTTP ${res.status}`);
+  // Ağ hatasında tekrar deneme. YALNIZ okuma çağrıları için kullanılır
+  // (retrieve); initialize her çağrıda yeni bir ödeme oturumu ürettiği için
+  // ASLA tekrarlanmaz. 18.09.2026'da retrieve çağrısı 117 ms'de ECONNRESET
+  // ile düşmüştü; tek bir tekrar bu tür anlık kopmaları yutar.
+  const attempts = 1 + Math.max(0, opts?.retries ?? 0);
+  let lastError: unknown;
+  for (let i = 0; i < attempts; i++) {
+    // İmza her denemede YENİDEN üretilir: randomKey zamana bağlıdır ve iyzico
+    // aynı randomKey'i ikinci kez kabul etmeyebilir.
+    const randomKey = `${Date.now()}${Math.floor(Math.random() * 1e9)}`;
+    const signature = crypto
+      .createHmac("sha256", secretKey)
+      .update(randomKey + path + body, "utf8")
+      .digest("hex");
+    const authorization =
+      "IYZWSv2 " +
+      Buffer.from(
+        `apiKey:${apiKey}&randomKey:${randomKey}&signature:${signature}`,
+        "utf8",
+      ).toString("base64");
+
+    try {
+      const res = await fetch(`${base}${path}`, {
+        method: "POST",
+        headers: {
+          Authorization: authorization,
+          "x-iyzi-rnd": randomKey,
+          "Content-Type": "application/json",
+        },
+        body,
+        cache: "no-store",
+        // Asılı kalan iyzico isteği Vercel fonksiyonunu kilitlemesin.
+        signal: AbortSignal.timeout(10_000),
+      });
+      // iyzico hata durumlarını da 200 + {status:"failure"} gövdesiyle döner;
+      // HTTP hatası yalnız ağ/altyapı sorunudur.
+      if (!res.ok) {
+        throw new Error(`iyzico HTTP ${res.status}`);
+      }
+      return (await res.json()) as T;
+    } catch (e) {
+      lastError = e;
+      if (i < attempts - 1) {
+        console.error(`iyzico isteği düştü, tekrar deneniyor (${i + 1}):`, e);
+        await new Promise((r) => setTimeout(r, 400));
+      }
+    }
   }
-  return (await res.json()) as T;
+  throw lastError;
 }
 
 // ---------------------------------------------------------------
@@ -149,6 +171,52 @@ export function verifyCfRetrieveSignature(r: CfRetrieveResult): boolean {
 /** CF Initialize yanıt imzası: [conversationId, token]. */
 export function verifyCfInitSignature(r: CfInitializeResult): boolean {
   return verifySignature([r.conversationId, r.token], r.signature);
+}
+
+/** iyzico webhook (HPP) gövdesi — imzaya giren alanlar + taşıdığı diğer veri. */
+export type IyzicoWebhookBody = {
+  iyziEventType?: string;
+  iyziPaymentId?: string | number;
+  token?: string;
+  paymentConversationId?: string;
+  status?: string;
+  merchantId?: string;
+  iyziReferenceCode?: string;
+  iyziEventTime?: number;
+};
+
+/**
+ * Webhook imzası (X-IYZ-SIGNATURE-V3, HPP formatı). Yukarıdaki
+ * `verifySignature`'dan FARKLIDIR: ayraç yoktur ve secretKey hem HMAC anahtarı
+ * hem de imzalanan dizginin başıdır (resmî doküman böyle tanımlıyor):
+ *
+ *   HMAC-SHA256(secretKey, secretKey + iyziEventType + iyziPaymentId
+ *               + token + paymentConversationId + status) → hex
+ *
+ * Bu fonksiyon bir KAPIDIR: false dönerse gövdenin hiçbir alanı kullanılmaz.
+ * Ancak kapıyı geçmek ödeme OTORİTESİ DEĞİLDİR; webhook yalnız `token`'ı
+ * taşır, sipariş durumu retrieve + imza + tutar zinciriyle belirlenir.
+ */
+export function verifyWebhookSignature(
+  header: string | null | undefined,
+  body: IyzicoWebhookBody,
+): boolean {
+  const secret = cleanEnv("IYZICO_SECRET_KEY");
+  if (!secret || !header) return false;
+  const data =
+    secret +
+    String(body.iyziEventType ?? "") +
+    String(body.iyziPaymentId ?? "") +
+    String(body.token ?? "") +
+    String(body.paymentConversationId ?? "") +
+    String(body.status ?? "");
+  const expected = crypto
+    .createHmac("sha256", secret)
+    .update(data, "utf8")
+    .digest("hex");
+  const a = Buffer.from(expected, "utf8");
+  const b = Buffer.from(String(header), "utf8");
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
 
 /**
@@ -350,5 +418,11 @@ export type CfRetrieveResult = {
 export async function retrieveCheckoutForm(
   token: string,
 ): Promise<CfRetrieveResult> {
-  return iyzicoPost<CfRetrieveResult>(RETRIEVE_PATH, { locale: "tr", token });
+  // Salt okuma olduğu için tekrarı güvenli. initializeCheckoutForm BİLİNÇLİ
+  // olarak tekrarlanmaz (her çağrı yeni ödeme oturumu üretir).
+  return iyzicoPost<CfRetrieveResult>(
+    RETRIEVE_PATH,
+    { locale: "tr", token },
+    { retries: 1 },
+  );
 }

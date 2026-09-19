@@ -142,3 +142,57 @@ export async function notifyNewOrder(
     });
   }
 }
+
+/**
+ * Para hareketi olmuş OLABİLECEK ama işlenemeyen ödeme için satıcı uyarısı.
+ * Best-effort: gönderilemese de ödeme akışı etkilenmez.
+ *
+ * Mükerrerlik çağıran tarafta dikkat bayrağıyla bastırılır (bkz.
+ * lib/db/orders.ts dbFlagOrderAttention); bu fonksiyon çağrıldığı her seferde
+ * gönderir.
+ */
+export async function notifyPaymentNeedsAttention(input: {
+  orderId?: string;
+  orderNo?: string;
+  reason: string;
+  detail: Record<string, unknown>;
+}): Promise<void> {
+  if (!process.env.RESEND_API_KEY) return;
+
+  const from = process.env.ORDER_EMAIL_FROM || "Maiamari <onboarding@resend.dev>";
+  const ownerTo = process.env.ORDER_EMAIL_TO || SELLER.email;
+  const label = input.orderNo ? `· ${input.orderNo}` : "· sipariş eşleşmedi";
+  const adminUrl = input.orderId
+    ? `${baseUrl()}/admin/orders/${input.orderId}`
+    : `${baseUrl()}/admin/orders`;
+
+  const rows = Object.entries(input.detail)
+    .map(
+      ([k, v]) =>
+        `<tr><td style="padding:4px 12px 4px 0;color:#888">${escapeHtml(
+          k,
+        )}</td><td style="padding:4px 0;font-family:monospace">${escapeHtml(
+          String(v),
+        )}</td></tr>`,
+    )
+    .join("");
+
+  await send({
+    from,
+    to: ownerTo,
+    subject: `Ödeme kontrol gerekiyor ${label}`,
+    html: `
+      <div style="font-family:system-ui,sans-serif;max-width:560px;margin:0 auto;color:#1a1a1a">
+        <h2 style="font-weight:600">Bir ödeme doğrulanamadı</h2>
+        <p style="line-height:1.6">${escapeHtml(input.reason)}</p>
+        <p style="font-size:13px;color:#666;line-height:1.6">
+          Para çekilmiş olabilir. iyzico panelinden işlemi kontrol edin.
+          Ödeme başarılıysa siparişi panelden kapatın.
+        </p>
+        <table style="font-size:13px;border-collapse:collapse;margin-top:12px">${rows}</table>
+        <p style="margin-top:20px">
+          <a href="${adminUrl}" style="background:#2B1E12;color:#fff;padding:10px 18px;text-decoration:none;font-size:13px;border-radius:4px">Panelde aç</a>
+        </p>
+      </div>`,
+  });
+}

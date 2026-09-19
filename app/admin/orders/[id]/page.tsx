@@ -63,6 +63,30 @@ export default async function AdminOrderDetailPage({
         {order.paymentProvider === "mock" ? " · TEST ödeme (sandbox)" : ""}
       </p>
 
+      {/* Ödeme doğrulanamadı uyarısı. Para çekilmiş olabilir; ne olduğunu ve
+          ne yapılacağını söyler, teknik hata dizgisi göstermez. */}
+      {order.paymentAttentionReason && (
+        <div
+          className="border px-4 py-3 mb-8 text-sm"
+          style={{ borderColor: "#E8A0A0", background: "#FDF3F3" }}
+        >
+          <p className="font-medium" style={{ color: "#8A1C1C" }}>
+            Bu siparişin ödemesi doğrulanamadı
+          </p>
+          <p className="mt-1 text-[color:var(--color-muted)]">
+            {order.paymentAttentionReason}
+          </p>
+          <p className="mt-2 text-[color:var(--color-muted)]">
+            Para çekilmiş olabilir. Önce iyzico panelinden bu siparişi arayın.
+            Ödeme görünmüyorsa aşağıdan iptal edin. Ödeme başarılı görünüyorsa
+            siparişi iptal etmeyin, kaydın ödendi olarak güncellenmesi gerekir.
+            {order.paymentAttentionAt
+              ? ` Uyarı ${fmtDate(order.paymentAttentionAt)} tarihinde kondu.`
+              : ""}
+          </p>
+        </div>
+      )}
+
       {/* Durum güncelleme */}
       {(next || cancellable) && (
         <div className="flex flex-wrap gap-3 mb-8">
