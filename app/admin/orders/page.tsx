@@ -42,6 +42,15 @@ function OrderRowLink({ o }: { o: OrderRow }) {
           >
             {orderStatusLabel(o.status)}
           </span>
+          {o.paymentAttentionReason && (
+            <span
+              className="text-[10px] tracking-wider uppercase px-2 py-0.5 rounded"
+              style={{ background: "#FDE8E8", color: "#8A1C1C" }}
+              title={o.paymentAttentionReason}
+            >
+              Ödeme kontrolü
+            </span>
+          )}
         </div>
         <p className="text-xs text-[color:var(--color-muted)] mt-0.5 truncate">
           {o.buyerName || "İsimsiz"} · {fmtDate(o.createdAt)}
@@ -70,11 +79,22 @@ export default async function AdminOrdersPage({
   const archived = archive.rows;
   const totalPages = Math.max(1, Math.ceil(archive.total / ARCHIVE_PAGE_SIZE));
 
+  // Ödeme kontrolü bekleyenler en üstte: para çekilmiş olabilir, bekletilmesin.
+  // Kendi içlerinde ve diğerlerinde mevcut sıralama (en yeni önce) korunur.
+  const activeSorted = [...active].sort(
+    (a, b) =>
+      (a.paymentAttentionReason ? 0 : 1) - (b.paymentAttentionReason ? 0 : 1),
+  );
+  const attentionCount = active.filter((o) => o.paymentAttentionReason).length;
+
   return (
     <div className="max-w-4xl">
       <h1 className="font-display text-3xl mb-1">Siparişler</h1>
       <p className="text-sm text-[color:var(--color-muted)] mb-8">
         {active.length} aktif · {archive.total} arşivde. En yeni önce.
+        {attentionCount > 0
+          ? ` ${attentionCount} siparişin ödemesi kontrol bekliyor.`
+          : ""}
       </p>
 
       {!isDbConfigured() && (
@@ -89,7 +109,7 @@ export default async function AdminOrdersPage({
         Aktif
       </h2>
       <div className="border border-[color:var(--color-hairline)] rounded-lg divide-y divide-[color:var(--color-hairline)]">
-        {active.map((o) => (
+        {activeSorted.map((o) => (
           <OrderRowLink key={o.id} o={o} />
         ))}
         {active.length === 0 && (

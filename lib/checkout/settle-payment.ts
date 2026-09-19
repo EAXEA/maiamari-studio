@@ -201,7 +201,8 @@ async function settle(
       basketId: result.basketId,
       conversationId: result.conversationId,
     });
-    const reason = "iyzico yanıtının imzası doğrulanamadı, siparişe dokunulmadı.";
+    const reason =
+      "iyzico'dan gelen yanıt doğrulanamadı, siparişe dokunulmadı.";
     await raiseAttention(deps, {
       orderId: local?.order.id,
       orderNo: local?.order.orderNo,
@@ -303,7 +304,7 @@ async function settle(
     }
     // Para çekilmiş ama sipariş paid de pending de değil (örn. alıcı ödeme
     // sayfasındayken admin iptal etti). paid YAZMA; iade/manuel inceleme.
-    const reason = `Ödeme başarılı ama sipariş durumu "${order.status}". Paid yazılmadı.`;
+    const reason = `Ödeme başarılı görünüyor ama sipariş durumu "${order.status}" olduğu için kapatılmadı.`;
     console.error("iyzico: ödeme başarılı ama sipariş durumu uyumsuz", {
       orderId: order.id,
       orderNo: order.orderNo,
@@ -326,7 +327,8 @@ async function settle(
 
   if (success && !amountOk) {
     // Ödeme alınmış ama tutar/para birimi uyuşmuyor: paid YAZMA.
-    const reason = "Ödeme alındı ama tutar siparişle uyuşmuyor. Paid yazılmadı.";
+    const reason =
+      "Ödeme alındı ama çekilen tutar siparişle uyuşmuyor. Sipariş kapatılmadı.";
     console.error("iyzico tutar UYUŞMAZLIĞI — manuel inceleme gerekli", {
       orderId: order.id,
       orderNo: order.orderNo,
