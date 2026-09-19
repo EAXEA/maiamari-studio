@@ -77,9 +77,9 @@ export default async function AdminOrderDetailPage({
             {order.paymentAttentionReason}
           </p>
           <p className="mt-2 text-[color:var(--color-muted)]">
-            Para çekilmiş olabilir. iyzico panelinden bu siparişi arayın. Ödeme
-            başarılı görünüyorsa siparişi ödendi olarak işaretleyin, başarısızsa
-            iptal edin.
+            Para çekilmiş olabilir. Önce iyzico panelinden bu siparişi arayın.
+            Ödeme görünmüyorsa aşağıdan iptal edin. Ödeme başarılı görünüyorsa
+            siparişi iptal etmeyin, kaydın ödendi olarak güncellenmesi gerekir.
             {order.paymentAttentionAt
               ? ` Uyarı ${fmtDate(order.paymentAttentionAt)} tarihinde kondu.`
               : ""}
