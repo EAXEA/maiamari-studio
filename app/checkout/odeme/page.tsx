@@ -6,6 +6,7 @@ import { paymentMode, initializeCheckoutForm, hashCallbackToken } from "@/lib/pa
 import { hasOrderAccess } from "@/lib/checkout/order-access";
 import { confirmMockPayment, cancelMockPayment } from "../actions";
 import { formatTRY } from "@/lib/format";
+import { RetryPaymentButton } from "./retry-button";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Ödeme", robots: { index: false } };
@@ -144,19 +145,11 @@ export default async function OdemePage({
             Ödeme sayfası açılamadı{iyzicoError ? `: ${iyzicoError}` : "."}
           </p>
           <p className="mt-2 text-sm text-[color:var(--color-muted)]">
-            Siparişiniz bekliyor; birkaç saniye sonra tekrar deneyebilirsiniz.
+            Siparişiniz duruyor, kaybolmadı. Tekrar denediğinizde birkaç saniye
+            sürebilir.
           </p>
           <div className="mt-5 flex gap-3">
-            <Link
-              href={`/checkout/odeme?order=${order.id}`}
-              className="inline-flex h-11 px-6 items-center text-xs tracking-[0.2em] uppercase hover:opacity-90"
-              style={{
-                background: "var(--color-walnut-dark)",
-                color: "var(--color-background)",
-              }}
-            >
-              Tekrar dene
-            </Link>
+            <RetryPaymentButton />
             <Link
               href="/cart"
               className="inline-flex h-11 px-6 items-center text-xs tracking-[0.2em] uppercase border transition-colors hover:bg-[color:var(--color-foreground)] hover:text-[color:var(--color-background)]"
