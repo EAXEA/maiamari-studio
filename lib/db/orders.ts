@@ -4,7 +4,17 @@
  */
 import { getDb } from "./client";
 import { orders, orderItems, type OrderRow, type OrderItemRow } from "./schema";
-import { and, eq, desc, inArray, notInArray, count } from "drizzle-orm";
+import {
+  and,
+  eq,
+  ne,
+  or,
+  isNull,
+  desc,
+  inArray,
+  notInArray,
+  count,
+} from "drizzle-orm";
 import { ARCHIVED_STATUSES } from "@/lib/order-status";
 
 export type NewOrderInput = {
@@ -207,6 +217,57 @@ export async function dbMarkOrderFailed(
     .update(orders)
     .set({ status, updatedAt: new Date() })
     .where(and(eq(orders.id, id), eq(orders.status, "pending")));
+}
+
+/**
+ * "Ödeme doğrulanamadı" bayrağını koyar. AYNI sebeple bayrak zaten konmuşsa
+ * `false` döner — çağıran bunu uyarı e-postasını bastırmak için kullanır
+ * (iyzico webhook'u 3 kez denediğinde tek uyarı gitsin).
+ *
+ * Koşullu UPDATE: yalnız bayrak boşken veya sebep farklıyken yazar, böylece
+ * "zaten var mı" okuması ile yazma arasında yarış oluşmaz.
+ *
+ * `status` alanına DOKUNMAZ: bayrak sipariş yaşam döngüsüne dik bir işarettir.
+ */
+export async function dbFlagOrderAttention(
+  id: string,
+  reason: string,
+): Promise<boolean> {
+  const db = getDb();
+  if (!db) return false;
+  const now = new Date();
+  const updated = await db
+    .update(orders)
+    .set({
+      paymentAttentionReason: reason,
+      paymentAttentionAt: now,
+      updatedAt: now,
+    })
+    .where(
+      and(
+        eq(orders.id, id),
+        or(
+          isNull(orders.paymentAttentionReason),
+          ne(orders.paymentAttentionReason, reason),
+        ),
+      ),
+    )
+    .returning({ id: orders.id });
+  return updated.length > 0;
+}
+
+/** Bayrağı kaldırır (sorun çözüldü). `dbMarkOrderPaid` başarılı olunca çağrılır. */
+export async function dbClearOrderAttention(id: string): Promise<void> {
+  const db = getDb();
+  if (!db) return;
+  await db
+    .update(orders)
+    .set({
+      paymentAttentionReason: null,
+      paymentAttentionAt: null,
+      updatedAt: new Date(),
+    })
+    .where(eq(orders.id, id));
 }
 
 /** Admin: aktif siparişler (arşiv durumları hariç; işlem bekleyen küçük küme). */

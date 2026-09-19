@@ -270,6 +270,15 @@ export const orders = pgTable("orders", {
   paymentTokenIssuedAt: timestamp("payment_token_issued_at", { withTimezone: true }),
   /** iyzico conversationId (request/response eşleştirme). */
   conversationId: text("conversation_id"),
+  /**
+   * Ödeme doğrulanamadığında sebep (null = sorun yok). Panelde uyarı olarak
+   * görünür; sipariş `paid` olunca temizlenir. `status` alanına DOKUNMAZ —
+   * sipariş yaşam döngüsüne dik, bağımsız bir işarettir. Böylece arşiv
+   * filtreleri (ARCHIVED_STATUSES) ve kargo akışı etkilenmez.
+   */
+  paymentAttentionReason: text("payment_attention_reason"),
+  /** Bayrağın ne zaman konduğu (panelde "ne kadardır bekliyor" bilgisi). */
+  paymentAttentionAt: timestamp("payment_attention_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

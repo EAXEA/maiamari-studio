@@ -32,6 +32,8 @@ function makeOrder(id: string, status: OrderRow["status"] = "pending"): OrderWit
     paymentPageUrl: null,
     paymentTokenIssuedAt: null,
     conversationId: null,
+    paymentAttentionReason: null,
+    paymentAttentionAt: null,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
