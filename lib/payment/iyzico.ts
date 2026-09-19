@@ -151,6 +151,52 @@ export function verifyCfInitSignature(r: CfInitializeResult): boolean {
   return verifySignature([r.conversationId, r.token], r.signature);
 }
 
+/** iyzico webhook (HPP) gövdesi — imzaya giren alanlar + taşıdığı diğer veri. */
+export type IyzicoWebhookBody = {
+  iyziEventType?: string;
+  iyziPaymentId?: string | number;
+  token?: string;
+  paymentConversationId?: string;
+  status?: string;
+  merchantId?: string;
+  iyziReferenceCode?: string;
+  iyziEventTime?: number;
+};
+
+/**
+ * Webhook imzası (X-IYZ-SIGNATURE-V3, HPP formatı). Yukarıdaki
+ * `verifySignature`'dan FARKLIDIR: ayraç yoktur ve secretKey hem HMAC anahtarı
+ * hem de imzalanan dizginin başıdır (resmî doküman böyle tanımlıyor):
+ *
+ *   HMAC-SHA256(secretKey, secretKey + iyziEventType + iyziPaymentId
+ *               + token + paymentConversationId + status) → hex
+ *
+ * Bu fonksiyon bir KAPIDIR: false dönerse gövdenin hiçbir alanı kullanılmaz.
+ * Ancak kapıyı geçmek ödeme OTORİTESİ DEĞİLDİR; webhook yalnız `token`'ı
+ * taşır, sipariş durumu retrieve + imza + tutar zinciriyle belirlenir.
+ */
+export function verifyWebhookSignature(
+  header: string | null | undefined,
+  body: IyzicoWebhookBody,
+): boolean {
+  const secret = cleanEnv("IYZICO_SECRET_KEY");
+  if (!secret || !header) return false;
+  const data =
+    secret +
+    String(body.iyziEventType ?? "") +
+    String(body.iyziPaymentId ?? "") +
+    String(body.token ?? "") +
+    String(body.paymentConversationId ?? "") +
+    String(body.status ?? "");
+  const expected = crypto
+    .createHmac("sha256", secret)
+    .update(data, "utf8")
+    .digest("hex");
+  const a = Buffer.from(expected, "utf8");
+  const b = Buffer.from(String(header), "utf8");
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+
 /**
  * Callback token'ının sha256 hex özeti. Ham CF token'ı hiçbir yerde (DB,
  * log) tutulmaz; sipariş eşleştirmesi ve callback idempotency bu hash
