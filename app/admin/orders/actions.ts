@@ -31,6 +31,21 @@ export async function setOrderStatus(
 }
 
 /**
+ * Admin: "ödeme doğrulanamadı" uyarısını siparişin durumuna DOKUNMADAN kaldırır.
+ *
+ * NEDEN VAR: uyarı şimdiye dek yalnız durum değişince ya da "iyzico'ya sor"
+ * başarılı olunca siliniyordu. Ödemesi elle doğrulanmış ama henüz kargolanmamış
+ * bir siparişte (18.09 BC2F) uyarıyı söndürmenin yolu yoktu; panelde kalıcı
+ * kırmızı bir leke bırakıyordu ve gerçek uyarıları görünmez kılıyordu.
+ */
+export async function dismissOrderAttention(orderId: string): Promise<void> {
+  await requireAdmin();
+  await dbClearOrderAttention(orderId);
+  revalidatePath("/admin/orders");
+  revalidatePath(`/admin/orders/${orderId}`);
+}
+
+/**
  * Admin: "iyzico'ya sor". Bekleyen bir siparişin gerçek ödeme durumunu
  * conversationId ile iyzico'dan sorar ve SUCCESS ise siparişi kapatır.
  *

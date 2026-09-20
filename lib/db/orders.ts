@@ -10,6 +10,7 @@ import {
   ne,
   or,
   isNull,
+  asc,
   desc,
   inArray,
   notInArray,
@@ -319,6 +320,45 @@ export async function dbGetArchivedOrders(
       .orderBy(desc(orders.createdAt))
       .limit(limit)
       .offset(offset),
+    db.select({ value: count() }).from(orders).where(where),
+  ]);
+  return { rows, total: totals[0]?.value ?? 0 };
+}
+
+/**
+ * Admin sipariş listesi: sekme (aktif/arşiv) + sıralama + sayfalama tek
+ * sorguda. Sıralama SQL'de yapılır; sayfanın içinde JS ile sıralamak, sayfa
+ * 2'de yanlış sonuç verirdi (yalnız o sayfadaki 25 kayıt sıralanmış olurdu).
+ */
+export async function dbGetOrdersPage(input: {
+  archived: boolean;
+  limit: number;
+  offset: number;
+  /** "tarih" (createdAt) | "tutar" (totalTry) */
+  sort: "tarih" | "tutar";
+  dir: "asc" | "desc";
+}): Promise<{ rows: OrderRow[]; total: number }> {
+  const db = getDb();
+  if (!db) return { rows: [], total: 0 };
+  const where = input.archived
+    ? inArray(orders.status, [...ARCHIVED_STATUSES])
+    : notInArray(orders.status, [...ARCHIVED_STATUSES]);
+  const kolon = input.sort === "tutar" ? orders.totalTry : orders.createdAt;
+  const yon = input.dir === "asc" ? asc : desc;
+  // İkincil anahtar createdAt: eşit tutarlarda sıra kararlı kalsın, yoksa
+  // sayfalar arasında kayıt tekrarlayabilir ya da atlanabilir.
+  const orderBy =
+    input.sort === "tutar"
+      ? [yon(kolon), desc(orders.createdAt)]
+      : [yon(kolon)];
+  const [rows, totals] = await Promise.all([
+    db
+      .select()
+      .from(orders)
+      .where(where)
+      .orderBy(...orderBy)
+      .limit(input.limit)
+      .offset(input.offset),
     db.select({ value: count() }).from(orders).where(where),
   ]);
   return { rows, total: totals[0]?.value ?? 0 };

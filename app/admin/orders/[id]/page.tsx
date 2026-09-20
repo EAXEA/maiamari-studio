@@ -13,7 +13,7 @@ import {
   nextFulfillmentStatus,
   isRefundable,
 } from "@/lib/order-status";
-import { setOrderStatus } from "../actions";
+import { setOrderStatus, dismissOrderAttention } from "../actions";
 import { AskIyzico } from "@/components/admin/ask-iyzico";
 
 export const dynamic = "force-dynamic";
@@ -88,6 +88,25 @@ export default async function AdminOrderDetailPage({
               ? ` Uyarı ${fmtDate(order.paymentAttentionAt)} tarihinde kondu.`
               : ""}
           </p>
+          {/* Ödemeyi elle doğrulamış olabilir (iyzico panelinden). O zaman
+              uyarı yalnız gürültüdür ve gerçek uyarıları görünmez kılar.
+              Sipariş durumuna dokunmadan kaldırılabilsin. */}
+          <form
+            action={dismissOrderAttention.bind(null, order.id)}
+            className="mt-3"
+          >
+            <button
+              type="submit"
+              className="h-9 px-3 text-xs tracking-[0.12em] uppercase border hover:bg-white/60"
+              style={{ borderColor: "#E8A0A0", color: "#8A1C1C" }}
+            >
+              Uyarıyı kaldır
+            </button>
+            <span className="ml-3 text-xs" style={{ color: "#8A1C1C" }}>
+              Ödemeyi iyzico panelinden doğruladıysanız kullanın. Sipariş
+              durumu değişmez.
+            </span>
+          </form>
         </div>
       )}
 
