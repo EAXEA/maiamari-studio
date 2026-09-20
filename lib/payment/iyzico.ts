@@ -244,6 +244,15 @@ export function diagnoseWebhookSignature(
   const secret = cleanEnv("IYZICO_SECRET_KEY");
   if (!secret) return "secret-yok";
   if (!header) return "baslik-yok";
+  // Karsilastirma `verifyWebhookSignature` ile AYNI normalizasyonu kullanmali:
+  // aksi halde dogru varyant bulundugu halde yalnizca harf buyuklugu yuzunden
+  // "hicbiri-eslesmedi" denir ve tarama bizi yanlis yone gonderir.
+  //
+  // DIKKAT: harf buyuklugu yalniz HEX'te anlamsizdir. Base64'te ANLAMLIDIR
+  // (a ile A farkli bayt), o yuzden base64 varyanti kucultulmeden, yalniz
+  // bosluklari kirpilarak karsilastirilir.
+  const gelenHam = String(header).trim();
+  const gelenHex = gelenHam.toLowerCase();
 
   const e = String(body.iyziEventType ?? "");
   const p = String(body.iyziPaymentId ?? "");
@@ -266,7 +275,9 @@ export function diagnoseWebhookSignature(
       .createHmac("sha256", secret)
       .update(data, "utf8")
       .digest(encoding === "hex" ? "hex" : "base64");
-    if (sig === header) return name;
+    const eslesti =
+      encoding === "hex" ? sig.toLowerCase() === gelenHex : sig === gelenHam;
+    if (eslesti) return name;
   }
   return "hicbiri-eslesmedi";
 }

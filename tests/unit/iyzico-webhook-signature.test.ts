@@ -14,6 +14,7 @@ import assert from "node:assert/strict";
 import crypto from "node:crypto";
 import {
   verifyWebhookSignature,
+  diagnoseWebhookSignature,
   type IyzicoWebhookBody,
 } from "../../lib/payment/iyzico";
 
@@ -117,4 +118,21 @@ test("eksik alanlar bos dizge sayilir, patlamaz", () => {
   process.env.IYZICO_SECRET_KEY = TEST_SECRET;
   const partial: IyzicoWebhookBody = { iyziEventType: "CHECKOUT_FORM_AUTH" };
   assert.equal(verifyWebhookSignature(sign(partial), partial), true);
+});
+
+test("teshis taramasi buyuk harf hex imzada dogru varyanti bulur", () => {
+  // Normalizasyon verify tarafina eklenmis ama teshis tarafina eklenmemis
+  // olsaydi, tarama dogru varyantta bile 'hicbiri-eslesmedi' der ve bizi
+  // formulu degistirmeye ugrasirdi.
+  process.env.IYZICO_SECRET_KEY = TEST_SECRET;
+  const b = makeBody();
+  assert.equal(diagnoseWebhookSignature(sign(b).toUpperCase(), b), "hpp-dokuman");
+  assert.equal(diagnoseWebhookSignature(`  ${sign(b)} `, b), "hpp-dokuman");
+});
+
+test("teshis taramasi alakasiz imzada hicbiri-eslesmedi der", () => {
+  process.env.IYZICO_SECRET_KEY = TEST_SECRET;
+  const b = makeBody();
+  assert.equal(diagnoseWebhookSignature("f".repeat(64), b), "hicbiri-eslesmedi");
+  assert.equal(diagnoseWebhookSignature(null, b), "baslik-yok");
 });
