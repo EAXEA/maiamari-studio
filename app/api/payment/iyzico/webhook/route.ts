@@ -29,7 +29,7 @@ import { settleCheckoutFormPayment } from "@/lib/checkout/settle-payment";
 import {
   paymentMode,
   verifyWebhookSignature,
-  computeWebhookSignature,
+  diagnoseWebhookSignature,
   type IyzicoWebhookBody,
 } from "@/lib/payment/iyzico";
 
@@ -52,23 +52,19 @@ export async function POST(req: Request) {
   const sigHeader = req.headers.get("x-iyz-signature-v3");
 
   if (!verifyWebhookSignature(sigHeader, body)) {
-    // GEÇİCİ TEŞHİS (2026-09-20): ilk gerçek webhook 401 aldı ve mevcut log
-    // "başlık hiç gelmedi" ile "imza tutmadı" durumlarını ayırt etmiyordu.
-    // Burada yalnız AYIRT EDİCİ veri yazılır: başlık ADLARI, imzaların ilk 12
-    // karakteri ve alan uzunlukları. Ham token ve secret ASLA loglanmaz.
+    // GEÇİCİ TEŞHİS (2026-09-20): ilk gerçek webhook 401 aldı. Loglanan tek
+    // ayırt edici bilgi, denenen formül varyantlarından hangisinin eşleştiği.
+    // Ne imza (ne de bir parçası), ne ham token, ne secret loglanır: beklenen
+    // imzayı sızdırmak gövdeyi kontrol eden birine örnek toplatırdı.
     // Sebep anlaşılınca bu blok kaldırılacak.
-    const expected = computeWebhookSignature(body);
     console.error("iyzico webhook: İMZA DOĞRULANAMADI", {
       iyziEventType: body.iyziEventType,
       paymentConversationId: body.paymentConversationId,
       status: body.status,
-      iyziPaymentId: body.iyziPaymentId,
-      tokenUzunluk: body.token ? String(body.token).length : 0,
+      tokenGeldiMi: Boolean(body.token),
       imzaBasligiGeldiMi: Boolean(sigHeader),
-      gelenImzaOnek: sigHeader ? String(sigHeader).slice(0, 12) : null,
       gelenImzaUzunluk: sigHeader ? String(sigHeader).length : 0,
-      beklenenImzaOnek: expected ? expected.slice(0, 12) : null,
-      beklenenImzaUzunluk: expected ? expected.length : 0,
+      eslesenVaryant: diagnoseWebhookSignature(sigHeader, body),
       gelenBaslikAdlari: [...req.headers.keys()].filter((k) =>
         k.startsWith("x-iyz"),
       ),
