@@ -26,6 +26,8 @@
  */
 import { NextResponse } from "next/server";
 import { settleCheckoutFormPayment } from "@/lib/checkout/settle-payment";
+import { reconcilePendingOrder } from "@/lib/checkout/reconcile-payment";
+import { dbFindOrderIdByConversationId } from "@/lib/db/orders";
 import {
   paymentMode,
   verifyWebhookSignature,
@@ -49,7 +51,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false }, { status: 400 });
   }
 
+  // V3 başlığı hesapta açık DEĞİLSE iyzico eski `x-iyz-signature` başlığını
+  // yollar (20.09.2026'da canlıda görüldü: gelen başlık `x-iyz-signature`,
+  // bizimki yalnız v3'e bakıyordu, bu yüzden imza formülü HİÇ çalışmadı).
+  // V3'ün açılması iyzico'dan talep edildi; o gelene kadar aşağıdaki
+  // ipucu yolu devreye girer.
   const sigHeader = req.headers.get("x-iyz-signature-v3");
+  const eskiSigHeader = req.headers.get("x-iyz-signature");
 
   if (!verifyWebhookSignature(sigHeader, body)) {
     // GEÇİCİ TEŞHİS (2026-09-20): ilk gerçek webhook 401 aldı. Loglanan tek
@@ -63,13 +71,43 @@ export async function POST(req: Request) {
       status: body.status,
       tokenGeldiMi: Boolean(body.token),
       imzaBasligiGeldiMi: Boolean(sigHeader),
-      gelenImzaUzunluk: sigHeader ? String(sigHeader).length : 0,
-      eslesenVaryant: diagnoseWebhookSignature(sigHeader, body),
+      eskiBaslikGeldiMi: Boolean(eskiSigHeader),
+      gelenImzaUzunluk: String(sigHeader || eskiSigHeader || "").length,
+      eslesenVaryant: diagnoseWebhookSignature(sigHeader || eskiSigHeader, body),
       gelenBaslikAdlari: [...req.headers.keys()].filter((k) =>
         k.startsWith("x-iyz"),
       ),
       govdeAlanlari: Object.keys(body),
     });
+
+    // İMZASIZ YOL: gövdeye GÜVENİLMEZ, yalnız `paymentConversationId` bir
+    // İPUCU olarak alınır. Gerçeği iyzico'ya KENDİ kimliğimizle sorarız ve
+    // yanıtın imzasını doğrularız; yani otorite gövde değil, bizim sorgumuz.
+    //
+    // Saldırgan ne yapabilir: geçerli bir conversationId biliyorsa bizi
+    // iyzico'ya bir sorgu yapmaya zorlar. Sonuç yine iyzico'nun imzalı
+    // cevabıdır, yani "ödenmemiş" bir siparişi ödendi yaptıramaz.
+    //
+    // Bu yol imza sorunu çözülünce de zararsızdır: imza doğrulanırsa zaten
+    // buraya hiç girilmez.
+    const ipucu = body.paymentConversationId;
+    if (ipucu) {
+      const orderId = await dbFindOrderIdByConversationId(String(ipucu));
+      if (orderId) {
+        const sonuc = await reconcilePendingOrder(orderId);
+        if (sonuc.paid) {
+          console.log("iyzico webhook: imzasız ipucu ile uzlaştırıldı", {
+            orderId,
+          });
+          return NextResponse.json({ ok: true });
+        }
+        if (!sonuc.reachable) {
+          // iyzico'ya ulaşılamadı: 503 ile iyzico'nun tekrar denemesini iste.
+          return NextResponse.json({ ok: false }, { status: 503 });
+        }
+      }
+    }
+
     return NextResponse.json({ ok: false }, { status: 401 });
   }
 
