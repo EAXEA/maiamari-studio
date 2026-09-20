@@ -1,5 +1,207 @@
 [
   {
+    "id": "mai_249c5451-53f8-4202-a31e-734bf8c0fd19",
+    "slug": "0-5-cm-kaucuk-merdane",
+    "title": "0.5 cm Kauçuk Merdane",
+    "description": "0.5 cm genişliğinde ahşap saplı kauçuk baskı merdanesi.",
+    "priceTRY": 1250,
+    "compareAtTRY": null,
+    "status": "low_stock",
+    "statuses": [
+      "Son ürün"
+    ],
+    "categorySlug": "merdaneler",
+    "coverImage": "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/4068d909-2fcb-409b-8cda-d65fe8930f96.jpg",
+    "gallery": [],
+    "sourceUrl": ""
+  },
+  {
+    "id": "mai_1a99bdfd-1299-4036-a4f5-609582851613",
+    "slug": "1-cm-kaucuk-merdane-2",
+    "title": "1 cm Kauçuk Merdane",
+    "description": "1 cm genişliğinde ahşap saplı kauçuk baskı merdanesi",
+    "priceTRY": 1250,
+    "compareAtTRY": null,
+    "status": "out_of_stock",
+    "statuses": [
+      "Tükendi"
+    ],
+    "categorySlug": "merdaneler",
+    "coverImage": "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/eb49ae84-d8ff-4845-b086-96d536355056.jpg",
+    "gallery": [],
+    "sourceUrl": ""
+  },
+  {
+    "id": "mai_6b57130e-ccf7-4cae-a6e8-e97b79a963df",
+    "slug": "10-cm-kaucuk-merdane",
+    "title": "10 cm Kauçuk Merdane",
+    "description": "10 cm genişliğinde kauçuk baskı merdanesi",
+    "priceTRY": 2250,
+    "compareAtTRY": null,
+    "status": "low_stock",
+    "statuses": [
+      "Son ürün"
+    ],
+    "categorySlug": "merdaneler",
+    "coverImage": "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/b1c0e275-b039-48f1-9083-e1454699331a.jpg",
+    "gallery": [],
+    "sourceUrl": ""
+  },
+  {
+    "id": "mai_d5adcad8-f48c-49cd-af79-140d028dbb93",
+    "slug": "2-cm-kaucuk-merdane-2",
+    "title": "2 cm Kauçuk Merdane",
+    "description": "2 cm genişliğinde ahşap saplı kauçuk baskı merdanesi",
+    "priceTRY": 1250,
+    "compareAtTRY": null,
+    "status": "out_of_stock",
+    "statuses": [
+      "Tükendi"
+    ],
+    "categorySlug": "merdaneler",
+    "coverImage": "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/ae77f83f-eae5-4372-be02-4d74decce7fb.jpg",
+    "gallery": [],
+    "sourceUrl": ""
+  },
+  {
+    "id": "mai_5f4124df-3e47-4ffc-9f6d-5dacefb8b770",
+    "slug": "clairefontaine-fleur-de-coton-baskiresim-kagidi-56x76-cm",
+    "title": "Clairefontaine Fleur De Coton Baskıresim Kağıdı 56x76 cm",
+    "description": "Clairefontaine Fleur De Coton Baskıresim için özel üretilmiş %100 pamuk 300 gsm bir kâğıttır. Tüm baskıresimler için kullanılabilir. Adet fiyatıdır.",
+    "priceTRY": 300,
+    "compareAtTRY": null,
+    "status": "in_stock",
+    "statuses": [],
+    "categorySlug": "baskiresim-kagitlari",
+    "coverImage": "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/38a50e0e-89fe-44ce-abb1-0a76cdd797d2.jpg",
+    "gallery": [
+      "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/262cc251-cf87-4b9a-a57e-eb2e1c816ea8.jpg"
+    ],
+    "sourceUrl": ""
+  },
+  {
+    "id": "mai_084a4aff-1a8d-4c2a-98e2-1ae6e963f14a",
+    "slug": "fabriano-rosaspina-bianco-baskiresim-kagidi",
+    "title": "Fabriano Rosaspina Bianco 50 x 70 cm Baskıresim Kâğıdı",
+    "description": "Fabriano Rosaspina, mükemmel dayanıklılık ve pürüzsüz, tutarlı bir yüzey sunan, %60 pamuk içeren kalıp yapımı bir baskı kağıdıdır. Gravür, Linol /ahşap baskı , litografi ve serigrafi dahil olmak üzere tüm baskı tekniklerinin yanı sıra çizim için de uygundur. 50 x 70 cm boyutlarında 285 gsm ağırlığındadır. Adet olarak satılmaktadır.",
+    "priceTRY": 250,
+    "compareAtTRY": null,
+    "status": "in_stock",
+    "statuses": [],
+    "categorySlug": "baskiresim-kagitlari",
+    "coverImage": "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/5f25331f-5fce-4fb6-8b64-3f111f891299.jpg",
+    "gallery": [],
+    "sourceUrl": ""
+  },
+  {
+    "id": "mai_792fa666-d6b3-4bd0-a84e-0ef958a9ab00",
+    "slug": "fabriano-rosaspina-bianco-70-x-100-cm-baskiresim-kagidi",
+    "title": "Fabriano Rosaspina Bianco 70 x 100 cm Baskıresim Kâğıdı",
+    "description": "Fabriano Rosaspina, mükemmel dayanıklılık ve pürüzsüz, tutarlı bir yüzey sunan, %60 pamuk içeren kalıp yapımı bir baskı kağıdıdır. Gravür, Linol /ahşap baskı , litografi ve serigrafi dahil olmak üzere tüm baskı tekniklerinin yanı sıra çizim için de uygundur. 70 x 100 cm boyutlarında 285 gsm ağırlığındadır. Adet olarak satılmaktadır.",
+    "priceTRY": 500,
+    "compareAtTRY": null,
+    "status": "in_stock",
+    "statuses": [],
+    "categorySlug": "baskiresim-kagitlari",
+    "coverImage": "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/84facec9-7c0d-497b-827b-8a18b8eeaebf.jpg",
+    "gallery": [],
+    "sourceUrl": ""
+  },
+  {
+    "id": "mai_81a76c7a-aab4-4ae7-be2a-f3a574195786",
+    "slug": "linolyum-35-x-50-cm",
+    "title": "Linolyum 35 x 50 cm",
+    "description": "35cm x 50 cm ölçüsünde linolyum plaka. Linol baskı için oyulur, kâğıt ya da kumaş üzerine basılır. Yumuşak yapısı sayesinde oyma bıçağı rahat ilerler, ilk kez oyanlar için de uygundur.",
+    "priceTRY": 300,
+    "compareAtTRY": null,
+    "status": "out_of_stock",
+    "statuses": [
+      "Tükendi"
+    ],
+    "categorySlug": "linolyum",
+    "coverImage": "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/b38806d5-40f9-4d13-bd3e-8f529df513ea.jpg",
+    "gallery": [],
+    "sourceUrl": ""
+  },
+  {
+    "id": "mai_13fdead7-28db-43d3-ad78-5eb32ff220ff",
+    "slug": "non-toxic-cleaner-solvent-free-1-lt",
+    "title": "Non-Toxic Cleaner ( Solvent free ) 1 Lt.",
+    "description": "Solvent içermeyen merdane ve yüzey temizleyici",
+    "priceTRY": 1700,
+    "compareAtTRY": null,
+    "status": "out_of_stock",
+    "statuses": [
+      "Tükendi"
+    ],
+    "categorySlug": "aletler",
+    "coverImage": "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/1c0d0cc0-ded2-4a95-97e3-a4f9951e95a4.jpg",
+    "gallery": [],
+    "sourceUrl": ""
+  },
+  {
+    "id": "mai_7927e44f-d36b-491d-a19d-7275730cdf85",
+    "slug": "pfeil-l-11-0-5-oyma-bicagi",
+    "title": "Pfeil L 11/0.5 Oyma Bıçağı",
+    "description": "11 numara profil, 0,5 mm ağız genişliği. Derin U kesitli, çok ince çizgiler ve nokta dokular için kullanılır. İsviçre çeliğinden üretilmiş profesyonel oyma bıçağı.",
+    "priceTRY": 2850,
+    "compareAtTRY": null,
+    "status": "out_of_stock",
+    "statuses": [
+      "Tükendi"
+    ],
+    "categorySlug": "aletler",
+    "coverImage": "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/c0f5127d-82f4-4e76-86fd-6bd6f1116c55.jpg",
+    "gallery": [],
+    "sourceUrl": ""
+  },
+  {
+    "id": "mai_259deb3d-ffa3-459c-8ab8-e09f6afdae73",
+    "slug": "pfeil-l-9-5-oyma-bicagi",
+    "title": "Pfeil L 9/5 Oyma Bıçağı",
+    "description": "9 numara profil, 5 mm ağız genişliği. Yuvarlak kesitli, geniş kalınlıkta çizgiler ve alan boşaltma için kullanılır. İsviçre çeliğinden üretilmiş profesyonel oyma bıçağı.",
+    "priceTRY": 2850,
+    "compareAtTRY": null,
+    "status": "out_of_stock",
+    "statuses": [
+      "Tükendi"
+    ],
+    "categorySlug": "aletler",
+    "coverImage": "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/56b0cc29-0863-4630-b384-1fd3fa1ddb49.jpg",
+    "gallery": [],
+    "sourceUrl": ""
+  },
+  {
+    "id": "mai_116a1a8e-e4b5-4a66-8ed0-cb400e80e438",
+    "slug": "shanghai-chiisen-paper-co-profesyonel-karakalem-ve-linol-baski-kagidi",
+    "title": "Shanghai Chiisen Paper Co. Profesyonel Karakalem ve Linol Baskı Kağıdı",
+    "description": "Shanghai Chiisen Artist's özel sanat serisi; karakalem, füzen ve eskiz çalışmalarının yanı sıra Linol (Linolyum), ağaç ve blok baskı teknikleri için tasarlanmış yüksek performanslı bir sanat kağıdıdır.\r\n38 x 53 cm , 160 gsm , 20 yaprak \r\nLinol ve Blok Baskıya Uygun: 160gsm kalınlığıyla el presi veya merdaneli baskılarda mürekkebi mükemmel emer, bükülme ya da arkaya sızma yapmaz.\r\nAsitsiz ve Arşiv Kalitesi: Asitsiz (Acid-Free) yapısı sayesinde zamanla sararmaz ve solmaz. Küfe ile güveye karşı dayanıklıdır.\r\nOptik Beyazlatıcısız: Doğal tonuyla gözü yormaz, mürekkep ve kurşun kalem pigmentlerini en gerçekçi kontrastta gösterir.\r\nYüksek Lif Direnci: Pres basıncına, yoğun silme ve kazıma işlemlerine karşı yırtılmaz, deforme olmaz.\r\nÜstün Pigment Tutuşu: Karakalem ve füzen çalışmalarında rengi yüzeye homojen yayar.\r\n1 pakette 20 adet kâğıt vardır. Verilen fiyat paket fiyatıdır.",
+    "priceTRY": 600,
+    "compareAtTRY": null,
+    "status": "in_stock",
+    "statuses": [],
+    "categorySlug": "baskiresim-kagitlari",
+    "coverImage": "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/75eee4d5-c6d3-4406-885c-34988be62e52.jpg",
+    "gallery": [],
+    "sourceUrl": ""
+  },
+  {
+    "id": "mai_c4af7c15-5551-4b7a-bb8b-0c177e5cdc89",
+    "slug": "pfeil-l9-2-oyma-bicagi",
+    "title": "Pfeil L9/2 Oyma Bıçağı",
+    "description": "9 numara profil, 2 mm ağız genişliği. Yuvarlak kesitli, orta kalınlıkta çizgiler ve alan boşaltma için kullanılır. İsviçre çeliğinden üretilmiş profesyonel oyma bıçağı.",
+    "priceTRY": 2850,
+    "compareAtTRY": null,
+    "status": "out_of_stock",
+    "statuses": [
+      "Tükendi"
+    ],
+    "categorySlug": "aletler",
+    "coverImage": "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/64157d9c-fb7c-40f2-88a1-36103254f694.jpg",
+    "gallery": [],
+    "sourceUrl": ""
+  },
+  {
     "id": "mai_1de765e0-b9a3-4a2a-8857-6153d2e6767b",
     "slug": "abig-oyma-seti",
     "title": "Abig Oyma Seti",
@@ -14,11 +216,45 @@
     "sourceUrl": ""
   },
   {
+    "id": "mai_f053635c-e757-468c-bf5f-c8fcf5bbf05e",
+    "slug": "linol-oyma-seti",
+    "title": "Linol Oyma seti",
+    "description": "Çelik bıçaklardan hazırlanmış bir oyma seti. Linol ve ahşap oymak için uygundur.",
+    "priceTRY": 900,
+    "compareAtTRY": null,
+    "status": "in_stock",
+    "statuses": [],
+    "categorySlug": "aletler",
+    "coverImage": "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/4f8f5502-50db-4a52-8aa2-2149df26c380.jpg",
+    "gallery": [
+      "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/2c085141-8cc7-4d30-a17e-7e0ff5807001.jpg",
+      "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/4c9b2dec-f0fb-4427-bba4-f6454586ab29.jpg"
+    ],
+    "sourceUrl": ""
+  },
+  {
+    "id": "mai_7e1b68d6-709d-4344-b5e8-f492c84b439b",
+    "slug": "baski-bareni",
+    "title": "Baskı Bareni",
+    "description": "Elde baskı yapmak için üretilmiş bir barendir.",
+    "priceTRY": 3000,
+    "compareAtTRY": null,
+    "status": "in_stock",
+    "statuses": [],
+    "categorySlug": "aletler",
+    "coverImage": "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/246048e4-82e1-44ea-ae1a-93e13bbecfff.jpg",
+    "gallery": [
+      "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/deccdf43-e010-4870-9371-d655d6672373.jpg",
+      "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/a7579cdd-39fd-4604-8128-e8e5cc2aec64.jpg"
+    ],
+    "sourceUrl": ""
+  },
+  {
     "id": "38261472",
     "slug": "gold-altin-rengi-parlak-linol-baski-boyasi",
     "title": "Gold (Altın rengi ) Parlak Linol Baskı Boyası",
     "description": "100 cc (100 ml) Gold (Altın Rengi ) Parlak Linol Boyası  Orijinal amber cam kavanozda sunulan bu linol baskı boyası, güneş ışığına maruz kalmadığı için uzun süre bozulmadan kullanılabilir. Sızdırmaz köpük contalı metal kapağı sayesinde hava almaz, böylece hem boyanın kuruması engellenir hem de dışarı sızması önlenir. Not : Ambalajlarımız orijinal amber camdır. Boyama değildir.",
-    "priceTRY": 294,
+    "priceTRY": 350,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -32,11 +268,29 @@
     "sourceUrl": "https://www.shopier.com/maiamari/38261472"
   },
   {
+    "id": "38291690",
+    "slug": "silver-gumus-rengi-parlak-linol-baski-boyasi",
+    "title": "Silver ( Gümüş Rengi ) Parlak Linol Baskı Boyası",
+    "description": "100 cc (100 ml) Silver  (Gümüş Rengi ) Parlak Linol Boyası  Orijinal amber cam kavanozda sunulan bu linol baskı boyası, güneş ışığına maruz kalmadığı için uzun süre bozulmadan kullanılabilir. Sızdırmaz köpük contalı metal kapağı sayesinde hava almaz, böylece hem boyanın kuruması engellenir hem de dışarı sızması önlenir. Not : Ambalajlarımız orijinal amber camdır. Boyama değildir.",
+    "priceTRY": 350,
+    "compareAtTRY": null,
+    "status": "in_stock",
+    "statuses": [],
+    "categorySlug": "linol-boyalari",
+    "coverImage": "/images/shopier/38291690/img_00.jpeg",
+    "gallery": [
+      "/images/shopier/38291690/img_00.jpeg",
+      "/images/shopier/38291690/img_01.jpeg",
+      "/images/shopier/38291690/img_02.jpeg"
+    ],
+    "sourceUrl": "https://www.shopier.com/maiamari/38291690"
+  },
+  {
     "id": "38261423",
     "slug": "beyaz-linol-boyasi",
     "title": "Beyaz Linol Boyası",
     "description": "150 cc (150 ml) Beyaz Linol Boyası  Orijinal amber cam kavanozda sunulan bu linol baskı boyası, güneş ışığına maruz kalmadığı için uzun süre bozulmadan kullanılabilir. Sızdırmaz köpük contalı metal kapağı sayesinde hava almaz, böylece hem boyanın kuruması engellenir hem de dışarı sızması önlenir. Not : Ambalajlarımız orijinal amber camdır. Boyama değildir.",
-    "priceTRY": 229,
+    "priceTRY": 300,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -50,25 +304,31 @@
     "sourceUrl": "https://www.shopier.com/maiamari/38261423"
   },
   {
-    "id": "mai_7927e44f-d36b-491d-a19d-7275730cdf85",
-    "slug": "pfeil-l-11-0-5-oyma-bicagi",
-    "title": "Pfeil L 11/0.5 Oyma Bıçağı",
-    "description": "11 numara profil, 0,5 mm ağız genişliği. Derin U kesitli, çok ince çizgiler ve nokta dokular için kullanılır. İsviçre çeliğinden üretilmiş profesyonel oyma bıçağı.",
-    "priceTRY": 2500,
+    "id": "38261218",
+    "slug": "siyah-linol-boyasi",
+    "title": "Siyah Linol Boyası",
+    "description": "100 cc (100 ml) Siyah Linol Boyası  Orijinal amber cam kavanozda sunulan bu linol baskı boyası, güneş ışığına maruz kalmadığı için uzun süre bozulmadan kullanılabilir. Sızdırmaz köpük contalı metal kapağı sayesinde hava almaz, böylece hem boyanın kuruması engellenir hem de dışarı sızması önlenir. Not : Ambalajlarımız orijinal amber camdır. Boyama değildir.",
+    "priceTRY": 250,
     "compareAtTRY": null,
-    "status": "in_stock",
-    "statuses": [],
-    "categorySlug": "aletler",
-    "coverImage": "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/c0f5127d-82f4-4e76-86fd-6bd6f1116c55.jpg",
-    "gallery": [],
-    "sourceUrl": ""
+    "status": "out_of_stock",
+    "statuses": [
+      "Tükendi"
+    ],
+    "categorySlug": "linol-boyalari",
+    "coverImage": "/images/shopier/38261218/img_00.jpeg",
+    "gallery": [
+      "/images/shopier/38261218/img_00.jpeg",
+      "/images/shopier/38261218/img_01.jpeg",
+      "/images/shopier/38261218/img_02.jpeg"
+    ],
+    "sourceUrl": "https://www.shopier.com/maiamari/38261218"
   },
   {
     "id": "38261382",
     "slug": "kirmizi-linol-boyasi",
     "title": "Kırmızı Linol Boyası",
     "description": "100 cc (100 ml) Kırmızı Linol Boyası  Orijinal amber cam kavanozda sunulan bu linol baskı boyası, güneş ışığına maruz kalmadığı için uzun süre bozulmadan kullanılabilir. Sızdırmaz köpük contalı metal kapağı sayesinde hava almaz, böylece hem boyanın kuruması engellenir hem de dışarı sızması önlenir. Not : Ambalajlarımız orijinal amber camdır. Boyama değildir.",
-    "priceTRY": 195,
+    "priceTRY": 250,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -82,25 +342,11 @@
     "sourceUrl": "https://www.shopier.com/maiamari/38261382"
   },
   {
-    "id": "mai_c4af7c15-5551-4b7a-bb8b-0c177e5cdc89",
-    "slug": "pfeil-l9-2-oyma-bicagi",
-    "title": "Pfeil L9/2 Oyma Bıçağı",
-    "description": "9 numara profil, 2 mm ağız genişliği. Yuvarlak kesitli, orta kalınlıkta çizgiler ve alan boşaltma için kullanılır. İsviçre çeliğinden üretilmiş profesyonel oyma bıçağı.",
-    "priceTRY": 2500,
-    "compareAtTRY": null,
-    "status": "in_stock",
-    "statuses": [],
-    "categorySlug": "aletler",
-    "coverImage": "https://wagaijlbpdyfbmhsjmho.supabase.co/storage/v1/object/public/product-images/64157d9c-fb7c-40f2-88a1-36103254f694.jpg",
-    "gallery": [],
-    "sourceUrl": ""
-  },
-  {
     "id": "38261297",
     "slug": "mavi-linol-boyasi",
     "title": "Mavi Linol Boyası",
     "description": "100 cc (100 ml) Mavi Linol Boyası  Orijinal amber cam kavanozda sunulan bu linol baskı boyası, güneş ışığına maruz kalmadığı için uzun süre bozulmadan kullanılabilir. Sızdırmaz köpük contalı metal kapağı sayesinde hava almaz, böylece hem boyanın kuruması engellenir hem de dışarı sızması önlenir. Not : Ambalajlarımız orijinal amber camdır. Boyama değildir.",
-    "priceTRY": 195,
+    "priceTRY": 250,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -118,7 +364,7 @@
     "slug": "sari-linol-boyasi",
     "title": "Sarı Linol Boyası",
     "description": "100 cc (100 ml) Sarı Linol Boyası  Orijinal amber cam kavanozda sunulan bu linol baskı boyası, güneş ışığına maruz kalmadığı için uzun süre bozulmadan kullanılabilir. Sızdırmaz köpük contalı metal kapağı sayesinde hava almaz, böylece hem boyanın kuruması engellenir hem de dışarı sızması önlenir. Not : Ambalajlarımız orijinal amber camdır. Boyama değildir.",
-    "priceTRY": 195,
+    "priceTRY": 250,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -132,29 +378,11 @@
     "sourceUrl": "https://www.shopier.com/maiamari/38261252"
   },
   {
-    "id": "38261218",
-    "slug": "siyah-linol-boyasi",
-    "title": "Siyah Linol Boyası",
-    "description": "100 cc (100 ml) Siyah Linol Boyası  Orijinal amber cam kavanozda sunulan bu linol baskı boyası, güneş ışığına maruz kalmadığı için uzun süre bozulmadan kullanılabilir. Sızdırmaz köpük contalı metal kapağı sayesinde hava almaz, böylece hem boyanın kuruması engellenir hem de dışarı sızması önlenir. Not : Ambalajlarımız orijinal amber camdır. Boyama değildir.",
-    "priceTRY": 195,
-    "compareAtTRY": null,
-    "status": "in_stock",
-    "statuses": [],
-    "categorySlug": "linol-boyalari",
-    "coverImage": "/images/shopier/38261218/img_00.jpeg",
-    "gallery": [
-      "/images/shopier/38261218/img_00.jpeg",
-      "/images/shopier/38261218/img_01.jpeg",
-      "/images/shopier/38261218/img_02.jpeg"
-    ],
-    "sourceUrl": "https://www.shopier.com/maiamari/38261218"
-  },
-  {
     "id": "38121479",
     "slug": "linolyum-a4-21-cm-x-30-cm",
     "title": "Linolyum A4 ( 21 cm x 30 cm )",
     "description": "21 cm x 30 cm ölçüsünde linolyum plaka. Linol baskı için oyulur, kâğıt ya da kumaş üzerine basılır. Yumuşak yapısı sayesinde oyma bıçağı rahat ilerler, ilk kez oyanlar için de uygundur.",
-    "priceTRY": 180,
+    "priceTRY": 280,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -166,11 +394,32 @@
     "sourceUrl": "https://www.shopier.com/maiamari/38121479"
   },
   {
+    "id": "38119960",
+    "slug": "el-yapimi-kagit-galaksi-serisi-gri",
+    "title": "El Yapımı Kâğıt - Galaksi Serisi - Gri",
+    "description": "Gri zemin üzerinde bulut gibi açılan açık tonlu bir yayılım. Galaksi serisinde iki ton aynı tabakada karışır, desen her seferinde farklı çıkar. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
+    "priceTRY": 150,
+    "compareAtTRY": null,
+    "status": "out_of_stock",
+    "statuses": [
+      "Tükendi"
+    ],
+    "categorySlug": "el-yapimi-kagitlar",
+    "coverImage": "/images/shopier/38119960/img_00.jpeg",
+    "gallery": [
+      "/images/shopier/38119960/img_00.jpeg",
+      "/images/shopier/38119960/img_01.jpeg",
+      "/images/shopier/38119960/img_02.jpeg",
+      "/images/shopier/38119960/img_03.jpeg"
+    ],
+    "sourceUrl": "https://www.shopier.com/maiamari/38119960"
+  },
+  {
     "id": "38121353",
     "slug": "linolyum-a5-15-cm-x-21-cm",
     "title": "Linolyum A5 ( 15 cm x 21 cm )",
     "description": "15 cm x 21 cm ölçüsünde linolyum plaka. Linol baskı için oyulur, kâğıt ya da kumaş üzerine basılır. Yumuşak yapısı sayesinde oyma bıçağı rahat ilerler, ilk kez oyanlar için de uygundur.",
-    "priceTRY": 150,
+    "priceTRY": 220,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -182,11 +431,30 @@
     "sourceUrl": "https://www.shopier.com/maiamari/38121353"
   },
   {
+    "id": "38119932",
+    "slug": "el-yapimi-kagit-galaksi-serisi-yesil",
+    "title": "El Yapımı Kâğıt - Galaksi Serisi - Yeşil",
+    "description": "Yeşil zemin üzerinde bulut gibi açılan açık tonlu bir yayılım. Galaksi serisinde iki ton aynı tabakada karışır, desen her seferinde farklı çıkar. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
+    "priceTRY": 250,
+    "compareAtTRY": null,
+    "status": "in_stock",
+    "statuses": [],
+    "categorySlug": "el-yapimi-kagitlar",
+    "coverImage": "/images/shopier/38119932/img_00.jpeg",
+    "gallery": [
+      "/images/shopier/38119932/img_00.jpeg",
+      "/images/shopier/38119932/img_01.jpeg",
+      "/images/shopier/38119932/img_02.jpeg",
+      "/images/shopier/38119932/img_03.jpeg"
+    ],
+    "sourceUrl": "https://www.shopier.com/maiamari/38119932"
+  },
+  {
     "id": "38120704",
     "slug": "pensan-tukenmez-kalem",
     "title": "Pensan Tükenmez Kalem",
     "description": "Linol kalıp üzerine çizim yapmak için kullanılabilecek özel bir tükenmez kalemdir. Diğer tükenmez kalemlerin aksine, linol yüzeyinden silinmez. Çiziminiz oyma işlemi boyunca kalıp üzerinde sabit kalır.",
-    "priceTRY": 15,
+    "priceTRY": 20,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -198,11 +466,30 @@
     "sourceUrl": "https://www.shopier.com/maiamari/38120704"
   },
   {
+    "id": "38119841",
+    "slug": "el-yapimi-kagit-galaksi-serisi-mor",
+    "title": "El Yapımı Kâğıt - Galaksi Serisi - Mor",
+    "description": "Mor zemin üzerinde bulut gibi açılan açık tonlu bir yayılım. Galaksi serisinde iki ton aynı tabakada karışır, desen her seferinde farklı çıkar. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
+    "priceTRY": 250,
+    "compareAtTRY": null,
+    "status": "in_stock",
+    "statuses": [],
+    "categorySlug": "el-yapimi-kagitlar",
+    "coverImage": "/images/shopier/38119841/img_00.jpeg",
+    "gallery": [
+      "/images/shopier/38119841/img_00.jpeg",
+      "/images/shopier/38119841/img_01.jpeg",
+      "/images/shopier/38119841/img_02.jpeg",
+      "/images/shopier/38119841/img_03.jpeg"
+    ],
+    "sourceUrl": "https://www.shopier.com/maiamari/38119841"
+  },
+  {
     "id": "38120559",
     "slug": "essdee-oyma-bicagi",
     "title": "Essdee Oyma Bıçağı",
     "description": "Linol ve ahşap oymak için tasarlanmış bu set, 5 farklı uçtan oluşur. İhtiyacınıza göre uçları kolayca değiştirerek oyma işleminizi gerçekleştirebilirsiniz.",
-    "priceTRY": 650,
+    "priceTRY": 800,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -220,7 +507,7 @@
     "slug": "el-yapimi-kagit-kirik-beyaz",
     "title": "El Yapımı Kâğıt - Kırık Beyaz",
     "description": "Kırık beyaz tonunda el yapımı kâğıt. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. Yüzeydeki ince lif benekleri üretimin izidir, her tabaka kendine özgüdür. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
-    "priceTRY": 150,
+    "priceTRY": 250,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -233,106 +520,11 @@
     "sourceUrl": "https://www.shopier.com/maiamari/38261827"
   },
   {
-    "id": "38261717",
-    "slug": "el-yapimi-kagit-beyaz",
-    "title": "El Yapımı Kâğıt - Beyaz",
-    "description": "Beyaz tonunda el yapımı kâğıt. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. Yüzeydeki ince lif benekleri üretimin izidir, her tabaka kendine özgüdür. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
-    "priceTRY": 150,
-    "compareAtTRY": null,
-    "status": "in_stock",
-    "statuses": [],
-    "categorySlug": "el-yapimi-kagitlar",
-    "coverImage": "/images/shopier/38261717/img_00.jpeg",
-    "gallery": [
-      "/images/shopier/38261717/img_00.jpeg",
-      "/images/shopier/38261717/img_01.jpeg"
-    ],
-    "sourceUrl": "https://www.shopier.com/maiamari/38261717"
-  },
-  {
-    "id": "38120359",
-    "slug": "el-yapimi-kagit-galaksi-serisi-koyu-gri",
-    "title": "El Yapımı Kâğıt - Galaksi Serisi - Koyu Gri",
-    "description": "Koyu gri zemin üzerinde bulut gibi açılan açık tonlu bir yayılım. Galaksi serisinde iki ton aynı tabakada karışır, desen her seferinde farklı çıkar. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
-    "priceTRY": 150,
-    "compareAtTRY": null,
-    "status": "in_stock",
-    "statuses": [],
-    "categorySlug": "el-yapimi-kagitlar",
-    "coverImage": "/images/shopier/38120359/img_00.jpeg",
-    "gallery": [
-      "/images/shopier/38120359/img_00.jpeg",
-      "/images/shopier/38120359/img_01.jpeg",
-      "/images/shopier/38120359/img_02.jpeg",
-      "/images/shopier/38120359/img_03.jpeg"
-    ],
-    "sourceUrl": "https://www.shopier.com/maiamari/38120359"
-  },
-  {
-    "id": "38119960",
-    "slug": "el-yapimi-kagit-galaksi-serisi-gri",
-    "title": "El Yapımı Kâğıt - Galaksi Serisi - Gri",
-    "description": "Gri zemin üzerinde bulut gibi açılan açık tonlu bir yayılım. Galaksi serisinde iki ton aynı tabakada karışır, desen her seferinde farklı çıkar. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
-    "priceTRY": 150,
-    "compareAtTRY": null,
-    "status": "low_stock",
-    "statuses": [
-      "Son ürün"
-    ],
-    "categorySlug": "el-yapimi-kagitlar",
-    "coverImage": "/images/shopier/38119960/img_00.jpeg",
-    "gallery": [
-      "/images/shopier/38119960/img_00.jpeg",
-      "/images/shopier/38119960/img_01.jpeg",
-      "/images/shopier/38119960/img_02.jpeg",
-      "/images/shopier/38119960/img_03.jpeg"
-    ],
-    "sourceUrl": "https://www.shopier.com/maiamari/38119960"
-  },
-  {
-    "id": "38119932",
-    "slug": "el-yapimi-kagit-galaksi-serisi-yesil",
-    "title": "El Yapımı Kâğıt - Galaksi Serisi - Yeşil",
-    "description": "Yeşil zemin üzerinde bulut gibi açılan açık tonlu bir yayılım. Galaksi serisinde iki ton aynı tabakada karışır, desen her seferinde farklı çıkar. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
-    "priceTRY": 150,
-    "compareAtTRY": null,
-    "status": "in_stock",
-    "statuses": [],
-    "categorySlug": "el-yapimi-kagitlar",
-    "coverImage": "/images/shopier/38119932/img_00.jpeg",
-    "gallery": [
-      "/images/shopier/38119932/img_00.jpeg",
-      "/images/shopier/38119932/img_01.jpeg",
-      "/images/shopier/38119932/img_02.jpeg",
-      "/images/shopier/38119932/img_03.jpeg"
-    ],
-    "sourceUrl": "https://www.shopier.com/maiamari/38119932"
-  },
-  {
-    "id": "38119841",
-    "slug": "el-yapimi-kagit-galaksi-serisi-mor",
-    "title": "El Yapımı Kâğıt - Galaksi Serisi - Mor",
-    "description": "Mor zemin üzerinde bulut gibi açılan açık tonlu bir yayılım. Galaksi serisinde iki ton aynı tabakada karışır, desen her seferinde farklı çıkar. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
-    "priceTRY": 150,
-    "compareAtTRY": null,
-    "status": "in_stock",
-    "statuses": [],
-    "categorySlug": "el-yapimi-kagitlar",
-    "coverImage": "/images/shopier/38119841/img_00.jpeg",
-    "gallery": [
-      "/images/shopier/38119841/img_00.jpeg",
-      "/images/shopier/38119841/img_01.jpeg",
-      "/images/shopier/38119841/img_02.jpeg",
-      "/images/shopier/38119841/img_03.jpeg"
-    ],
-    "sourceUrl": "https://www.shopier.com/maiamari/38119841"
-  },
-  {
     "id": "38119758",
     "slug": "el-yapimi-kagit-koyu-gri",
     "title": "El Yapımı Kâğıt - Koyu Gri",
     "description": "Koyu gri tonunda el yapımı kâğıt. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. Yüzeydeki ince lif benekleri üretimin izidir, her tabaka kendine özgüdür. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
-    "priceTRY": 150,
+    "priceTRY": 250,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -350,7 +542,7 @@
     "slug": "el-yapimi-kagit-acik-gri",
     "title": "El Yapımı Kâğıt - Açık Gri",
     "description": "Açık gri tonunda el yapımı kâğıt. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. Yüzeydeki ince lif benekleri üretimin izidir, her tabaka kendine özgüdür. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
-    "priceTRY": 150,
+    "priceTRY": 250,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -364,11 +556,47 @@
     "sourceUrl": "https://www.shopier.com/maiamari/38119734"
   },
   {
+    "id": "38261717",
+    "slug": "el-yapimi-kagit-beyaz",
+    "title": "El Yapımı Kâğıt - Beyaz",
+    "description": "Beyaz tonunda el yapımı kâğıt. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. Yüzeydeki ince lif benekleri üretimin izidir, her tabaka kendine özgüdür. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
+    "priceTRY": 250,
+    "compareAtTRY": null,
+    "status": "in_stock",
+    "statuses": [],
+    "categorySlug": "el-yapimi-kagitlar",
+    "coverImage": "/images/shopier/38261717/img_00.jpeg",
+    "gallery": [
+      "/images/shopier/38261717/img_00.jpeg",
+      "/images/shopier/38261717/img_01.jpeg"
+    ],
+    "sourceUrl": "https://www.shopier.com/maiamari/38261717"
+  },
+  {
+    "id": "38120359",
+    "slug": "el-yapimi-kagit-galaksi-serisi-koyu-gri",
+    "title": "El Yapımı Kâğıt - Galaksi Serisi - Koyu Gri",
+    "description": "Koyu gri zemin üzerinde bulut gibi açılan açık tonlu bir yayılım. Galaksi serisinde iki ton aynı tabakada karışır, desen her seferinde farklı çıkar. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
+    "priceTRY": 250,
+    "compareAtTRY": null,
+    "status": "in_stock",
+    "statuses": [],
+    "categorySlug": "el-yapimi-kagitlar",
+    "coverImage": "/images/shopier/38120359/img_00.jpeg",
+    "gallery": [
+      "/images/shopier/38120359/img_00.jpeg",
+      "/images/shopier/38120359/img_01.jpeg",
+      "/images/shopier/38120359/img_02.jpeg",
+      "/images/shopier/38120359/img_03.jpeg"
+    ],
+    "sourceUrl": "https://www.shopier.com/maiamari/38120359"
+  },
+  {
     "id": "38119694",
     "slug": "el-yapimi-kagit-haki",
     "title": "El Yapımı Kâğıt - Haki",
     "description": "Haki tonunda el yapımı kâğıt. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. Yüzeydeki ince lif benekleri üretimin izidir, her tabaka kendine özgüdür. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
-    "priceTRY": 150,
+    "priceTRY": 250,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -386,7 +614,7 @@
     "slug": "el-yapimi-kagit-yesil",
     "title": "El Yapımı Kâğıt - Yeşil",
     "description": "Yeşil tonunda el yapımı kâğıt. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. Yüzeydeki ince lif benekleri üretimin izidir, her tabaka kendine özgüdür. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
-    "priceTRY": 150,
+    "priceTRY": 250,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -404,7 +632,7 @@
     "slug": "el-yapimi-kagit-acik-yesil",
     "title": "El Yapımı Kâğıt - Açık Yeşil",
     "description": "Açık yeşil tonunda el yapımı kâğıt. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. Yüzeydeki ince lif benekleri üretimin izidir, her tabaka kendine özgüdür. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
-    "priceTRY": 150,
+    "priceTRY": 250,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -422,7 +650,7 @@
     "slug": "el-yapimi-kagit-mint-yesil",
     "title": "El Yapımı Kâğıt - Mint Yeşil",
     "description": "Mint yeşil tonunda el yapımı kâğıt. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. Yüzeydeki ince lif benekleri üretimin izidir, her tabaka kendine özgüdür. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
-    "priceTRY": 150,
+    "priceTRY": 250,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -440,7 +668,7 @@
     "slug": "el-yapimi-kagit-yesil-gri",
     "title": "El Yapımı Kâğıt - Yeşil Gri",
     "description": "Yeşil gri tonunda el yapımı kâğıt. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. Yüzeydeki ince lif benekleri üretimin izidir, her tabaka kendine özgüdür. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
-    "priceTRY": 150,
+    "priceTRY": 250,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -458,7 +686,7 @@
     "slug": "el-yapimi-kagit-turkuaz",
     "title": "El Yapımı Kâğıt - Turkuaz",
     "description": "Turkuaz tonunda el yapımı kâğıt. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. Yüzeydeki ince lif benekleri üretimin izidir, her tabaka kendine özgüdür. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
-    "priceTRY": 150,
+    "priceTRY": 250,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -476,10 +704,12 @@
     "slug": "el-yapimi-kagit-mavi",
     "title": "El Yapımı Kâğıt - Mavi",
     "description": "Mavi tonunda el yapımı kâğıt. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. Yüzeydeki ince lif benekleri üretimin izidir, her tabaka kendine özgüdür. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
-    "priceTRY": 150,
+    "priceTRY": 250,
     "compareAtTRY": null,
-    "status": "in_stock",
-    "statuses": [],
+    "status": "out_of_stock",
+    "statuses": [
+      "Tükendi"
+    ],
     "categorySlug": "el-yapimi-kagitlar",
     "coverImage": "/images/shopier/38119399/img_00.jpeg",
     "gallery": [
@@ -494,7 +724,7 @@
     "slug": "el-yapimi-kagit-koyu-mor",
     "title": "El Yapımı Kâğıt - Koyu Mor",
     "description": "Koyu mor tonunda el yapımı kâğıt. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. Yüzeydeki ince lif benekleri üretimin izidir, her tabaka kendine özgüdür. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
-    "priceTRY": 150,
+    "priceTRY": 250,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -512,7 +742,7 @@
     "slug": "el-yapimi-kagit-acik-mor",
     "title": "El Yapımı Kâğıt - Açık Mor",
     "description": "Açık mor tonunda el yapımı kâğıt. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. Yüzeydeki ince lif benekleri üretimin izidir, her tabaka kendine özgüdür. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
-    "priceTRY": 150,
+    "priceTRY": 250,
     "compareAtTRY": null,
     "status": "low_stock",
     "statuses": [
@@ -532,7 +762,7 @@
     "slug": "el-yapimi-kagit-kahverengi",
     "title": "El Yapımı Kâğıt - Kahverengi",
     "description": "Kahverengi tonunda el yapımı kâğıt. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. Yüzeydeki ince lif benekleri üretimin izidir, her tabaka kendine özgüdür. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
-    "priceTRY": 150,
+    "priceTRY": 250,
     "compareAtTRY": null,
     "status": "low_stock",
     "statuses": [
@@ -552,7 +782,7 @@
     "slug": "el-yapimi-kagit-koyu-bej",
     "title": "El Yapımı Kâğıt - Koyu Bej",
     "description": "Koyu bej tonunda el yapımı kâğıt. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. Yüzeydeki ince lif benekleri üretimin izidir, her tabaka kendine özgüdür. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
-    "priceTRY": 150,
+    "priceTRY": 250,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -570,7 +800,7 @@
     "slug": "el-yapimi-kagit-acik-bej",
     "title": "El Yapımı Kâğıt - Açık Bej",
     "description": "Açık bej tonunda el yapımı kâğıt. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. Yüzeydeki ince lif benekleri üretimin izidir, her tabaka kendine özgüdür. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
-    "priceTRY": 150,
+    "priceTRY": 250,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -588,7 +818,7 @@
     "slug": "el-yapimi-kagit-gulkurusu",
     "title": "El Yapımı Kâğıt - Gülkurusu",
     "description": "Gülkurusu tonunda el yapımı kâğıt. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. Yüzeydeki ince lif benekleri üretimin izidir, her tabaka kendine özgüdür. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
-    "priceTRY": 150,
+    "priceTRY": 250,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -605,7 +835,7 @@
     "slug": "el-yapimi-kagit-parlak-pembe",
     "title": "El Yapımı Kâğıt - Parlak Pembe",
     "description": "Parlak pembe tonunda el yapımı kâğıt. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. Yüzeydeki ince lif benekleri üretimin izidir, her tabaka kendine özgüdür. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
-    "priceTRY": 150,
+    "priceTRY": 250,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -624,7 +854,7 @@
     "slug": "el-yapimi-kagit-seker-pembe",
     "title": "El Yapımı Kâğıt - Şeker Pembe",
     "description": "Şeker pembe tonunda el yapımı kâğıt. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. Yüzeydeki ince lif benekleri üretimin izidir, her tabaka kendine özgüdür. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
-    "priceTRY": 150,
+    "priceTRY": 250,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -643,7 +873,7 @@
     "slug": "el-yapimi-kagit-orta-ton-pembe",
     "title": "El Yapımı Kâğıt - Orta Ton Pembe",
     "description": "Orta ton pembe tonunda el yapımı kâğıt. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. Yüzeydeki ince lif benekleri üretimin izidir, her tabaka kendine özgüdür. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
-    "priceTRY": 150,
+    "priceTRY": 250,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -661,7 +891,7 @@
     "slug": "el-yapimi-kagit-acik-pembe",
     "title": "El Yapımı Kâğıt - Açık Pembe",
     "description": "Açık pembe tonunda el yapımı kâğıt. Atölyede atık kâğıt ve doğal liflerden tek tek dökülür. Kenarları kesilmez, elekten çıktığı gibi tırtıklı kalır. Yüzeydeki ince lif benekleri üretimin izidir, her tabaka kendine özgüdür. 3'lü paket halinde satılır. Linol baskı, davetiye, defter kapağı ve kolaj çalışmaları için uygundur.",
-    "priceTRY": 150,
+    "priceTRY": 250,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -679,7 +909,7 @@
     "slug": "pembe-kirmizi-puffer-tablet-kitap-cantasi",
     "title": "Pembe - Kırmızı Puffer Tablet & Kitap Çantası",
     "description": "Pembe - Kırmızı Puffer Tablet & Kitap Çantası",
-    "priceTRY": 550,
+    "priceTRY": 750,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -698,7 +928,7 @@
     "slug": "benekli-puffer-tablet-kitap-cantasi",
     "title": "Benekli Puffer Tablet & Kitap Çantası",
     "description": "Benekli Puffer Tablet & Kitap Çantası",
-    "priceTRY": 550,
+    "priceTRY": 750,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -717,7 +947,7 @@
     "slug": "kedili-puffer-tablet-kitap-cantasi",
     "title": "Kedili Puffer Tablet & Kitap Çantası",
     "description": "Kedili Puffer Tablet & Kitap Çantası",
-    "priceTRY": 550,
+    "priceTRY": 750,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -736,7 +966,7 @@
     "slug": "yesil-puffer-tablet-kitap-cantasi",
     "title": "Yeşil Puffer Tablet & Kitap Çantası",
     "description": "Yeşil Puffer Tablet & Kitap Çantası",
-    "priceTRY": 550,
+    "priceTRY": 750,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -755,7 +985,7 @@
     "slug": "hayvan-desenli-puffer-tablet-kitap-cantasi",
     "title": "Hayvan Desenli Puffer Tablet & Kitap Çantası",
     "description": "Hayvan Desenli Puffer Tablet & Kitap Çantası",
-    "priceTRY": 550,
+    "priceTRY": 750,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -774,7 +1004,7 @@
     "slug": "cizgili-puffer-tablet-kitap-cantasi",
     "title": "Hardal & Pembe Çizgili Puffer Tablet & Kitap Çantası",
     "description": "Çİzgili Puffer Tablet & Kitap Çantası",
-    "priceTRY": 550,
+    "priceTRY": 750,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -793,7 +1023,7 @@
     "slug": "cizgili-puffer-tablet-kitap-cantasi-2",
     "title": "Çizgili Puffer Tablet & Kitap Çantası",
     "description": "Çizgili Puffer Tablet & Kitap Çantası",
-    "priceTRY": 550,
+    "priceTRY": 750,
     "compareAtTRY": null,
     "status": "in_stock",
     "statuses": [],
@@ -812,12 +1042,10 @@
     "slug": "antrasit-kanvas-canta",
     "title": "Antrasit kanvas çanta",
     "description": "Antrasit kanvas çanta",
-    "priceTRY": 1250,
-    "compareAtTRY": 1500,
+    "priceTRY": 2000,
+    "compareAtTRY": null,
     "status": "in_stock",
-    "statuses": [
-      "İndirim"
-    ],
+    "statuses": [],
     "categorySlug": "cantalar",
     "coverImage": "/images/shopier/29182154/img_00.JPG",
     "gallery": [
@@ -834,12 +1062,10 @@
     "slug": "haki-kanvas-canta",
     "title": "Haki kanvas çanta",
     "description": "Haki kanvas çanta",
-    "priceTRY": 1250,
-    "compareAtTRY": 1500,
+    "priceTRY": 2000,
+    "compareAtTRY": null,
     "status": "in_stock",
-    "statuses": [
-      "İndirim"
-    ],
+    "statuses": [],
     "categorySlug": "cantalar",
     "coverImage": "/images/shopier/29180614/img_00.JPG",
     "gallery": [
@@ -856,12 +1082,10 @@
     "slug": "hardal-kanvas-canta",
     "title": "Hardal kanvas çanta",
     "description": "Hardal kanvas çanta",
-    "priceTRY": 1250,
-    "compareAtTRY": 1500,
+    "priceTRY": 2000,
+    "compareAtTRY": null,
     "status": "in_stock",
-    "statuses": [
-      "İndirim"
-    ],
+    "statuses": [],
     "categorySlug": "cantalar",
     "coverImage": "/images/shopier/29180397/img_00.JPG",
     "gallery": [
@@ -878,11 +1102,11 @@
     "slug": "1-cm-kaucuk-merdane",
     "title": "1 cm Kauçuk Merdane",
     "description": "1 cm genişliğinde kauçuk, ahşap saplı baskı merdanesi",
-    "priceTRY": 500,
+    "priceTRY": 600,
     "compareAtTRY": null,
-    "status": "new",
+    "status": "out_of_stock",
     "statuses": [
-      "Yeni"
+      "Tükendi"
     ],
     "categorySlug": "merdaneler",
     "coverImage": "/images/shopier/47235336/img_00.jpeg",
@@ -897,11 +1121,11 @@
     "slug": "2-cm-kaucuk-merdane",
     "title": "2 cm Kauçuk Merdane",
     "description": "2 cm genişliğinde kauçuk ahşap saplı baskı merdanesi",
-    "priceTRY": 500,
+    "priceTRY": 600,
     "compareAtTRY": null,
-    "status": "new",
+    "status": "out_of_stock",
     "statuses": [
-      "Yeni"
+      "Tükendi"
     ],
     "categorySlug": "merdaneler",
     "coverImage": "/images/shopier/47235298/img_00.jpeg",
@@ -916,11 +1140,11 @@
     "slug": "3-cm-kaucuk-merdane",
     "title": "3 cm Kauçuk Merdane",
     "description": "3 cm genişliğinde kauçuk , ahşap saplı baskı merdanesi",
-    "priceTRY": 500,
+    "priceTRY": 600,
     "compareAtTRY": null,
-    "status": "new",
+    "status": "out_of_stock",
     "statuses": [
-      "Yeni"
+      "Tükendi"
     ],
     "categorySlug": "merdaneler",
     "coverImage": "/images/shopier/47235231/img_00.jpeg",
@@ -949,24 +1173,6 @@
       "/images/shopier/47234836/img_02.jpeg"
     ],
     "sourceUrl": "https://www.shopier.com/maiamari/47234836"
-  },
-  {
-    "id": "38291690",
-    "slug": "silver-gumus-rengi-parlak-linol-baski-boyasi",
-    "title": "Silver ( Gümüş Rengi ) Parlak Linol Baskı Boyası",
-    "description": "100 cc (100 ml) Silver  (Gümüş Rengi ) Parlak Linol Boyası  Orijinal amber cam kavanozda sunulan bu linol baskı boyası, güneş ışığına maruz kalmadığı için uzun süre bozulmadan kullanılabilir. Sızdırmaz köpük contalı metal kapağı sayesinde hava almaz, böylece hem boyanın kuruması engellenir hem de dışarı sızması önlenir. Not : Ambalajlarımız orijinal amber camdır. Boyama değildir.",
-    "priceTRY": 294,
-    "compareAtTRY": null,
-    "status": "in_stock",
-    "statuses": [],
-    "categorySlug": "linol-boyalari",
-    "coverImage": "/images/shopier/38291690/img_00.jpeg",
-    "gallery": [
-      "/images/shopier/38291690/img_00.jpeg",
-      "/images/shopier/38291690/img_01.jpeg",
-      "/images/shopier/38291690/img_02.jpeg"
-    ],
-    "sourceUrl": "https://www.shopier.com/maiamari/38291690"
   },
   {
     "id": "38119885",
