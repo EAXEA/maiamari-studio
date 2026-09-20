@@ -11,6 +11,7 @@ import {
   orderStatusLabel,
   orderBadgeStyle,
   nextFulfillmentStatus,
+  isRefundable,
 } from "@/lib/order-status";
 import { setOrderStatus } from "../actions";
 import { AskIyzico } from "@/components/admin/ask-iyzico";
@@ -38,6 +39,7 @@ export default async function AdminOrderDetailPage({
 
   const next = nextFulfillmentStatus(order.status);
   const cancellable = ["paid", "shipped", "pending"].includes(order.status);
+  const refundable = isRefundable(order.status);
 
   return (
     <div className="max-w-2xl">
@@ -90,7 +92,7 @@ export default async function AdminOrderDetailPage({
       )}
 
       {/* Durum güncelleme */}
-      {(next || cancellable) && (
+      {(next || cancellable || refundable) && (
         <div className="flex flex-wrap gap-3 mb-8">
           {next && (
             <form action={setOrderStatus.bind(null, order.id, next.to)}>
@@ -130,7 +132,30 @@ export default async function AdminOrderDetailPage({
               </button>
             </form>
           )}
+          {/* İade, iptalden ayrı tutulur: iptal hiç tahsil edilmemiş satıştır,
+              iade tahsil edilmiş paranın geri gönderilmesidir. Tek durumda
+              toplanırsa para iadesi bilgisi kayıtta kaybolur. */}
+          {refundable && (
+            <form action={setOrderStatus.bind(null, order.id, "refunded")}>
+              <button
+                type="submit"
+                className="h-10 px-4 text-xs tracking-[0.15em] uppercase border hover:bg-[color:var(--color-surface-2)]"
+                style={{
+                  borderColor: "var(--color-press-red)",
+                  color: "var(--color-press-red)",
+                }}
+              >
+                İade edildi işaretle
+              </button>
+            </form>
+          )}
         </div>
+      )}
+      {refundable && (
+        <p className="-mt-6 mb-8 text-xs text-[color:var(--color-muted)]">
+          Para iade edildiyse iptal değil iade işaretleyin. İptal, hiç tahsil
+          edilmemiş sipariş içindir.
+        </p>
       )}
 
       {/* Alıcı */}

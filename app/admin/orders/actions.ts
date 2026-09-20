@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/admin/auth";
 import { dbSetOrderStatus, dbClearOrderAttention } from "@/lib/db/orders";
 import { reconcilePendingOrder } from "@/lib/checkout/reconcile-payment";
+import { isKnownStatus } from "@/lib/order-status";
 
 /**
  * Admin: sipariş durumunu ilerletir (kargo/teslim). Yetki zorunlu.
@@ -11,12 +12,18 @@ import { reconcilePendingOrder } from "@/lib/checkout/reconcile-payment";
  * Durumu elle değiştirmek, "ödeme doğrulanamadı" uyarısının ele alındığı
  * anlamına gelir: bayrak da temizlenir, yoksa çözülmüş bir sorun panelde
  * asılı kalırdı.
+ *
+ * Durum, bilinen kümeyle sınırlıdır: yazım hatası ya da elle üretilmiş bir
+ * istek siparişi hiçbir listeye düşmeyen bir duruma kilitlemesin.
  */
 export async function setOrderStatus(
   orderId: string,
   status: string,
 ): Promise<void> {
   await requireAdmin();
+  if (!isKnownStatus(status)) {
+    throw new Error(`Bilinmeyen sipariş durumu: ${status}`);
+  }
   await dbSetOrderStatus(orderId, status);
   await dbClearOrderAttention(orderId);
   revalidatePath("/admin/orders");

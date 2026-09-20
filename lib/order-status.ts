@@ -12,7 +12,13 @@ export const ORDER_STATUS: Record<
   delivered: { label: "Teslim edildi", tone: "good" },
   failed: { label: "Başarısız", tone: "bad" },
   cancelled: { label: "İptal edildi", tone: "bad" },
+  refunded: { label: "İade edildi", tone: "bad" },
 };
+
+/** Panelin yazabileceği durumlar. Bilinmeyen dizgi sessizce kaydedilmesin. */
+export function isKnownStatus(status: string): boolean {
+  return Object.prototype.hasOwnProperty.call(ORDER_STATUS, status);
+}
 
 export function orderStatusLabel(status: string): string {
   return ORDER_STATUS[status]?.label ?? status;
@@ -52,10 +58,24 @@ export function nextFulfillmentStatus(
 }
 
 /**
- * Sipariş arşivlik mi (tamamlanmış/sonlanmış): teslim edildi, iptal veya
+ * Parası alınmış sipariş iade edilebilir. "İptal" ile ayrı tutulur: iptal,
+ * hiç gerçekleşmemiş bir satıştır; iade, gerçekleşmiş satışın geri
+ * döndürülmesidir. İkisi tek durumda toplanırsa para iadesi bilgisi kaybolur.
+ */
+export function isRefundable(status: string): boolean {
+  return status === "paid" || status === "shipped" || status === "delivered";
+}
+
+/**
+ * Sipariş arşivlik mi (tamamlanmış/sonlanmış): teslim edildi, iptal, iade veya
  * başarısız. Aktif siparişler (ödeme bekliyor / ödendi / kargolandı) işlem ister.
  */
-export const ARCHIVED_STATUSES = ["delivered", "cancelled", "failed"] as const;
+export const ARCHIVED_STATUSES = [
+  "delivered",
+  "cancelled",
+  "failed",
+  "refunded",
+] as const;
 
 export function isArchivedStatus(status: string): boolean {
   return (ARCHIVED_STATUSES as readonly string[]).includes(status);
