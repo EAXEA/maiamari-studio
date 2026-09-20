@@ -208,14 +208,8 @@ export function verifyWebhookSignature(
   return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
 
-/**
- * Beklenen imzayı üretir. `verifyWebhookSignature` bunu kullanır; ayrıca
- * teşhis için dışa açıktır (hesaplanan ile gelenin ÖNEKLERİ karşılaştırılıp
- * loglanabilsin diye). Secret yoksa null döner.
- */
-export function computeWebhookSignature(
-  body: IyzicoWebhookBody,
-): string | null {
+/** Beklenen imzayı üretir. Secret yoksa null döner. */
+function computeWebhookSignature(body: IyzicoWebhookBody): string | null {
   const secret = cleanEnv("IYZICO_SECRET_KEY");
   if (!secret) return null;
   const data =
@@ -226,6 +220,52 @@ export function computeWebhookSignature(
     String(body.paymentConversationId ?? "") +
     String(body.status ?? "");
   return crypto.createHmac("sha256", secret).update(data, "utf8").digest("hex");
+}
+
+/**
+ * GEÇİCİ TEŞHİS (2026-09-20): ilk gerçek webhook 401 aldı ve doküman
+ * formülü uygulanmış olmasına rağmen imza tutmadı. Burada birkaç makul
+ * varyant denenir ve YALNIZ hangisinin eşleştiği döner.
+ *
+ * İmzanın kendisi (ya da bir parçası) BİLEREK döndürülmez ve loglanmaz:
+ * beklenen imzayı sızdırmak, gövdeyi kontrol eden birine imza örneği
+ * toplama imkânı verirdi. Burada dışarı çıkan tek şey bir varyant adıdır.
+ *
+ * Eşleşen varyant öğrenilince kalıcı formül ona göre sabitlenip bu fonksiyon
+ * kaldırılacak.
+ */
+export function diagnoseWebhookSignature(
+  header: string | null | undefined,
+  body: IyzicoWebhookBody,
+): string {
+  const secret = cleanEnv("IYZICO_SECRET_KEY");
+  if (!secret) return "secret-yok";
+  if (!header) return "baslik-yok";
+
+  const e = String(body.iyziEventType ?? "");
+  const p = String(body.iyziPaymentId ?? "");
+  const t = String(body.token ?? "");
+  const c = String(body.paymentConversationId ?? "");
+  const s = String(body.status ?? "");
+
+  const variants: Array<[string, string, "hex" | "base64"]> = [
+    ["hpp-dokuman", secret + e + p + t + c + s, "hex"],
+    ["hpp-secretsiz", e + p + t + c + s, "hex"],
+    ["hpp-base64", secret + e + p + t + c + s, "base64"],
+    ["direct-tokensiz", secret + e + p + c + s, "hex"],
+    ["hpp-tokensiz-secretsiz", e + p + c + s, "hex"],
+    ["hpp-status-once", secret + e + s + p + t + c, "hex"],
+    ["sadece-token", secret + t, "hex"],
+  ];
+
+  for (const [name, data, encoding] of variants) {
+    const sig = crypto
+      .createHmac("sha256", secret)
+      .update(data, "utf8")
+      .digest(encoding === "hex" ? "hex" : "base64");
+    if (sig === header) return name;
+  }
+  return "hicbiri-eslesmedi";
 }
 
 /**
