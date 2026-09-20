@@ -61,3 +61,8 @@ supabase/.branches/
 
 # claude.ai Projects snapshot çıktısı (scripts/export-claude-snapshot.mjs)
 /.claude-snapshot/
+
+# drizzle-kit generate çıktısı — proje db:push ile yürüyor, hiçbir yerde
+# `drizzle-kit migrate` koşulmuyor. Commit edilen migration dosyası otorite
+# gibi görünüp sessizce bayatlar; şemanın kaynağı lib/db/schema.ts.
+/lib/db/migrations/
