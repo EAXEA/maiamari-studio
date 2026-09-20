@@ -9,7 +9,17 @@
  * "ne zaman ödendi denir" kuralı testle kilitlenir: para durumunu değiştiren
  * bir karar, gözle doğrulanamayan bir yerde durmamalı.
  */
-import type { PaymentDetailResult } from "@/lib/payment/iyzico";
+import {
+  retrievePaymentByConversationId,
+  verifyPaymentDetailSignature,
+  type PaymentDetailResult,
+} from "@/lib/payment/iyzico";
+import {
+  dbGetOrder,
+  dbMarkOrderPaid,
+  dbClearOrderAttention,
+} from "@/lib/db/orders";
+import { notifyNewOrder } from "@/lib/notify/order-email";
 
 export type ReconcileDecision =
   /** iyzico ödemeyi başarılı gösteriyor ve her şey tutuyor. */
@@ -77,4 +87,99 @@ export function decideReconcile({
   }
 
   return { kind: "paid", paymentId };
+}
+
+
+export type ReconcileOutcome = {
+  /** Sipariş bu çağrının sonunda ödenmiş sayılıyor mu. */
+  paid: boolean;
+  /** Soru iyzico'ya sorulabildi mi (false = ulaşılamadı). */
+  reachable: boolean;
+  /** Panelde gösterilecek açıklama. Müşteriye bu metin GÖSTERİLMEZ. */
+  message: string;
+};
+
+/**
+ * Bekleyen siparişi iyzico'ya sorup uzlaştırır. Yetki kontrolü YAPMAZ;
+ * çağıran yapar (panelde `requireAdmin`, sonuç sayfasında sipariş sahipliği).
+ *
+ * Hem panel hem müşterinin sonuç sayfası bunu kullanır: iki ayrı uzlaştırma
+ * mantığı bulunmamalı, yoksa biri düzelirken diğeri eskir.
+ *
+ * `retries` çağırana bırakılır: panelde geniş (kimse beklemiyor), alıcının
+ * sonuç sayfasında dar olmalı, yoksa sayfa saniyelerce asılı kalır.
+ */
+export async function reconcilePendingOrder(
+  orderId: string,
+  opts?: { retries?: number },
+): Promise<ReconcileOutcome> {
+  const data = await dbGetOrder(orderId);
+  if (!data) return { paid: false, reachable: true, message: "Sipariş bulunamadı." };
+  const { order } = data;
+
+  if (order.status === "paid") {
+    return { paid: true, reachable: true, message: "Sipariş zaten ödendi." };
+  }
+  if (order.status !== "pending") {
+    return {
+      paid: false,
+      reachable: true,
+      message: `Sipariş durumu ${order.status}, sorgulanmadı.`,
+    };
+  }
+  if (!order.conversationId) {
+    return {
+      paid: false,
+      reachable: true,
+      message: "Siparişte conversationId yok, iyzico'ya sorulamaz.",
+    };
+  }
+
+  let result: PaymentDetailResult;
+  try {
+    result = await retrievePaymentByConversationId(order.conversationId, {
+      retries: opts?.retries,
+    });
+  } catch (e) {
+    // Sorunun kendisi bu: iyzico'ya ulaşılamıyor. Sipariş DEĞİŞTİRİLMEZ.
+    console.error("iyzico sorgusu düştü:", e);
+    return {
+      paid: false,
+      reachable: false,
+      message: "iyzico'ya ulaşılamadı. Sipariş değiştirilmedi.",
+    };
+  }
+
+  const karar = decideReconcile({
+    order: { id: order.id, totalTry: order.totalTry, status: order.status },
+    result,
+    signatureOk: verifyPaymentDetailSignature(result),
+  });
+
+  if (karar.kind !== "paid") {
+    return { paid: false, reachable: true, message: karar.detail };
+  }
+
+  const updated = await dbMarkOrderPaid(order.id, {
+    paymentProvider: "iyzico",
+    paymentId: karar.paymentId,
+  });
+  await dbClearOrderAttention(order.id);
+
+  // Bildirim yalnız gerçek pending→paid geçişinde. Mail hatası uzlaştırmayı
+  // bozmaz: para durumu doğru yazıldı, haber verememek ayrı bir sorundur.
+  if (updated) {
+    try {
+      const fresh = await dbGetOrder(order.id);
+      if (fresh) await notifyNewOrder(fresh.order, fresh.items);
+    } catch (e) {
+      console.error("Sipariş bildirimi gönderilemedi:", e);
+    }
+  }
+
+  return {
+    paid: true,
+    reachable: true,
+    message: `Ödeme doğrulandı (${karar.paymentId}).`,
+  };
 }

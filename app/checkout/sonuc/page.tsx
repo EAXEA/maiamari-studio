@@ -1,6 +1,9 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { dbGetOrder } from "@/lib/db/orders";
+import { reconcilePendingOrder } from "@/lib/checkout/reconcile-payment";
+import { RetryPaymentButton } from "../odeme/retry-button";
+import { SELLER } from "@/lib/legal";
 import { hasOrderAccess } from "@/lib/checkout/order-access";
 import { formatTRY } from "@/lib/format";
 import { ClearCartOnSuccess } from "@/components/cart/clear-cart-on-success";
@@ -18,11 +21,26 @@ export default async function SonucPage({
   // Sahiplik: yalnız siparişi oluşturan tarayıcı alıcı bilgilerini görebilir.
   if (!(await hasOrderAccess(orderId))) redirect("/");
 
-  const data = await dbGetOrder(orderId);
+  let data = await dbGetOrder(orderId);
   if (!data) redirect("/");
+
+  // Sipariş hâlâ bekliyorsa iyzico'ya SOR. Callback anında bağlantı koptuysa
+  // (ölçülmüş bir sorun) sipariş burada asılı kalıyordu ve alıcı "ödeme
+  // tamamlanmadı" görüyordu; oysa parası çekilmiş olabiliyor. Bu sorgu
+  // conversationId ile yapılır, yani token gerekmez ve tekrar sorulabilir.
+  if (data.order.status === "pending") {
+    // Dar bütçe: alıcı bu sayfanın yüklenmesini bekliyor. Tek tekrar =
+    // en kötü ~20 sn, tipik olarak bir saniyenin altı. Tutmazsa alıcı
+    // "Durumu yeniden sorgula" ile kendisi tekrarlayabilir.
+    const sonuc = await reconcilePendingOrder(orderId, { retries: 1 });
+    if (sonuc.paid) data = (await dbGetOrder(orderId)) ?? data;
+  }
 
   const { order, items } = data;
   const paid = order.status === "paid";
+  // Üçüncü durum: ödeme BAŞARISIZ değil, SONUCU BİLİNMİYOR. Alıcıya
+  // "tekrar deneyin" demek burada zararlıdır, ikinci kez ödeme yaptırır.
+  const dogrulanamadi = order.status === "pending";
 
   return (
     <div className="container-x py-16 lg:py-24 max-w-2xl mx-auto text-center">
@@ -57,6 +75,36 @@ export default async function SonucPage({
               {order.orderNo}
             </strong>
             . Teşekkür ederiz, {order.buyerName.split(" ")[0]}.
+          </p>
+        </>
+      ) : dogrulanamadi ? (
+        <>
+          <h1 className="font-display text-3xl lg:text-4xl">
+            Ödemeniz kontrol ediliyor.
+          </h1>
+          <p className="mt-3 text-[color:var(--color-muted)] leading-relaxed">
+            Ödeme sonucunu şu an ödeme sağlayıcımızdan doğrulayamadık.{" "}
+            <strong className="font-medium text-[color:var(--color-foreground)]">
+              Lütfen ödemeyi tekrar yapmayın.
+            </strong>{" "}
+            Kartınızdan çekim yapıldıysa siparişiniz geçerlidir. Durum
+            netleştiğinde size e posta ile haber veriyoruz.
+          </p>
+          <p className="mt-3 text-sm text-[color:var(--color-muted)]">
+            Sipariş numaranız{" "}
+            <strong className="font-medium text-[color:var(--color-foreground)]">
+              {order.orderNo}
+            </strong>
+            . Bize ulaşmak isterseniz{" "}
+            <a
+              href={`mailto:${SELLER.email}?subject=${encodeURIComponent(
+                `Sipariş ${order.orderNo}`,
+              )}`}
+              className="underline underline-offset-2"
+            >
+              {SELLER.email}
+            </a>
+            .
           </p>
         </>
       ) : (
@@ -100,6 +148,12 @@ export default async function SonucPage({
       </div>
 
       <div className="mt-10 flex flex-wrap gap-3 justify-center">
+        {dogrulanamadi && (
+          <RetryPaymentButton
+            label="Durumu yeniden sorgula"
+            busyLabel="Sorgulanıyor…"
+          />
+        )}
         {paid ? (
           <Link
             href="/shop"
@@ -111,7 +165,7 @@ export default async function SonucPage({
           >
             Mağazaya dön
           </Link>
-        ) : (
+        ) : dogrulanamadi ? null : (
           <Link
             href="/cart"
             className="inline-flex h-11 px-6 items-center text-xs tracking-[0.2em] uppercase hover:opacity-90"
