@@ -157,6 +157,25 @@ export async function dbFindPendingOrderByLegacyToken(
  * günceller (koşullu UPDATE) → eşzamanlı/tekrarlanan callback'te ikinci çağrı
  * false döner ve çağıran bildirimi atlar (çifte e-posta koruması).
  */
+/**
+ * conversationId ile siparişi bulur. Webhook gövdesi GÜVENİLMEZ olduğu için
+ * bu yalnız bir İPUCU aramasıdır: bulunan sipariş üzerinde hiçbir şey, ancak
+ * iyzico'ya kendi kimliğimizle sorulup yanıt imzası doğrulandıktan sonra
+ * değişir (bkz. lib/checkout/reconcile-payment.ts).
+ */
+export async function dbFindOrderIdByConversationId(
+  conversationId: string,
+): Promise<string | null> {
+  const db = getDb();
+  if (!db || !conversationId) return null;
+  const rows = await db
+    .select({ id: orders.id })
+    .from(orders)
+    .where(eq(orders.conversationId, conversationId))
+    .limit(1);
+  return rows[0]?.id ?? null;
+}
+
 export async function dbMarkOrderPaid(
   id: string,
   ref: { paymentProvider?: string; paymentId?: string },
