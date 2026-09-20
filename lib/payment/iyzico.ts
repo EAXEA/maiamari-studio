@@ -50,6 +50,8 @@ export function siteBaseUrl(): string {
 
 const INITIALIZE_PATH = "/payment/iyzipos/checkoutform/initialize/auth/ecom";
 const RETRIEVE_PATH = "/payment/iyzipos/checkoutform/auth/ecom/detail";
+/** Ödeme sorgulama: token yerine paymentId VEYA paymentConversationId ister. */
+const PAYMENT_DETAIL_PATH = "/payment/detail";
 
 async function iyzicoPost<T>(
   path: string,
@@ -163,6 +165,25 @@ export function verifyCfRetrieveSignature(r: CfRetrieveResult): boolean {
       normalizePriceForSignature(r.paidPrice),
       normalizePriceForSignature(r.price),
       r.token,
+    ],
+    r.signature,
+  );
+}
+
+/**
+ * Ödeme sorgulama yanıt imzası — param sırası resmî dokümandan
+ * (paymentId:currency:basketId:conversationId:paidPrice:price).
+ * CF retrieve'inkinden FARKLIDIR: paymentStatus ve token YOKTUR.
+ */
+export function verifyPaymentDetailSignature(r: PaymentDetailResult): boolean {
+  return verifySignature(
+    [
+      r.paymentId,
+      r.currency,
+      r.basketId,
+      r.conversationId,
+      normalizePriceForSignature(r.paidPrice),
+      normalizePriceForSignature(r.price),
     ],
     r.signature,
   );
@@ -498,5 +519,45 @@ export async function retrieveCheckoutForm(
     RETRIEVE_PATH,
     { locale: "tr", token },
     { retries: 2 },
+  );
+}
+
+export type PaymentDetailResult = {
+  status?: string;
+  errorCode?: string;
+  errorMessage?: string;
+  paymentStatus?: string;
+  paymentId?: string | number;
+  price?: string | number;
+  paidPrice?: string | number;
+  currency?: string;
+  basketId?: string;
+  conversationId?: string;
+  lastFourDigits?: string;
+  cardAssociation?: string;
+  fraudStatus?: number;
+  signature?: string;
+};
+
+/**
+ * Ödemeyi conversationId ile sorar (`/payment/detail`).
+ *
+ * NEDEN AYRI BİR YOL: `retrieveCheckoutForm` ham `token` ister, biz token'ı
+ * hiçbir yerde saklamayız (yalnız sha256 hash'i). Callback anında iyzico'ya
+ * ulaşılamazsa o token bir daha ele geçmez ve sipariş "bilmiyorum" durumunda
+ * asılı kalır (18.09 BC2F, 20.09 A666). conversationId ise siparişte durur,
+ * yani bu soru İSTENİLEN ZAMAN tekrar sorulabilir.
+ *
+ * Okuma çağrısıdır, tekrarı güvenlidir. iyzico API'sinde ölçülmüş ~%17
+ * bağlantı kopması olduğu için burada üç tekrar kullanılır: bu yol zaten
+ * "bir şeyler ters gitti" anında koşar, elimizdeki son penceredir.
+ */
+export async function retrievePaymentByConversationId(
+  conversationId: string,
+): Promise<PaymentDetailResult> {
+  return iyzicoPost<PaymentDetailResult>(
+    PAYMENT_DETAIL_PATH,
+    { locale: "tr", paymentConversationId: conversationId },
+    { retries: 3 },
   );
 }
