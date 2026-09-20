@@ -40,6 +40,11 @@ export async function GET() {
         `      <g:availability>${availability}</g:availability>`,
         `      <g:condition>new</g:condition>`,
         `      <g:brand>MAIAMARI</g:brand>`,
+        // El yapımı ve atölye ürünlerinde barkod (GTIN) ya da üretici kodu
+        // (MPN) YOKTUR. Google Merchant spesifikasyonu bu durumda alanları
+        // boş bırakmayı değil, yokluğu AÇIKÇA bildirmeyi ister; eksikliği
+        // feed'i doğrulamada hataya düşürür.
+        `      <g:identifier_exists>no</g:identifier_exists>`,
       ];
       const cat = categoryName.get(p.categorySlug);
       if (cat) lines.push(`      <g:product_type>${esc(cat)}</g:product_type>`);
