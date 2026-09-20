@@ -203,8 +203,11 @@ export function verifyWebhookSignature(
 ): boolean {
   const expected = computeWebhookSignature(body);
   if (!expected || !header) return false;
-  const a = Buffer.from(expected, "utf8");
-  const b = Buffer.from(String(header), "utf8");
+  // Hex büyük/küçük harf ve baştaki/sondaki boşluk ANLAMLI DEĞİLDİR.
+  // `digest("hex")` küçük harf üretir; gönderen büyük harf ya da boşluklu
+  // yollarsa formül doğru olsa bile imza tutmaz ve 401 sebebi görünmez olur.
+  const a = Buffer.from(expected.toLowerCase(), "utf8");
+  const b = Buffer.from(String(header).trim().toLowerCase(), "utf8");
   return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
 

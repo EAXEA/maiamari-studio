@@ -50,6 +50,30 @@ test("gecerli imza kabul edilir", () => {
   assert.equal(verifyWebhookSignature(sign(b), b), true);
 });
 
+test("buyuk harf hex imza kabul edilir", () => {
+  // iyzico'nun 20.09'da gonderdigi ilk gercek webhook 401 aldi ve sebep
+  // gorunmuyordu. Hex'te buyuk/kucuk harf ANLAMLI DEGIL; gonderen buyuk
+  // harf yollarsa formul dogru olsa bile imza tutmazdi.
+  process.env.IYZICO_SECRET_KEY = TEST_SECRET;
+  const b = makeBody();
+  assert.equal(verifyWebhookSignature(sign(b).toUpperCase(), b), true);
+});
+
+test("bastaki ve sondaki bosluk imzayi bozmaz", () => {
+  process.env.IYZICO_SECRET_KEY = TEST_SECRET;
+  const b = makeBody();
+  assert.equal(verifyWebhookSignature(`  ${sign(b)}
+`, b), true);
+});
+
+test("normalizasyon tahrifi gizlemez", () => {
+  // Harf buyuklugu gevsetildi diye imzanin kendisi gevsemis olmamali.
+  process.env.IYZICO_SECRET_KEY = TEST_SECRET;
+  const b = makeBody();
+  const bozuk = sign(b).slice(0, -1) + (sign(b).endsWith("a") ? "b" : "a");
+  assert.equal(verifyWebhookSignature(bozuk.toUpperCase(), b), false);
+});
+
 test("her alanin tahrifi imzayi bozar", () => {
   process.env.IYZICO_SECRET_KEY = TEST_SECRET;
   const b = makeBody();
