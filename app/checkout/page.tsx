@@ -7,6 +7,7 @@ import { useCart } from "@/components/cart/cart-provider";
 import { formatTRY } from "@/lib/format";
 import { CHECKOUT_ENABLED } from "@/lib/checkout/flags";
 import { startCheckout } from "./actions";
+import { RemovedItemsNotice } from "@/components/cart/removed-items-notice";
 
 const FIELDS = [
   { name: "name", label: "Ad Soyad", type: "text", autoComplete: "name" },
@@ -54,6 +55,10 @@ export default function CheckoutPage() {
   if (ready && items.length === 0) {
     return (
       <div className="container-x py-24 lg:py-32 text-center max-w-xl mx-auto">
+        {/* Sepet tazelemede boşaldıysa müşteri nedenini burada görür. */}
+        <div className="text-left">
+          <RemovedItemsNotice />
+        </div>
         <h1 className="font-display text-3xl lg:text-4xl">Sepetiniz boş.</h1>
         <p className="mt-4 text-[color:var(--color-muted)]">
           Ödeme adımına geçmek için önce sepete ürün ekleyin.
@@ -101,6 +106,8 @@ export default function CheckoutPage() {
         </Link>
         <h1 className="font-display text-3xl lg:text-4xl mt-4">Ödeme</h1>
       </header>
+
+      <RemovedItemsNotice />
 
       <form
         onSubmit={onSubmit}
