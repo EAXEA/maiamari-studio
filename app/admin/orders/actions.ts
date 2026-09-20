@@ -2,18 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/admin/auth";
-import {
-  dbSetOrderStatus,
-  dbClearOrderAttention,
-  dbGetOrder,
-  dbMarkOrderPaid,
-} from "@/lib/db/orders";
-import {
-  retrievePaymentByConversationId,
-  verifyPaymentDetailSignature,
-} from "@/lib/payment/iyzico";
-import { decideReconcile } from "@/lib/checkout/reconcile-payment";
-import { notifyNewOrder } from "@/lib/notify/order-email";
+import { dbSetOrderStatus, dbClearOrderAttention } from "@/lib/db/orders";
+import { reconcilePendingOrder } from "@/lib/checkout/reconcile-payment";
 
 /**
  * Admin: sipariş durumunu ilerletir (kargo/teslim). Yetki zorunlu.
@@ -49,65 +39,18 @@ export async function reconcileOrderWithIyzico(
   orderId: string,
 ): Promise<{ ok: boolean; message: string }> {
   await requireAdmin();
-
-  const data = await dbGetOrder(orderId);
-  if (!data) return { ok: false, message: "Sipariş bulunamadı." };
-  const { order } = data;
-
-  if (order.status === "paid") {
-    return { ok: true, message: "Bu sipariş zaten ödendi olarak işaretli." };
+  const sonuc = await reconcilePendingOrder(orderId);
+  if (sonuc.paid) {
+    revalidatePath("/admin/orders");
+    revalidatePath(`/admin/orders/${orderId}`);
+    return { ok: true, message: sonuc.message };
   }
-  if (!order.conversationId) {
-    return {
-      ok: false,
-      message: "Siparişte conversationId yok, iyzico'ya sorulamaz.",
-    };
-  }
-
-  let result;
-  try {
-    result = await retrievePaymentByConversationId(order.conversationId);
-  } catch (e) {
-    // Sorunun kendisi bu: iyzico'ya ulaşılamıyor. Sipariş DEĞİŞTİRİLMEZ.
-    console.error("iyzico sorgusu düştü:", e);
+  if (!sonuc.reachable) {
     return {
       ok: false,
       message:
         "iyzico'ya ulaşılamadı. Sipariş değiştirilmedi, birkaç dakika sonra tekrar deneyin.",
     };
   }
-
-  const karar = decideReconcile({
-    order: { id: order.id, totalTry: order.totalTry, status: order.status },
-    result,
-    signatureOk: verifyPaymentDetailSignature(result),
-  });
-
-  if (karar.kind !== "paid") {
-    return { ok: false, message: karar.detail };
-  }
-
-  const updated = await dbMarkOrderPaid(order.id, {
-    paymentProvider: "iyzico",
-    paymentId: karar.paymentId,
-  });
-  await dbClearOrderAttention(order.id);
-  revalidatePath("/admin/orders");
-  revalidatePath(`/admin/orders/${order.id}`);
-
-  // Bildirim yalnız gerçek pending→paid geçişinde; alıcı ödemesinin
-  // karşılığını görmeli. Mail hatası uzlaştırmayı bozmaz.
-  if (updated) {
-    try {
-      const fresh = await dbGetOrder(order.id);
-      if (fresh) await notifyNewOrder(fresh.order, fresh.items);
-    } catch (e) {
-      console.error("Sipariş bildirimi gönderilemedi:", e);
-    }
-  }
-
-  return {
-    ok: true,
-    message: `Ödeme doğrulandı (${karar.paymentId}). Sipariş ödendi olarak işaretlendi.`,
-  };
+  return { ok: false, message: sonuc.message };
 }

@@ -548,16 +548,18 @@ export type PaymentDetailResult = {
  * asılı kalır (18.09 BC2F, 20.09 A666). conversationId ise siparişte durur,
  * yani bu soru İSTENİLEN ZAMAN tekrar sorulabilir.
  *
- * Okuma çağrısıdır, tekrarı güvenlidir. iyzico API'sinde ölçülmüş ~%17
- * bağlantı kopması olduğu için burada üç tekrar kullanılır: bu yol zaten
- * "bir şeyler ters gitti" anında koşar, elimizdeki son penceredir.
+ * Okuma çağrısıdır, tekrarı güvenlidir. Varsayılan üç tekrardır: bu yol
+ * zaten "bir şeyler ters gitti" anında koşar, elimizdeki son penceredir.
+ * ANCAK alıcının beklediği bir sayfada bu bütçe fazladır (her deneme 10 sn
+ * timeout), o yüzden çağıran daha dar bir bütçe verebilir.
  */
 export async function retrievePaymentByConversationId(
   conversationId: string,
+  opts?: { retries?: number },
 ): Promise<PaymentDetailResult> {
   return iyzicoPost<PaymentDetailResult>(
     PAYMENT_DETAIL_PATH,
     { locale: "tr", paymentConversationId: conversationId },
-    { retries: 3 },
+    { retries: opts?.retries ?? 3 },
   );
 }

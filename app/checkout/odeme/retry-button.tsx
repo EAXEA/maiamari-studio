@@ -17,7 +17,13 @@
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 
-export function RetryPaymentButton() {
+export function RetryPaymentButton({
+  label = "Tekrar dene",
+  busyLabel = "Deneniyor…",
+}: {
+  label?: string;
+  busyLabel?: string;
+} = {}) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
@@ -33,7 +39,7 @@ export function RetryPaymentButton() {
         color: "var(--color-background)",
       }}
     >
-      {pending ? "Deneniyor…" : "Tekrar dene"}
+      {pending ? busyLabel : label}
     </button>
   );
 }
