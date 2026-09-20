@@ -13,6 +13,7 @@ import {
   nextFulfillmentStatus,
 } from "@/lib/order-status";
 import { setOrderStatus } from "../actions";
+import { AskIyzico } from "@/components/admin/ask-iyzico";
 
 export const dynamic = "force-dynamic";
 
@@ -77,9 +78,10 @@ export default async function AdminOrderDetailPage({
             {order.paymentAttentionReason}
           </p>
           <p className="mt-2 text-[color:var(--color-muted)]">
-            Para çekilmiş olabilir. Önce iyzico panelinden bu siparişi arayın.
-            Ödeme görünmüyorsa aşağıdan iptal edin. Ödeme başarılı görünüyorsa
-            siparişi iptal etmeyin, kaydın ödendi olarak güncellenmesi gerekir.
+            Para çekilmiş olabilir. Önce aşağıdaki {"“"}iyzico{"’"}ya
+            sor{"”"} düğmesine basın: ödeme başarılıysa sipariş
+            kendiliğinden ödendi olarak kapanır. iyzico{"’"}ya göre ödeme
+            yoksa siparişi iptal edin.
             {order.paymentAttentionAt
               ? ` Uyarı ${fmtDate(order.paymentAttentionAt)} tarihinde kondu.`
               : ""}
@@ -114,6 +116,10 @@ export default async function AdminOrderDetailPage({
               </button>
             </form>
           )}
+          {/* Ödeme bekleyen siparişte gerçeği iyzico'dan sorabilme.
+              Callback anında ulaşılamamış olabilir; para çekilmiş olduğu
+              hâlde sipariş burada asılı kalabiliyor. */}
+          {order.status === "pending" && <AskIyzico orderId={order.id} />}
           {cancellable && (
             <form action={setOrderStatus.bind(null, order.id, "cancelled")}>
               <button
