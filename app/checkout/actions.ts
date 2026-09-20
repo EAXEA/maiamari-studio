@@ -12,6 +12,7 @@ import { notifyNewOrder } from "@/lib/notify/order-email";
 import { paymentMode } from "@/lib/payment/iyzico";
 import { CHECKOUT_ENABLED } from "@/lib/checkout/flags";
 import { grantOrderAccess, hasOrderAccess } from "@/lib/checkout/order-access";
+import { purchaseBlockReason } from "@/lib/checkout/purchasable";
 
 export type CheckoutBuyer = {
   name: string;
@@ -59,14 +60,12 @@ export async function startCheckout(
 
   // Fiyatları DB'den otoriter al (materyal + galeri eseri; istemci fiyatına
   // güvenme). dbGetRowById kind filtresi uygulamaz → satılık eser de geçer;
-  // yayında + forSale + fiyatı>0 olmayan kalemler elenir.
+  // satın alınamayan kalemler elenir (kural: lib/checkout/purchasable).
   const orderItems = [];
   for (const it of input.items) {
     const row = await dbGetRowById(it.id);
-    if (!row || !row.isPublished || !row.forSale || row.status === "out_of_stock")
-      continue;
+    if (!row || purchaseBlockReason(row)) continue;
     const price = Number(row.priceTry);
-    if (!(price > 0)) continue;
     const qty = Math.max(1, Math.min(99, Math.floor(Number(it.qty) || 1)));
     orderItems.push({
       productId: row.id,

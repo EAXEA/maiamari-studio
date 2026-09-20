@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useCart } from "@/components/cart/cart-provider";
 import { formatTRY } from "@/lib/format";
 import { CHECKOUT_ENABLED } from "@/lib/checkout/flags";
+import { RemovedItemsNotice } from "@/components/cart/removed-items-notice";
 
 export default function CartPage() {
   const { items, setQty, remove, total, count, ready } = useCart();
@@ -48,6 +49,10 @@ export default function CartPage() {
   if (items.length === 0) {
     return (
       <div className="container-x py-24 lg:py-32 text-center max-w-xl mx-auto">
+        {/* Sepet tazelemede boşaldıysa müşteri nedenini burada görür. */}
+        <div className="text-left">
+          <RemovedItemsNotice />
+        </div>
         <p className="text-xs tracking-[0.3em] uppercase text-[color:var(--color-muted)]">
           Sepet
         </p>
@@ -84,6 +89,8 @@ export default function CartPage() {
           Sepetiniz ({count})
         </h1>
       </header>
+
+      <RemovedItemsNotice />
 
       <div className="grid lg:grid-cols-[1.6fr_1fr] gap-12 lg:gap-16 items-start">
         {/* Kalemler */}
