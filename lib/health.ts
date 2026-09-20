@@ -15,6 +15,7 @@ import { getDb, isDbConfigured } from "./db/client";
 import { isStorageConfigured } from "./admin/storage";
 import { isIyzicoConfigured } from "./payment/iyzico";
 import { cleanEnv } from "./env";
+import { dbEmailEventsSince, dbRecentEmailEvents } from "./db/email-events";
 
 export type ProbeState = "ok" | "warn" | "down" | "unconfigured";
 
@@ -56,8 +57,36 @@ export type KeepaliveStatus = {
   error?: string;
 };
 
+/**
+ * Gerçek e-posta gönderimlerinin özeti (email_events tablosundan).
+ * `checkEmail` yalnız yapılandırmayı söyler; bu blok GÖNDERİM oldu mu,
+ * düştü mü onu söyler.
+ */
+export type EmailDelivery = {
+  state: ProbeState;
+  /** Son 24 saatteki toplam / başarısız gönderim. */
+  total24h: number;
+  failed24h: number;
+  lastOkAt: string | null;
+  lastFailAt: string | null;
+  /** Son başarısız gönderimin kısaltılmış hatası (secret içermez). */
+  lastError: string;
+  /** Son kayıtlar (en yeni önce), panelde liste olarak gösterilir. */
+  recent: {
+    kind: string;
+    orderNo: string;
+    recipientMasked: string;
+    ok: boolean;
+    httpStatus: number | null;
+    createdAt: string;
+    error: string;
+  }[];
+  detail: string;
+};
+
 export type HealthReport = {
   probes: Probe[];
+  emailDelivery: EmailDelivery;
   keepalive: KeepaliveStatus;
   meta: RuntimeMeta;
   checkedAt: string;
@@ -202,6 +231,85 @@ export function checkEmail(): Probe {
     detail: hasKey
       ? `Gönderen: ${from}${customerCopy ? " · müşteri kopyası açık" : " · müşteri kopyası kapalı"}`
       : "RESEND_API_KEY yok — sipariş e-postaları gönderilmez.",
+  };
+}
+
+// ---------------------------------------------------------------
+// E-posta GÖNDERİMİ — kayıtlı gerçek denemeler (email_events)
+// NEDEN: Resend hatası yutuluyor ve Vercel logu kısa ömürlü; bir sipariş
+// maili düştüğünde panelde iz kalsın diye.
+// ---------------------------------------------------------------
+/**
+ * Gönderim durumunun kararı — saf fonksiyon, testlidir.
+ * Ayrı durmasının sebebi: karar DB erişiminden bağımsız doğrulanabilsin.
+ */
+export function emailDeliveryVerdict(input: {
+  configured: boolean;
+  total24h: number;
+  failed24h: number;
+  hasOlderRecords: boolean;
+}): { state: ProbeState; detail: string } {
+  if (!input.configured) {
+    return {
+      state: "unconfigured",
+      detail: "RESEND_API_KEY yok — gönderim yapılmıyor, kayıt da tutulmuyor.",
+    };
+  }
+  if (input.failed24h > 0) {
+    return {
+      state: "warn",
+      detail: `Son 24 saatte ${input.failed24h} gönderim düştü (toplam ${input.total24h}).`,
+    };
+  }
+  if (input.total24h > 0) {
+    return {
+      state: "ok",
+      detail: `Son 24 saatte ${input.total24h} gönderim, hepsi başarılı.`,
+    };
+  }
+  if (input.hasOlderRecords) {
+    return {
+      state: "ok",
+      detail: "Son 24 saatte gönderim yok; daha eski kayıtlar başarılı.",
+    };
+  }
+  return { state: "ok", detail: "Henüz kayıtlı gönderim yok." };
+}
+
+export async function checkEmailDelivery(): Promise<EmailDelivery> {
+  const configured = present(process.env.RESEND_API_KEY);
+  const [since24h, recentRows] = await Promise.all([
+    dbEmailEventsSince(24),
+    dbRecentEmailEvents(10),
+  ]);
+  const failed = since24h.filter((r) => !r.ok);
+  const lastOk = recentRows.find((r) => r.ok) ?? null;
+  const lastFail = recentRows.find((r) => !r.ok) ?? null;
+
+  const { state, detail } = emailDeliveryVerdict({
+    configured,
+    total24h: since24h.length,
+    failed24h: failed.length,
+    hasOlderRecords: recentRows.length > 0,
+  });
+
+  return {
+    state,
+    total24h: since24h.length,
+    failed24h: failed.length,
+    lastOkAt: lastOk ? lastOk.createdAt.toISOString() : null,
+    lastFailAt: lastFail ? lastFail.createdAt.toISOString() : null,
+    lastError: lastFail?.error ?? "",
+    recent: recentRows.map((r) => ({
+      kind: r.kind,
+      orderNo: r.orderNo,
+      recipientMasked: r.recipientMasked,
+      ok: r.ok,
+      httpStatus: r.httpStatus,
+      createdAt: r.createdAt.toISOString(),
+      error: r.error,
+    })),
+    detail,
   };
 }
 
@@ -363,13 +471,15 @@ export function getRuntimeMeta(): RuntimeMeta {
 // Toplu rapor — probe'lar kendi içinde hata yakalar; allSettled gerekmez.
 // ---------------------------------------------------------------
 export async function runHealth(): Promise<HealthReport> {
-  const [db, storage, keepalive] = await Promise.all([
+  const [db, storage, keepalive, emailDelivery] = await Promise.all([
     checkDatabase(),
     checkStorage(),
     checkKeepalive(),
+    checkEmailDelivery(),
   ]);
   return {
     probes: [db, storage, checkEmail(), checkPayment()],
+    emailDelivery,
     keepalive,
     meta: getRuntimeMeta(),
     checkedAt: new Date().toISOString(),

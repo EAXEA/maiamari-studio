@@ -17,6 +17,7 @@
 import type { OrderRow, OrderItemRow } from "@/lib/db/schema";
 import { SELLER } from "@/lib/legal";
 import { cleanEnv } from "@/lib/env";
+import { dbLogEmailEvent, type EmailKind } from "@/lib/db/email-events";
 
 // Maildeki "Panelde aç" linkinin tabanı. Lokal testte SITE_URL=http://localhost:3000
 // koyunca link localhost'a gider; prod'da (Vercel) SITE_URL boşsa canlıya gider.
@@ -62,6 +63,10 @@ async function send(payload: {
   subject: string;
   html: string;
   replyTo?: string;
+  /** Hangi bildirim: sağlık kartında tür olarak görünür. */
+  kind: EmailKind;
+  /** İlgili sipariş no (varsa) — kaydı siparişe bağlar. */
+  orderNo?: string;
 }): Promise<void> {
   const key = process.env.RESEND_API_KEY;
   if (!key) return;
@@ -81,10 +86,45 @@ async function send(payload: {
       }),
     });
     if (!res.ok) {
-      console.error("Resend e-posta hatası:", res.status, await res.text());
+      const body = await res.text();
+      console.error("Resend e-posta hatası:", res.status, body);
+      await dbLogEmailEvent({
+        kind: payload.kind,
+        orderNo: payload.orderNo,
+        recipient: payload.to,
+        ok: false,
+        httpStatus: res.status,
+        error: body,
+      });
+      return;
     }
+    // Sağlayıcı mesaj kimliği destek kaydında işe yarar; gövde okunamazsa
+    // gönderim yine başarılıdır, kimliksiz kaydedilir.
+    let providerId = "";
+    try {
+      const data = (await res.json()) as { id?: string };
+      providerId = data?.id ?? "";
+    } catch {
+      providerId = "";
+    }
+    await dbLogEmailEvent({
+      kind: payload.kind,
+      orderNo: payload.orderNo,
+      recipient: payload.to,
+      ok: true,
+      httpStatus: res.status,
+      providerId,
+    });
   } catch (e) {
     console.error("Resend e-posta gönderilemedi:", e);
+    await dbLogEmailEvent({
+      kind: payload.kind,
+      orderNo: payload.orderNo,
+      recipient: payload.to,
+      ok: false,
+      httpStatus: null,
+      error: e instanceof Error ? e.message : String(e),
+    });
   }
 }
 
@@ -105,6 +145,8 @@ export async function notifyNewOrder(
     from,
     to: ownerTo,
     replyTo: order.buyerEmail || undefined,
+    kind: "order_seller",
+    orderNo: order.orderNo,
     subject: `Yeni sipariş · ${order.orderNo} · ${total}`,
     html: `
       <div style="font-family:system-ui,sans-serif;max-width:560px;margin:0 auto;color:#1a1a1a">
@@ -128,6 +170,8 @@ export async function notifyNewOrder(
     await send({
       from,
       to: order.buyerEmail,
+      kind: "order_customer",
+      orderNo: order.orderNo,
       subject: `Siparişiniz alındı · ${order.orderNo}`,
       html: `
         <div style="font-family:system-ui,sans-serif;max-width:560px;margin:0 auto;color:#1a1a1a">
@@ -180,6 +224,8 @@ export async function notifyPaymentNeedsAttention(input: {
   await send({
     from,
     to: ownerTo,
+    kind: "payment_attention",
+    orderNo: input.orderNo,
     subject: `Ödeme kontrol gerekiyor ${label}`,
     html: `
       <div style="font-family:system-ui,sans-serif;max-width:560px;margin:0 auto;color:#1a1a1a">

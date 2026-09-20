@@ -305,6 +305,33 @@ export const orderItems = pgTable("order_items", {
     .default("0"),
 });
 
+/**
+ * E-posta gönderim kaydı. Resend çağrısı best-effort olduğu ve hatası
+ * yutulduğu için, bir sipariş maili düştüğünde geriye hiçbir iz kalmıyordu;
+ * Vercel logu da birkaç gün sonra siliniyor. Bu tablo /admin/health'in
+ * "e-posta gönderimi" kartını besler.
+ *
+ * KİŞİSEL VERİ: alıcı adresi MASKELİ saklanır (f***@gmail.com). Açık adres
+ * zaten siparişte var, ikinci kopyasına gerek yok.
+ */
+export const emailEvents = pgTable("email_events", {
+  id: text("id").primaryKey(),
+  /** order_seller | order_customer | payment_attention */
+  kind: text("kind").notNull(),
+  /** İlgili sipariş no (varsa); eşleşmeyen ödeme uyarısında boş kalır. */
+  orderNo: text("order_no").notNull().default(""),
+  /** Maskelenmiş alıcı: f***@gmail.com */
+  recipientMasked: text("recipient_masked").notNull().default(""),
+  ok: boolean("ok").notNull(),
+  /** Resend HTTP durumu; ağ hatasında null. */
+  httpStatus: integer("http_status"),
+  /** Resend mesaj kimliği (destek kaydı için); hata durumunda boş. */
+  providerId: text("provider_id").notNull().default(""),
+  /** Hata metni, kısaltılmış. Secret içermez. */
+  error: text("error").notNull().default(""),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 export type OrderRow = typeof orders.$inferSelect;
 export type NewOrderRow = typeof orders.$inferInsert;
 export type OrderItemRow = typeof orderItems.$inferSelect;
@@ -323,3 +350,5 @@ export type NewJournalRow = typeof journal.$inferInsert;
 export type WorkshopRow = typeof workshops.$inferSelect;
 export type NewWorkshopRow = typeof workshops.$inferInsert;
 export type AdminLoginAttemptRow = typeof adminLoginAttempts.$inferSelect;
+export type EmailEventRow = typeof emailEvents.$inferSelect;
+export type NewEmailEventRow = typeof emailEvents.$inferInsert;

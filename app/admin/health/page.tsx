@@ -19,6 +19,13 @@ const STATE: Record<ProbeState, { label: string; cls: string }> = {
   unconfigured: { label: "Yapılandırılmamış", cls: "bg-gray-50 text-gray-500 border-gray-300" },
 };
 
+/** Gönderim türlerinin okunur karşılığı. */
+const EMAIL_KIND: Record<string, string> = {
+  order_seller: "satıcı bildirimi",
+  order_customer: "müşteri onayı",
+  payment_attention: "ödeme uyarısı",
+};
+
 /** Kalan pencereyi "6 gün 21 sa" biçiminde yazar. */
 function fmtRemaining(ms: number | null): string {
   if (ms == null) return "—";
@@ -35,8 +42,9 @@ function fmtDate(iso: string | null): string {
 
 export default async function HealthPage() {
   await requireAdmin();
-  const { probes, keepalive, meta, checkedAt } = await runHealth();
+  const { probes, emailDelivery, keepalive, meta, checkedAt } = await runHealth();
   const ka = STATE[keepalive.state];
+  const ed = STATE[emailDelivery.state];
 
   return (
     <div className="max-w-3xl">
@@ -120,6 +128,61 @@ export default async function HealthPage() {
             </code>
           )}
         </div>
+      </div>
+
+      {/* E-posta gönderimi — yapılandırma değil, GERÇEK denemeler.
+          Resend hatası yutuluyor ve Vercel logu kısa ömürlü olduğu için
+          düşen bir sipariş maili ancak burada görünür. */}
+      <div className="flex items-center justify-between mt-10 mb-3">
+        <h2 className="font-display text-xl">E-posta Gönderimi</h2>
+        <span className={`text-[11px] px-2 py-0.5 rounded-full border ${ed.cls}`}>
+          {ed.label}
+        </span>
+      </div>
+      <div className="border border-[color:var(--color-hairline)] rounded-lg p-4">
+        <p className="text-sm text-[color:var(--color-muted)]">{emailDelivery.detail}</p>
+        <dl className="mt-3 space-y-1.5 text-xs">
+          {[
+            ["Son 24 saat", `${emailDelivery.total24h} gönderim · ${emailDelivery.failed24h} başarısız`],
+            ["Son başarılı", fmtDate(emailDelivery.lastOkAt)],
+            ["Son başarısız", fmtDate(emailDelivery.lastFailAt)],
+          ].map(([k, v]) => (
+            <div key={k} className="flex justify-between gap-4">
+              <dt className="text-[color:var(--color-muted)]">{k}</dt>
+              <dd className="font-mono text-right">{v}</dd>
+            </div>
+          ))}
+        </dl>
+        {emailDelivery.lastError && (
+          <code className="mt-2 block text-xs text-red-600 break-all">
+            {emailDelivery.lastError}
+          </code>
+        )}
+
+        {emailDelivery.recent.length > 0 ? (
+          <ul className="mt-4 divide-y divide-[color:var(--color-hairline)] text-xs">
+            {emailDelivery.recent.map((r, i) => (
+              <li key={`${r.createdAt}-${i}`} className="py-2 flex items-baseline gap-3">
+                <span
+                  className={r.ok ? "text-emerald-700" : "text-red-600"}
+                  aria-label={r.ok ? "başarılı" : "başarısız"}
+                >
+                  {r.ok ? "✓" : "✕"}
+                </span>
+                <span className="font-mono">{EMAIL_KIND[r.kind] ?? r.kind}</span>
+                {r.orderNo && <span className="font-mono">{r.orderNo}</span>}
+                <span className="text-[color:var(--color-muted)]">{r.recipientMasked}</span>
+                <span className="ml-auto text-[color:var(--color-muted)] whitespace-nowrap">
+                  {fmtDate(r.createdAt)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-4 text-xs text-[color:var(--color-muted)]">
+            Kayıt yok. İlk sipariş e-postası gönderildiğinde burada görünür.
+          </p>
+        )}
       </div>
 
       {/* Build / runtime */}
